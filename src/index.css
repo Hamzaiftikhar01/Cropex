@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@theme {
+  --color-crop-50: #f0fdf4;
+  --color-crop-100: #dcfce7;
+  --color-crop-200: #bbf7d0;
+  --color-crop-300: #86efac;
+  --color-crop-400: #4ade80;
+  --color-crop-500: #22c55e;
+  --color-crop-600: #16a34a;
+  --color-crop-700: #15803d;
+  --color-crop-800: #166534;
+  --color-crop-900: #14532d;
+
+  --color-earth-50: #faf9f7;
+  --color-earth-100: #f3f1ed;
+  --color-earth-200: #e8e4dd;
+  --color-earth-300: #d4cfc5;
+  --color-earth-400: #a8a093;
+  --color-earth-500: #78716c;
+  --color-earth-600: #57534e;
+  --color-earth-700: #44403c;
+  --color-earth-800: #292524;
+  --color-earth-900: #1c1917;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-soft: 0 1px 3px 0 rgb(28 25 23 / 0.04), 0 1px 2px -1px rgb(28 25 23 / 0.04);
+  --shadow-card: 0 4px 6px -1px rgb(28 25 23 / 0.05), 0 2px 4px -2px rgb(28 25 23 / 0.05);
+  --shadow-elevated: 0 10px 25px -5px rgb(28 25 23 / 0.08), 0 8px 10px -6px rgb(28 25 23 / 0.04);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-earth-900 antialiased;
+  }
+}
