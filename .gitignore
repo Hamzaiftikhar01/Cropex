@@ -45,3 +45,4 @@ pyvenv.cfg
 share/
 .pytest_cache/
 .ipynb_checkpoints/
+*.exe
