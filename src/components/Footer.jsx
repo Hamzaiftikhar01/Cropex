@@ -11,7 +11,7 @@ function Footer() {
                 🌱
               </span>
               <span className="text-lg font-bold text-white">
-                CropCare <span className="font-semibold text-crop-400">AI</span>
+                CropMedic <span className="font-semibold text-crop-400">AI</span>
               </span>
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed">
@@ -47,17 +47,22 @@ function Footer() {
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-widest text-white">Contact</h4>
+            <h4 className="text-xs font-semibold uppercase tracking-widest text-white">Creator & Contact</h4>
             <ul className="mt-4 space-y-2.5 text-sm">
-              <li>support@cropcare.ai</li>
-              <li>+1 (555) 123-4567</li>
+              <li className="text-earth-200 font-medium">Muhammad Abdullah Khan</li>
+              <li>
+                <a href="mailto:mabdullahkhan.tech@gmail.com" className="transition-colors hover:text-white underline decoration-crop-500/50 hover:decoration-white">
+                  mabdullahkhan.tech@gmail.com
+                </a>
+              </li>
+              <li>support@cropmedic.ai</li>
             </ul>
           </div>
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-earth-800 pt-8 sm:flex-row">
           <p className="text-sm text-earth-500">
-            &copy; {currentYear} CropCare AI. All rights reserved.
+            &copy; {currentYear} CropMedic AI. Created by Muhammad Abdullah Khan. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-earth-500">
             <span className="cursor-default">Privacy Policy</span>

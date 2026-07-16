@@ -5,7 +5,7 @@ const cropImages = {
     label: 'Wheat',
   },
   corn: {
-    src: 'https://images.unsplash.com/photo-1551754654-ce20aa692bb0?w=600&auto=format&fit=crop&q=80',
+    src: 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?w=600&auto=format&fit=crop&q=80',
     alt: 'Fresh corn on the cob',
     label: 'Corn',
   },

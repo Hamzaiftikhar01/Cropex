@@ -1,83 +1,151 @@
 import { useState } from 'react';
 
 const navLinks = [
-  { label: 'Home', href: '#home' },
-  { label: 'Upload', href: '#upload' },
-  { label: 'Features', href: '#features' },
-  { label: 'Results', href: '#results' },
+  { label: 'Home', view: 'home' },
+  { label: 'About', view: 'about' },
+  { label: 'Contact', view: 'contact' },
 ];
 
-function Navbar() {
+function Navbar({ currentView, onNavigate, onOpenSettings }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const handleLinkClick = (e, view) => {
+    e.preventDefault();
+    onNavigate(view);
+    setMenuOpen(false);
+  };
+
+  const handleAnalyzeClick = (e) => {
+    e.preventDefault();
+    onNavigate('home');
+    setMenuOpen(false);
+    setTimeout(() => {
+      document.getElementById('upload')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
   return (
-    <header className="sticky top-0 z-50 border-b border-earth-100 bg-white/80 backdrop-blur-lg">
+    <header className="sticky top-0 z-40 border-b border-earth-100 bg-white/85 backdrop-blur-lg transition-colors duration-200 dark:border-earth-800 dark:bg-earth-950/85">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <a href="#home" className="flex items-center gap-2.5">
+        
+        {/* Logo */}
+        <a
+          href="#home"
+          onClick={(e) => handleLinkClick(e, 'home')}
+          className="flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-crop-500 rounded-lg p-1"
+        >
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-crop-600 text-base text-white shadow-sm shadow-crop-600/20">
             🌱
           </span>
-          <span className="text-lg font-bold tracking-tight text-earth-900">
-            CropCare <span className="font-semibold text-crop-600">AI</span>
+          <span className="text-lg font-bold tracking-tight text-earth-900 dark:text-earth-50">
+            CropMedic <span className="font-semibold text-crop-600 dark:text-crop-400">AI</span>
           </span>
         </a>
 
+        {/* Desktop Links */}
         <ul className="hidden items-center gap-8 md:flex">
-          {navLinks.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                className="text-sm font-medium text-earth-500 transition-colors hover:text-earth-900"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        <a
-          href="#upload"
-          className="hidden rounded-xl bg-crop-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-crop-600/20 transition-all hover:bg-crop-700 hover:shadow-md md:inline-block"
-        >
-          Analyze Crop
-        </a>
-
-        <button
-          type="button"
-          className="inline-flex items-center justify-center rounded-lg p-2 text-earth-600 transition-colors hover:bg-earth-50 md:hidden"
-          aria-label="Toggle menu"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((prev) => !prev)}
-        >
-          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            {menuOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            )}
-          </svg>
-        </button>
-      </nav>
-
-      {menuOpen && (
-        <div className="border-t border-earth-100 bg-white px-4 py-4 md:hidden">
-          <ul className="flex flex-col gap-1">
-            {navLinks.map((link) => (
-              <li key={link.href}>
+          {navLinks.map((link) => {
+            const isActive = currentView === link.view;
+            return (
+              <li key={link.view}>
                 <a
-                  href={link.href}
-                  className="block rounded-xl px-3 py-2.5 text-sm font-medium text-earth-600 transition-colors hover:bg-earth-50 hover:text-earth-900"
-                  onClick={() => setMenuOpen(false)}
+                  href={`#${link.view}`}
+                  onClick={(e) => handleLinkClick(e, link.view)}
+                  className={`text-sm font-semibold transition-colors duration-150 py-1.5 px-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-crop-500 ${
+                    isActive
+                      ? 'text-crop-600 bg-crop-50/50 dark:text-crop-400 dark:bg-crop-950/20'
+                      : 'text-earth-500 hover:text-earth-900 dark:text-earth-400 dark:hover:text-earth-100'
+                  }`}
                 >
                   {link.label}
                 </a>
               </li>
-            ))}
+            );
+          })}
+        </ul>
+
+        {/* Buttons (Analyze & Settings Toggle) */}
+        <div className="hidden items-center gap-3 md:flex">
+          <a
+            href="#upload"
+            onClick={handleAnalyzeClick}
+            className="rounded-xl bg-crop-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-crop-600/20 transition-all hover:bg-crop-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-crop-500"
+          >
+            Analyze Crop
+          </a>
+          
+          <button
+            type="button"
+            onClick={onOpenSettings}
+            className="rounded-xl border border-earth-200 bg-white p-2.5 text-earth-650 shadow-soft hover:bg-earth-55 hover:text-earth-950 dark:border-earth-850 dark:bg-earth-850 dark:text-earth-300 dark:hover:bg-earth-800 dark:hover:text-earth-100 focus:outline-none focus:ring-2 focus:ring-crop-500 cursor-pointer"
+            aria-label="System Settings"
+          >
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Mobile menu and settings toggles */}
+        <div className="flex items-center gap-2 md:hidden">
+          <button
+            type="button"
+            onClick={onOpenSettings}
+            className="rounded-xl border border-earth-200 bg-white p-2 text-earth-650 shadow-soft dark:border-earth-850 dark:bg-earth-850 dark:text-earth-300 dark:hover:bg-earth-800 focus:outline-none focus:ring-2 focus:ring-crop-500 cursor-pointer"
+            aria-label="System Settings"
+          >
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            className="inline-flex items-center justify-center rounded-lg p-2 text-earth-660 hover:bg-earth-50 dark:text-earth-300 dark:hover:bg-earth-800 transition-colors focus:outline-none focus:ring-2 focus:ring-crop-500"
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((prev) => !prev)}
+          >
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              {menuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Drawer */}
+      {menuOpen && (
+        <div className="border-t border-earth-100 bg-white px-4 py-4 md:hidden dark:border-earth-800 dark:bg-earth-950 transition-colors duration-200">
+          <ul className="flex flex-col gap-1">
+            {navLinks.map((link) => {
+              const isActive = currentView === link.view;
+              return (
+                <li key={link.view}>
+                  <a
+                    href={`#${link.view}`}
+                    onClick={(e) => handleLinkClick(e, link.view)}
+                    className={`block rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors ${
+                      isActive
+                        ? 'text-crop-600 bg-crop-50 dark:text-crop-400 dark:bg-crop-950/20'
+                        : 'text-earth-600 hover:bg-earth-50 dark:text-earth-300 dark:hover:bg-earth-900'
+                    }`}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
           <a
             href="#upload"
+            onClick={handleAnalyzeClick}
             className="mt-3 block rounded-xl bg-crop-600 px-5 py-2.5 text-center text-sm font-semibold text-white shadow-sm"
-            onClick={() => setMenuOpen(false)}
           >
             Analyze Crop
           </a>
