@@ -22,8 +22,25 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+Lib/
+Include/
+Scripts/
+pyvenv.cfg
+share/
+.pytest_cache/
+.ipynb_checkpoints/
