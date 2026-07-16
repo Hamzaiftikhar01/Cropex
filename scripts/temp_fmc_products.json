@@ -1,0 +1,270 @@
+[
+  {
+    "name": "Coragen",
+    "company": "FMC Pakistan",
+    "productType": "Insecticide",
+    "activeIngredient": "Chlorantraniliprole 20%",
+    "supportedCrops": [
+      "Tomato",
+      "Potato",
+      "Rice",
+      "Cotton"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/coragen",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Elevest",
+    "company": "FMC Pakistan",
+    "productType": "Insecticide",
+    "activeIngredient": "Bifenthrin 16% + Chlorantraniliprole 10.60%",
+    "supportedCrops": [
+      "Potato",
+      "Cotton"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/elevest",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Soduku",
+    "company": "FMC Pakistan",
+    "productType": "Fungicide",
+    "activeIngredient": "CHLOROTHALONIL10.5%+ TEBUCONAZOLE 31.5%",
+    "supportedCrops": [
+      "Wheat"
+    ],
+    "supportedDiseases": [
+      "Rust",
+      "Powdery Mildew"
+    ],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/soduku",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Besun",
+    "company": "FMC Pakistan",
+    "productType": "Fungicide",
+    "activeIngredient": "Zinc Thiazole 20%",
+    "supportedCrops": [
+      "Rice"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/besun",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Cabrio Top",
+    "company": "FMC Pakistan",
+    "productType": "Fungicide",
+    "activeIngredient": "Pyraclostrobin 5% + Metiram 55%",
+    "supportedCrops": [
+      "Tomato",
+      "Potato"
+    ],
+    "supportedDiseases": [
+      "Blight",
+      "Downy Mildew",
+      "Powdery Mildew"
+    ],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/cabrio-top",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Kocide",
+    "company": "FMC Pakistan",
+    "productType": "Fungicide",
+    "activeIngredient": "Copper Hydroxide 52.4%",
+    "supportedCrops": [
+      "Potato"
+    ],
+    "supportedDiseases": [
+      "Blight",
+      "Rust",
+      "Anthracnose",
+      "Downy Mildew"
+    ],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/kocide",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Equal",
+    "company": "FMC Pakistan",
+    "productType": "Fungicide",
+    "activeIngredient": "Azoxystrobin 20% + Flutriafol 20%",
+    "supportedCrops": [
+      "Rice",
+      "Wheat"
+    ],
+    "supportedDiseases": [
+      "Blight",
+      "Powdery Mildew"
+    ],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/equal",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Bravis",
+    "company": "FMC Pakistan",
+    "productType": "Fungicide",
+    "activeIngredient": "Fluopimbravisomide 15% + Dimethomorph 25%",
+    "supportedCrops": [
+      "Tomato",
+      "Potato",
+      "Rice"
+    ],
+    "supportedDiseases": [
+      "Blight",
+      "Downy Mildew"
+    ],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/bravis",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Acelan",
+    "company": "FMC Pakistan",
+    "productType": "Insecticide",
+    "activeIngredient": "Acetamiprid 20%",
+    "supportedCrops": [
+      "Cotton"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/acelan",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Protocol",
+    "company": "FMC Pakistan",
+    "productType": "Fungicide",
+    "activeIngredient": "Chlorothalonil 33.3% + Procymidone 16.7%",
+    "supportedCrops": [
+      "Potato"
+    ],
+    "supportedDiseases": [
+      "Anthracnose",
+      "Downy Mildew"
+    ],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/protocol",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Novastar",
+    "company": "FMC Pakistan",
+    "productType": "Insecticide",
+    "activeIngredient": "Bifenthrin 5% + Abamectin 0.6%",
+    "supportedCrops": [
+      "Potato",
+      "Cotton"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/novastar",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Ferterra",
+    "company": "FMC Pakistan",
+    "productType": "Insecticide",
+    "activeIngredient": "Chlorantraniliprole 00.40%",
+    "supportedCrops": [
+      "Rice",
+      "Sugarcane"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/ferterra",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Acrobat",
+    "company": "FMC Pakistan",
+    "productType": "Fungicide",
+    "activeIngredient": "Dimethomorph 90g + Mancozeb 600g",
+    "supportedCrops": [
+      "Tomato",
+      "Potato",
+      "Onion"
+    ],
+    "supportedDiseases": [
+      "Blight",
+      "Downy Mildew"
+    ],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/acrobat",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Padan",
+    "company": "FMC Pakistan",
+    "productType": "Insecticide",
+    "activeIngredient": "Cartap hydrochloride 04.00%",
+    "supportedCrops": [
+      "Rice"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/padan",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Talstar",
+    "company": "FMC Pakistan",
+    "productType": "Insecticide",
+    "activeIngredient": "Bifenthrin 10%",
+    "supportedCrops": [
+      "Cotton",
+      "Sugarcane"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/talstar",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Hoopoe",
+    "company": "FMC Pakistan",
+    "productType": "Insecticide",
+    "activeIngredient": "Cartap hydrochloride 04.00%",
+    "supportedCrops": [
+      "Rice"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/hoopoe",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Benevia",
+    "company": "FMC Pakistan",
+    "productType": "Insecticide",
+    "activeIngredient": "Cyantraniliprole 10%",
+    "supportedCrops": [
+      "Tomato",
+      "Cotton",
+      "Onion"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/benevia",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Admiral",
+    "company": "FMC Pakistan",
+    "productType": "Insecticide",
+    "activeIngredient": "Pyriproxyfen 10%",
+    "supportedCrops": [
+      "Cotton"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/admiral",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  },
+  {
+    "name": "Major",
+    "company": "FMC Pakistan",
+    "productType": "Insecticide",
+    "activeIngredient": "Nitenpyram 15% + Pymetrozine 45%",
+    "supportedCrops": [
+      "Rice",
+      "Cotton"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/major",
+    "notes": "Have some questions? We are here to help.\nContact Us"
+  }
+]

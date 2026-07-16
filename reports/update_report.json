@@ -1,0 +1,721 @@
+{
+  "timestamp": "2026-07-16T17:24:57.492386",
+  "duration_seconds": 120.312483,
+  "pages_visited": 4,
+  "products_extracted": 42,
+  "products_merged": 48,
+  "failed_scrapers": [
+    "Bayer Pakistan",
+    "Syngenta Pakistan"
+  ],
+  "added": [
+    {
+      "id": "fmc_coragen",
+      "name": "Coragen",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Insecticide",
+      "activeIngredient": "Chlorantraniliprole 20%",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Cotton",
+        "Tomato",
+        "Potato",
+        "Rice"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/coragen",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_elevest",
+      "name": "Elevest",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Insecticide",
+      "activeIngredient": "Bifenthrin 16% + Chlorantraniliprole 10.60%",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Cotton",
+        "Potato"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/elevest",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_soduku",
+      "name": "Soduku",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Fungicide",
+      "activeIngredient": "CHLOROTHALONIL10.5%+ TEBUCONAZOLE 31.5%",
+      "targetDiseases": [
+        "Rust",
+        "Powdery Mildew"
+      ],
+      "targetCrops": [
+        "Wheat"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/soduku",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_besun",
+      "name": "Besun",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Fungicide",
+      "activeIngredient": "Zinc Thiazole 20%",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Rice"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/besun",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_kocide",
+      "name": "Kocide",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Fungicide",
+      "activeIngredient": "Copper Hydroxide 52.4%",
+      "targetDiseases": [
+        "Anthracnose",
+        "Rust",
+        "Downy Mildew",
+        "Blight"
+      ],
+      "targetCrops": [
+        "Potato"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/kocide",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_equal",
+      "name": "Equal",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Fungicide",
+      "activeIngredient": "Azoxystrobin 20% + Flutriafol 20%",
+      "targetDiseases": [
+        "Powdery Mildew",
+        "Blight"
+      ],
+      "targetCrops": [
+        "Wheat",
+        "Rice"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/equal",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_bravis",
+      "name": "Bravis",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Fungicide",
+      "activeIngredient": "Fluopimbravisomide 15% + Dimethomorph 25%",
+      "targetDiseases": [
+        "Downy Mildew",
+        "Blight"
+      ],
+      "targetCrops": [
+        "Tomato",
+        "Potato",
+        "Rice"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/bravis",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_acelan",
+      "name": "Acelan",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Insecticide",
+      "activeIngredient": "Acetamiprid 20%",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Cotton"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/acelan",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_protocol",
+      "name": "Protocol",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Fungicide",
+      "activeIngredient": "Chlorothalonil 33.3% + Procymidone 16.7%",
+      "targetDiseases": [
+        "Anthracnose",
+        "Downy Mildew"
+      ],
+      "targetCrops": [
+        "Potato"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/protocol",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_novastar",
+      "name": "Novastar",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Insecticide",
+      "activeIngredient": "Bifenthrin 5% + Abamectin 0.6%",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Cotton",
+        "Potato"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/novastar",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_ferterra",
+      "name": "Ferterra",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Insecticide",
+      "activeIngredient": "Chlorantraniliprole 00.40%",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Sugarcane",
+        "Rice"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/ferterra",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_acrobat",
+      "name": "Acrobat",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Fungicide",
+      "activeIngredient": "Dimethomorph 90g + Mancozeb 600g",
+      "targetDiseases": [
+        "Downy Mildew",
+        "Blight"
+      ],
+      "targetCrops": [
+        "Onion",
+        "Tomato",
+        "Potato"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/acrobat",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_padan",
+      "name": "Padan",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Insecticide",
+      "activeIngredient": "Cartap hydrochloride 04.00%",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Rice"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/padan",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_talstar",
+      "name": "Talstar",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Insecticide",
+      "activeIngredient": "Bifenthrin 10%",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Cotton",
+        "Sugarcane"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/talstar",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_hoopoe",
+      "name": "Hoopoe",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Insecticide",
+      "activeIngredient": "Cartap hydrochloride 04.00%",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Rice"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/hoopoe",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_benevia",
+      "name": "Benevia",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Insecticide",
+      "activeIngredient": "Cyantraniliprole 10%",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Onion",
+        "Cotton",
+        "Tomato"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/benevia",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_admiral",
+      "name": "Admiral",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Insecticide",
+      "activeIngredient": "Pyriproxyfen 10%",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Cotton"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/admiral",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "fmc_major",
+      "name": "Major",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Insecticide",
+      "activeIngredient": "Nitenpyram 15% + Pymetrozine 45%",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Cotton",
+        "Rice"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/major",
+      "notes": "Have some questions? We are here to help.\nContact Us"
+    },
+    {
+      "id": "suncrop_entrol",
+      "name": "Entrol",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Propineb",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Chili",
+        "Potato",
+        "Rice"
+      ],
+      "officialProductUrl": "https://www.suncropgroup.com/product/entrol/",
+      "notes": "Entrol contains Propineb, a contact fungicide with broad-spectrum activity against various diseases of rice, chili, grapes, potato, and other vegetables and fruits. Propineb is a polymeric zinc-containing dithiocarbamate. Due to the release of zinc, the application of “Entrol” results in a greening ..."
+    },
+    {
+      "id": "suncrop_megawar",
+      "name": "Megawar",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Unknown",
+      "targetDiseases": [],
+      "targetCrops": [],
+      "officialProductUrl": "https://www.suncropgroup.com/product/megawar/",
+      "notes": "Megawar is a combination of Pyraclostrobin & Metiram, widely acknowledged as a mighty effective fungicide. Pyraclostrobin decreases the severity of disease and provides good resistance against it by blocking electron transport in fungi cells, thereby reducing ATP in it to prevent disease development..."
+    },
+    {
+      "id": "suncrop_red_gold_super",
+      "name": "Red Gold Super",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Spirotetramat",
+      "targetDiseases": [],
+      "targetCrops": [],
+      "officialProductUrl": "https://www.suncropgroup.com/product/red-gold-super/",
+      "notes": "Red Gold Super is a highly effective product and can control several pests in one application. Red Gold Super is formulated with the active ingredients Dinotefuran and Spirotetramate. Red Gold Super has very quick control over insects. Red Gold Super has two active ingredients in which dinotefuran a..."
+    },
+    {
+      "id": "suncrop_foree",
+      "name": "Foree",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Unknown",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Cotton",
+        "Wheat",
+        "Potato"
+      ],
+      "officialProductUrl": "https://www.suncropgroup.com/product/foree/",
+      "notes": "Foree has the active ingredient flonicamid which is a systemic insecticide. Foree exhibits excellent performance for control of almost all important aphid species in apples, peaches, wheat, potato vegetables, cotton, and ornamentals, etc. Foree has no negative impact on pollinating insects or natura..."
+    },
+    {
+      "id": "suncrop_traffic",
+      "name": "Traffic",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Abamectin",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Wheat",
+        "Tomato"
+      ],
+      "officialProductUrl": "https://www.suncropgroup.com/product/traffic/",
+      "notes": "Traffic is a highly effective product for the control of a wide spectrum of insects such as aphids, whitefly, sucking insects, larvae, beetles, and moths that affect a large group of crops. Traffic is a combination of the two active ingredients Abamectin & Thiamethoxam. Traffic ensures high efficacy..."
+    },
+    {
+      "id": "suncrop_bold",
+      "name": "Bold",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Lufenuron",
+      "targetDiseases": [],
+      "targetCrops": [],
+      "officialProductUrl": "https://www.suncropgroup.com/product/bold/",
+      "notes": "Bold is a broad-spectrum novel IGR, highly effective for the control of armyworms. Bold has the active ingredient Lufenuron, Lufenuron inhibits the production of chitin in insects. Without chitin, Lepidopterans larvae will never develop a hard outer shell (exoskeleton). With its inner organs exposed..."
+    },
+    {
+      "id": "suncrop_boleto",
+      "name": "Boleto",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Emamectin",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Maize"
+      ],
+      "officialProductUrl": "https://www.suncropgroup.com/product/boleto/",
+      "notes": "It is a broad-spectrum Insecticide product controlling all Lepidoptera especially Fall Army worm on maize crop as well. This product contains a modern combination (Chlorantraniliprole and emamectin benzoate) of novel insecticides that are effectively used to control many lepidopterous pests in diffe..."
+    },
+    {
+      "id": "suncrop_trunk_star",
+      "name": "Trunk Star",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Unknown",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Cotton",
+        "Maize",
+        "Wheat",
+        "Potato"
+      ],
+      "officialProductUrl": "https://www.suncropgroup.com/product/trunk-star/",
+      "notes": "Trunk Star is a broad activity seed care solution, with a unique mode of action. It interferes with the protein in the fungal cells at various points in the life cycle and also controls sucking pests at the earliest stage of the crop. Composed of the characteristic of three active ingredients Chloth..."
+    },
+    {
+      "id": "suncrop_gem_star_ultra",
+      "name": "Gem Star Ultra",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Azoxystrobin + Chlorothalonil",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Potato"
+      ],
+      "officialProductUrl": "https://www.suncropgroup.com/product/gem-star-ultra/",
+      "notes": "Gem Star Ultra is a broad-spectrum fungicide with multiple modes of action that has a mixture of Azoxystrobin and Chlorothalonil. Gem Star Ultra helps you keep disease away with its convenient pre-mix of two powerful, proven active ingredients. Gem Star Ultra is a convenient pre-mix of two powerful ..."
+    },
+    {
+      "id": "suncrop_gem_star_super",
+      "name": "Gem Star Super",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Azoxystrobin + Difenoconazole",
+      "targetDiseases": [
+        "Powdery Mildew",
+        "Blight"
+      ],
+      "targetCrops": [
+        "Cotton",
+        "Rice"
+      ],
+      "officialProductUrl": "https://www.suncropgroup.com/product/gem-star-super/",
+      "notes": "Gem Star Super Technology is the world’s best-selling fungicide. Offering preventive, systemic, and curative activity, Gem Star Super contains two fungicides to provide broad-spectrum control of many important vegetable, rice, cotton, citrus, and tree nut diseases, including leaf spots, blights, and..."
+    },
+    {
+      "id": "suncrop_starwin",
+      "name": "Starwin",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Unknown",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Cotton"
+      ],
+      "officialProductUrl": "https://www.suncropgroup.com/product/starwin/",
+      "notes": "It is a broad-spectrum Insecticide product controlling all Lepidoptera especially Pink Boll worm on Cotton. This is an OP replacement (persistent and effects the nervous system of both mammals and insects) offering a modern combination (Lambda cyhalothrin and Chlorantraniliprole) with global import ..."
+    },
+    {
+      "id": "suncrop_trunk",
+      "name": "Trunk",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Unknown",
+      "targetDiseases": [],
+      "targetCrops": [],
+      "officialProductUrl": "https://www.suncropgroup.com/product/trunk/",
+      "notes": "Trunk is a highly effective product and has the capability of controlling several crop pests in one spray. Trunk is formulated with the active ingredient Chlothiandin. Trunk controls sucking and some chewing insects, such as aphids, thrips, and beetles. Trunk may be applied to plant leaves, soil, or..."
+    },
+    {
+      "id": "suncrop_success",
+      "name": "Success",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Chlorothalonil",
+      "targetDiseases": [],
+      "targetCrops": [],
+      "officialProductUrl": "https://www.suncropgroup.com/product/success/",
+      "notes": "Success is a combination of contact and systemic fungicide effective on a wide range of fungus from lower to higher groups, with the active ingredient Metalyxyl and Chlorothalonil. Success protects the crops from the existing fungus present in and/or on the plant system while also shielding the buil..."
+    },
+    {
+      "id": "suncrop_stalker",
+      "name": "Stalker",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Unknown",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Rice"
+      ],
+      "officialProductUrl": "https://www.suncropgroup.com/product/stalker/",
+      "notes": "Stalker is a broad-spectrum insecticide. It has low aqueous solubility and low volatility and based on its chemical properties, would not normally be expected to leach into groundwater. Stalker mode of action through disruption of oxidative phosphorylation in the mitochondria rather than to target n..."
+    },
+    {
+      "id": "suncrop_century",
+      "name": "Century",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Unknown",
+      "targetDiseases": [],
+      "targetCrops": [],
+      "officialProductUrl": "https://www.suncropgroup.com/product/century/",
+      "notes": "Century is an insecticide containing the active ingredient “Pyriproxyfen”. Century has contact & stomach action and also has translaminar action. It affects the growth and development of target insects by reducing/inhibiting several physiological processes Inhibition including embryogenesis, metamor..."
+    },
+    {
+      "id": "suncrop_unit_plus",
+      "name": "Unit Plus",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Unknown",
+      "targetDiseases": [],
+      "targetCrops": [],
+      "officialProductUrl": "https://www.suncropgroup.com/product/unit-plus/",
+      "notes": "Unit Plus is the most reliable insecticide for controlling different kinds of bollworms. Unit Plus has contact & stomach action and also has translaminar properties and can penetrate deeply into plant tissues. Unit Plus is a broad-spectrum insecticide and also acts as an acaricide. Unit Plus can be ..."
+    },
+    {
+      "id": "suncrop_greater",
+      "name": "Greater",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Unknown",
+      "targetDiseases": [],
+      "targetCrops": [],
+      "officialProductUrl": "https://www.suncropgroup.com/product/greater/",
+      "notes": "Greater is a new and unique combination of Dinotefuran + Pymetrozine with a broad spectrum against sucking insects. Dinotefuran: Disruption of the insect’s nervous system by inhibiting nicotinic acetylcholine receptors. Pymetrozine: it does affect neuro regulation or nerve-muscle interaction. Physio..."
+    },
+    {
+      "id": "suncrop_sentinel",
+      "name": "Sentinel",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Propiconazole",
+      "targetDiseases": [],
+      "targetCrops": [],
+      "officialProductUrl": "https://www.suncropgroup.com/product/sentinel/",
+      "notes": "Sentinel is a highly effective broad-spectrum systemic foliar fungicide for the control of a wide range of leaf and stems diseases in cereals. Composed with the active ingredient Propiconazole and formulation of an emulsifiable concentrate is absorbed by the assimilating parts of the plant, the majo..."
+    },
+    {
+      "id": "suncrop_rider_super",
+      "name": "Rider Super",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Lufenuron + Emamectin",
+      "targetDiseases": [],
+      "targetCrops": [],
+      "officialProductUrl": "https://www.suncropgroup.com/product/rider-super/",
+      "notes": "Rider Super is a compound of emamectin benzoate and lufenuron. By affecting the formation of insect epidermis to achieve the insecticidal effect, but also can hinder the transmission of insect nerve information & kill pests. Emamectin Benzoate is a highly efficient insecticide against many larvae of..."
+    },
+    {
+      "id": "suncrop_marvin",
+      "name": "Marvin",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Unknown",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Cotton",
+        "Rice"
+      ],
+      "officialProductUrl": "https://www.suncropgroup.com/product/marvin/",
+      "notes": "Marvin has a pesticidal composition containing tolfenpyrad and chlorfenapyr. Tolfenpyrad and Chlorfenapyr have different acting mechanisms on target pests and by compounding the tolfenpyrad and the chlorfenapyr, the composition has obvious synergistic and lasting effects. Marvin has a vast insect co..."
+    },
+    {
+      "id": "suncrop_kamman",
+      "name": "Kamman",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Unknown",
+      "targetDiseases": [],
+      "targetCrops": [
+        "Cotton",
+        "Potato",
+        "Rice"
+      ],
+      "officialProductUrl": "https://www.suncropgroup.com/product/kamman/",
+      "notes": "Kamman is an insecticide of the ryanoid classes. Kamman has an active ingredient Chlorantraniliprole that belongs to a class of selective insecticides featuring a novel mode of action to control a range of pests belonging to the order Lepidoptera and some other Coleoptera, Diptera, and Isoptera spec..."
+    },
+    {
+      "id": "suncrop_yorker",
+      "name": "Yorker",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Tebuconazole + Trifloxystrobin",
+      "targetDiseases": [
+        "Anthracnose",
+        "Rust",
+        "Powdery Mildew",
+        "Blight"
+      ],
+      "targetCrops": [
+        "Wheat",
+        "Tomato",
+        "Rice"
+      ],
+      "officialProductUrl": "https://www.suncropgroup.com/product/yorker/",
+      "notes": "Yorker is a new combination fungicide containing Tebuconazole and Trifloxystrobin. Yorker is a systemic broad-spectrum fungicide with protective and curative action which offers not only disease control but also improves the quality and yield of crops. In rice, it improves the yield quality by reduc..."
+    },
+    {
+      "id": "suncrop_alpine",
+      "name": "Alpine",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Insecticide",
+      "activeIngredient": "Unknown",
+      "targetDiseases": [],
+      "targetCrops": [],
+      "officialProductUrl": "https://www.suncropgroup.com/product/alpine/",
+      "notes": "Alpine is used for control of insect pests such as aphids, whiteflies, thrips, leafhoppers, leafminers, sawflies, mole cricket, white grubs, lace bugs, billbugs, beetles, and mealybugs. Alpine has the active ingredient “Dinotefuron” which is a neonicotinoid insecticide. Alpine is a contact poison an..."
+    }
+  ],
+  "updated": [
+    {
+      "id": "fmc_cabrio_top",
+      "changes": {
+        "activeIngredient": {
+          "old": "Pyraclostrobin + Metiram",
+          "new": "Pyraclostrobin 5% + Metiram 55%"
+        },
+        "notes": {
+          "old": "Provides broad-spectrum control and enhances green leaf health.",
+          "new": "Have some questions? We are here to help.\nContact Us"
+        },
+        "targetCrops": {
+          "old": [
+            "Tomato",
+            "Potato",
+            "Chili"
+          ],
+          "new": [
+            "Tomato",
+            "Potato"
+          ]
+        },
+        "targetDiseases": {
+          "old": [
+            "Early Blight",
+            "Late Blight",
+            "Anthracnose"
+          ],
+          "new": [
+            "Downy Mildew",
+            "Powdery Mildew",
+            "Blight"
+          ]
+        }
+      },
+      "product": {
+        "id": "fmc_cabrio_top",
+        "name": "Cabrio Top",
+        "company": "FMC Pakistan",
+        "companyName": "FMC Pakistan",
+        "productType": "Fungicide",
+        "activeIngredient": "Pyraclostrobin 5% + Metiram 55%",
+        "targetDiseases": [
+          "Downy Mildew",
+          "Powdery Mildew",
+          "Blight"
+        ],
+        "targetCrops": [
+          "Tomato",
+          "Potato"
+        ],
+        "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/cabrio-top",
+        "notes": "Have some questions? We are here to help.\nContact Us"
+      }
+    }
+  ],
+  "removed": [
+    {
+      "id": "suncrop_sun_cop",
+      "name": "Sun-Cop",
+      "company": "Suncrop Group",
+      "companyName": "Suncrop Group",
+      "productType": "Fungicide",
+      "activeIngredient": "Copper Oxychloride 50% WP",
+      "targetDiseases": [
+        "Bacterial Leaf Blight",
+        "Bacterial Blight",
+        "Anthracnose",
+        "Red Rot"
+      ],
+      "targetCrops": [
+        "Rice",
+        "Cotton",
+        "Chili",
+        "Sugarcane"
+      ],
+      "officialProductUrl": "https://suncropgroup.com/pesticides/fungicides",
+      "notes": "Contact protective fungicide. Useful for suppressing bacterial and fungal pathogens."
+    },
+    {
+      "id": "fmc_steward",
+      "name": "Steward",
+      "company": "FMC Pakistan",
+      "companyName": "FMC Pakistan",
+      "productType": "Insecticide",
+      "activeIngredient": "Indoxacarb 150 SC",
+      "targetDiseases": [
+        "Armyworm control",
+        "Bollworm control"
+      ],
+      "targetCrops": [
+        "Cotton",
+        "Maize"
+      ],
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides",
+      "notes": "Broad-spectrum larvicide with contact and stomach action. Rapid feeding cessation."
+    }
+  ]
+}

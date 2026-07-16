@@ -1,0 +1,278 @@
+[
+  {
+    "name": "Entrol",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Propineb",
+    "supportedCrops": [
+      "Potato",
+      "Rice",
+      "Chili"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/entrol/",
+    "notes": "Entrol contains Propineb, a contact fungicide with broad-spectrum activity against various diseases of rice, chili, grapes, potato, and other vegetables and fruits. Propineb is a polymeric zinc-containing dithiocarbamate. Due to the release of zinc, the application of “Entrol” results in a greening ..."
+  },
+  {
+    "name": "Megawar",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Unknown",
+    "supportedCrops": [],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/megawar/",
+    "notes": "Megawar is a combination of Pyraclostrobin & Metiram, widely acknowledged as a mighty effective fungicide. Pyraclostrobin decreases the severity of disease and provides good resistance against it by blocking electron transport in fungi cells, thereby reducing ATP in it to prevent disease development..."
+  },
+  {
+    "name": "Red Gold Super",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Spirotetramat",
+    "supportedCrops": [],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/red-gold-super/",
+    "notes": "Red Gold Super is a highly effective product and can control several pests in one application. Red Gold Super is formulated with the active ingredients Dinotefuran and Spirotetramate. Red Gold Super has very quick control over insects. Red Gold Super has two active ingredients in which dinotefuran a..."
+  },
+  {
+    "name": "Foree",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Unknown",
+    "supportedCrops": [
+      "Potato",
+      "Wheat",
+      "Cotton"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/foree/",
+    "notes": "Foree has the active ingredient flonicamid which is a systemic insecticide. Foree exhibits excellent performance for control of almost all important aphid species in apples, peaches, wheat, potato vegetables, cotton, and ornamentals, etc. Foree has no negative impact on pollinating insects or natura..."
+  },
+  {
+    "name": "Traffic",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Abamectin",
+    "supportedCrops": [
+      "Tomato",
+      "Wheat"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/traffic/",
+    "notes": "Traffic is a highly effective product for the control of a wide spectrum of insects such as aphids, whitefly, sucking insects, larvae, beetles, and moths that affect a large group of crops. Traffic is a combination of the two active ingredients Abamectin & Thiamethoxam. Traffic ensures high efficacy..."
+  },
+  {
+    "name": "Bold",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Lufenuron",
+    "supportedCrops": [],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/bold/",
+    "notes": "Bold is a broad-spectrum novel IGR, highly effective for the control of armyworms. Bold has the active ingredient Lufenuron, Lufenuron inhibits the production of chitin in insects. Without chitin, Lepidopterans larvae will never develop a hard outer shell (exoskeleton). With its inner organs exposed..."
+  },
+  {
+    "name": "Boleto",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Emamectin",
+    "supportedCrops": [
+      "Maize"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/boleto/",
+    "notes": "It is a broad-spectrum Insecticide product controlling all Lepidoptera especially Fall Army worm on maize crop as well. This product contains a modern combination (Chlorantraniliprole and emamectin benzoate) of novel insecticides that are effectively used to control many lepidopterous pests in diffe..."
+  },
+  {
+    "name": "Trunk Star",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Unknown",
+    "supportedCrops": [
+      "Potato",
+      "Wheat",
+      "Cotton",
+      "Maize"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/trunk-star/",
+    "notes": "Trunk Star is a broad activity seed care solution, with a unique mode of action. It interferes with the protein in the fungal cells at various points in the life cycle and also controls sucking pests at the earliest stage of the crop. Composed of the characteristic of three active ingredients Chloth..."
+  },
+  {
+    "name": "Gem Star Ultra",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Azoxystrobin + Chlorothalonil",
+    "supportedCrops": [
+      "Potato"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/gem-star-ultra/",
+    "notes": "Gem Star Ultra is a broad-spectrum fungicide with multiple modes of action that has a mixture of Azoxystrobin and Chlorothalonil. Gem Star Ultra helps you keep disease away with its convenient pre-mix of two powerful, proven active ingredients. Gem Star Ultra is a convenient pre-mix of two powerful ..."
+  },
+  {
+    "name": "Gem Star Super",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Azoxystrobin + Difenoconazole",
+    "supportedCrops": [
+      "Rice",
+      "Cotton"
+    ],
+    "supportedDiseases": [
+      "Blight",
+      "Powdery Mildew"
+    ],
+    "officialProductUrl": "https://www.suncropgroup.com/product/gem-star-super/",
+    "notes": "Gem Star Super Technology is the world’s best-selling fungicide. Offering preventive, systemic, and curative activity, Gem Star Super contains two fungicides to provide broad-spectrum control of many important vegetable, rice, cotton, citrus, and tree nut diseases, including leaf spots, blights, and..."
+  },
+  {
+    "name": "Starwin",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Unknown",
+    "supportedCrops": [
+      "Cotton"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/starwin/",
+    "notes": "It is a broad-spectrum Insecticide product controlling all Lepidoptera especially Pink Boll worm on Cotton. This is an OP replacement (persistent and effects the nervous system of both mammals and insects) offering a modern combination (Lambda cyhalothrin and Chlorantraniliprole) with global import ..."
+  },
+  {
+    "name": "Trunk",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Unknown",
+    "supportedCrops": [],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/trunk/",
+    "notes": "Trunk is a highly effective product and has the capability of controlling several crop pests in one spray. Trunk is formulated with the active ingredient Chlothiandin. Trunk controls sucking and some chewing insects, such as aphids, thrips, and beetles. Trunk may be applied to plant leaves, soil, or..."
+  },
+  {
+    "name": "Success",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Chlorothalonil",
+    "supportedCrops": [],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/success/",
+    "notes": "Success is a combination of contact and systemic fungicide effective on a wide range of fungus from lower to higher groups, with the active ingredient Metalyxyl and Chlorothalonil. Success protects the crops from the existing fungus present in and/or on the plant system while also shielding the buil..."
+  },
+  {
+    "name": "Stalker",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Unknown",
+    "supportedCrops": [
+      "Rice"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/stalker/",
+    "notes": "Stalker is a broad-spectrum insecticide. It has low aqueous solubility and low volatility and based on its chemical properties, would not normally be expected to leach into groundwater. Stalker mode of action through disruption of oxidative phosphorylation in the mitochondria rather than to target n..."
+  },
+  {
+    "name": "Century",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Unknown",
+    "supportedCrops": [],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/century/",
+    "notes": "Century is an insecticide containing the active ingredient “Pyriproxyfen”. Century has contact & stomach action and also has translaminar action. It affects the growth and development of target insects by reducing/inhibiting several physiological processes Inhibition including embryogenesis, metamor..."
+  },
+  {
+    "name": "Unit Plus",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Unknown",
+    "supportedCrops": [],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/unit-plus/",
+    "notes": "Unit Plus is the most reliable insecticide for controlling different kinds of bollworms. Unit Plus has contact & stomach action and also has translaminar properties and can penetrate deeply into plant tissues. Unit Plus is a broad-spectrum insecticide and also acts as an acaricide. Unit Plus can be ..."
+  },
+  {
+    "name": "Greater",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Unknown",
+    "supportedCrops": [],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/greater/",
+    "notes": "Greater is a new and unique combination of Dinotefuran + Pymetrozine with a broad spectrum against sucking insects. Dinotefuran: Disruption of the insect’s nervous system by inhibiting nicotinic acetylcholine receptors. Pymetrozine: it does affect neuro regulation or nerve-muscle interaction. Physio..."
+  },
+  {
+    "name": "Sentinel",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Propiconazole",
+    "supportedCrops": [],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/sentinel/",
+    "notes": "Sentinel is a highly effective broad-spectrum systemic foliar fungicide for the control of a wide range of leaf and stems diseases in cereals. Composed with the active ingredient Propiconazole and formulation of an emulsifiable concentrate is absorbed by the assimilating parts of the plant, the majo..."
+  },
+  {
+    "name": "Rider Super",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Lufenuron + Emamectin",
+    "supportedCrops": [],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/rider-super/",
+    "notes": "Rider Super is a compound of emamectin benzoate and lufenuron. By affecting the formation of insect epidermis to achieve the insecticidal effect, but also can hinder the transmission of insect nerve information & kill pests. Emamectin Benzoate is a highly efficient insecticide against many larvae of..."
+  },
+  {
+    "name": "Marvin",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Unknown",
+    "supportedCrops": [
+      "Rice",
+      "Cotton"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/marvin/",
+    "notes": "Marvin has a pesticidal composition containing tolfenpyrad and chlorfenapyr. Tolfenpyrad and Chlorfenapyr have different acting mechanisms on target pests and by compounding the tolfenpyrad and the chlorfenapyr, the composition has obvious synergistic and lasting effects. Marvin has a vast insect co..."
+  },
+  {
+    "name": "Kamman",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Unknown",
+    "supportedCrops": [
+      "Potato",
+      "Rice",
+      "Cotton"
+    ],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/kamman/",
+    "notes": "Kamman is an insecticide of the ryanoid classes. Kamman has an active ingredient Chlorantraniliprole that belongs to a class of selective insecticides featuring a novel mode of action to control a range of pests belonging to the order Lepidoptera and some other Coleoptera, Diptera, and Isoptera spec..."
+  },
+  {
+    "name": "Yorker",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Tebuconazole + Trifloxystrobin",
+    "supportedCrops": [
+      "Tomato",
+      "Rice",
+      "Wheat"
+    ],
+    "supportedDiseases": [
+      "Blight",
+      "Rust",
+      "Anthracnose",
+      "Powdery Mildew"
+    ],
+    "officialProductUrl": "https://www.suncropgroup.com/product/yorker/",
+    "notes": "Yorker is a new combination fungicide containing Tebuconazole and Trifloxystrobin. Yorker is a systemic broad-spectrum fungicide with protective and curative action which offers not only disease control but also improves the quality and yield of crops. In rice, it improves the yield quality by reduc..."
+  },
+  {
+    "name": "Alpine",
+    "company": "Suncrop Group",
+    "productType": "Insecticide",
+    "activeIngredient": "Unknown",
+    "supportedCrops": [],
+    "supportedDiseases": [],
+    "officialProductUrl": "https://www.suncropgroup.com/product/alpine/",
+    "notes": "Alpine is used for control of insect pests such as aphids, whiteflies, thrips, leafhoppers, leafminers, sawflies, mole cricket, white grubs, lace bugs, billbugs, beetles, and mealybugs. Alpine has the active ingredient “Dinotefuron” which is a neonicotinoid insecticide. Alpine is a contact poison an..."
+  }
+]

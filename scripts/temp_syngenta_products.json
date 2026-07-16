@@ -1,0 +1,59 @@
+[
+  {
+    "name": "Amistar Top",
+    "company": "Syngenta Pakistan",
+    "productType": "Fungicide",
+    "activeIngredient": "Azoxystrobin + Difenoconazole",
+    "supportedCrops": [
+      "Tomato",
+      "Potato",
+      "Rice",
+      "Wheat",
+      "Onion",
+      "Chili"
+    ],
+    "supportedDiseases": [
+      "Leaf Rust",
+      "Early Blight",
+      "Blast",
+      "Purple Blotch",
+      "Powdery Mildew"
+    ],
+    "officialProductUrl": "https://www.syngenta.com.pk/product/crop-protection/fungicide/amistar-top",
+    "notes": "Excellent leaf coverage."
+  },
+  {
+    "name": "Ridomil Gold",
+    "company": "Syngenta Pakistan",
+    "productType": "Fungicide",
+    "activeIngredient": "Metalaxyl-M + Mancozeb",
+    "supportedCrops": [
+      "Potato",
+      "Tomato",
+      "Onion"
+    ],
+    "supportedDiseases": [
+      "Late Blight",
+      "Downy Mildew"
+    ],
+    "officialProductUrl": "https://www.syngenta.com.pk/product/crop-protection/fungicide/ridomil-gold-wg",
+    "notes": "Systemic and contact fungicide."
+  },
+  {
+    "name": "Match",
+    "company": "Syngenta Pakistan",
+    "productType": "Insecticide",
+    "activeIngredient": "Lufenuron",
+    "supportedCrops": [
+      "Cotton",
+      "Maize",
+      "Tomato"
+    ],
+    "supportedDiseases": [
+      "Armyworm control",
+      "Helicoverpa control"
+    ],
+    "officialProductUrl": "https://www.syngenta.com.pk/product/crop-protection/insecticide/match-050-ec",
+    "notes": "Lepidopteran larvae control."
+  }
+]

@@ -40,6 +40,7 @@ env/
 Lib/
 Include/
 Scripts/
+!scripts/
 pyvenv.cfg
 share/
 .pytest_cache/

@@ -1,0 +1,138 @@
+{
+  "timestamp": "2026-07-16T18:15:11.901004",
+  "summary": {
+    "total_urls_checked": 9,
+    "working_urls": 1,
+    "redirected_urls": 0,
+    "broken_urls": 5,
+    "connection_errors": 3
+  },
+  "url_details": [
+    {
+      "url": "https://www.syngenta.com.pk/product/crop-protection/fungicide/amistar-top",
+      "linked_products": [
+        {
+          "id": "syngenta_amistar_top",
+          "name": "Amistar Top",
+          "company": "Syngenta Pakistan"
+        }
+      ],
+      "status": "Broken",
+      "status_code": 403,
+      "error_detail": null,
+      "final_destination": "https://www.syngenta.com.pk/product/crop-protection/fungicide/amistar-top"
+    },
+    {
+      "url": "https://www.syngenta.com.pk/product/crop-protection/fungicide/ridomil-gold-wg",
+      "linked_products": [
+        {
+          "id": "syngenta_ridomil_gold",
+          "name": "Ridomil Gold",
+          "company": "Syngenta Pakistan"
+        }
+      ],
+      "status": "Broken",
+      "status_code": 403,
+      "error_detail": null,
+      "final_destination": "https://www.syngenta.com.pk/product/crop-protection/fungicide/ridomil-gold-wg"
+    },
+    {
+      "url": "https://ag.fmc.com/pk/en/products/fungicides/cabrio-top",
+      "linked_products": [
+        {
+          "id": "fmc_cabrio_top",
+          "name": "Cabrio Top",
+          "company": "FMC Pakistan"
+        }
+      ],
+      "status": "OK",
+      "status_code": 200,
+      "error_detail": null,
+      "final_destination": "https://ag.fmc.com/pk/en/products/fungicides/cabrio-top"
+    },
+    {
+      "url": "https://www.crop.bayer.com.pk/products/nativo.aspx",
+      "linked_products": [
+        {
+          "id": "bayer_nativo",
+          "name": "Nativo",
+          "company": "Bayer Pakistan"
+        }
+      ],
+      "status": "Connection Error",
+      "status_code": null,
+      "error_detail": "Failed to resolve domain name or establish connection.",
+      "final_destination": null
+    },
+    {
+      "url": "https://www.crop.bayer.com.pk/products/infinito.aspx",
+      "linked_products": [
+        {
+          "id": "bayer_infinito",
+          "name": "Infinito",
+          "company": "Bayer Pakistan"
+        }
+      ],
+      "status": "Connection Error",
+      "status_code": null,
+      "error_detail": "Failed to resolve domain name or establish connection.",
+      "final_destination": null
+    },
+    {
+      "url": "https://suncropgroup.com/pesticides/fungicides",
+      "linked_products": [
+        {
+          "id": "suncrop_sun_cop",
+          "name": "Sun-Cop",
+          "company": "Suncrop Group"
+        }
+      ],
+      "status": "Broken",
+      "status_code": 404,
+      "error_detail": null,
+      "final_destination": "https://www.suncropgroup.com/pesticides/fungicides"
+    },
+    {
+      "url": "https://www.crop.bayer.com.pk/products/confidor.aspx",
+      "linked_products": [
+        {
+          "id": "bayer_confidor",
+          "name": "Confidor",
+          "company": "Bayer Pakistan"
+        }
+      ],
+      "status": "Connection Error",
+      "status_code": null,
+      "error_detail": "Failed to resolve domain name or establish connection.",
+      "final_destination": null
+    },
+    {
+      "url": "https://ag.fmc.com/pk/en/products/insecticides",
+      "linked_products": [
+        {
+          "id": "fmc_steward",
+          "name": "Steward",
+          "company": "FMC Pakistan"
+        }
+      ],
+      "status": "Broken",
+      "status_code": 404,
+      "error_detail": null,
+      "final_destination": "https://ag.fmc.com/pk/en/products/insecticides"
+    },
+    {
+      "url": "https://www.syngenta.com.pk/product/crop-protection/insecticide/match-050-ec",
+      "linked_products": [
+        {
+          "id": "syngenta_match",
+          "name": "Match",
+          "company": "Syngenta Pakistan"
+        }
+      ],
+      "status": "Broken",
+      "status_code": 403,
+      "error_detail": null,
+      "final_destination": "https://www.syngenta.com.pk/product/crop-protection/insecticide/match-050-ec"
+    }
+  ]
+}

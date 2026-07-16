@@ -1,0 +1,55 @@
+[
+  {
+    "name": "Nativo",
+    "company": "Bayer Pakistan",
+    "productType": "Fungicide",
+    "activeIngredient": "Tebuconazole + Trifloxystrobin",
+    "supportedCrops": [
+      "Rice",
+      "Wheat",
+      "Chili",
+      "Onion"
+    ],
+    "supportedDiseases": [
+      "Blast",
+      "Leaf Rust",
+      "Powdery Mildew",
+      "Purple Blotch"
+    ],
+    "officialProductUrl": "https://www.crop.bayer.com.pk/products/nativo.aspx",
+    "notes": "Curative and protective action."
+  },
+  {
+    "name": "Infinito",
+    "company": "Bayer Pakistan",
+    "productType": "Fungicide",
+    "activeIngredient": "Fluopicolide + Propamocarb Hydrochloride",
+    "supportedCrops": [
+      "Potato",
+      "Tomato",
+      "Onion"
+    ],
+    "supportedDiseases": [
+      "Late Blight",
+      "Downy Mildew"
+    ],
+    "officialProductUrl": "https://www.crop.bayer.com.pk/products/infinito.aspx",
+    "notes": "Excellent weather resistance."
+  },
+  {
+    "name": "Confidor",
+    "company": "Bayer Pakistan",
+    "productType": "Insecticide",
+    "activeIngredient": "Imidacloprid 200 SL",
+    "supportedCrops": [
+      "Cotton",
+      "Chili",
+      "Onion"
+    ],
+    "supportedDiseases": [
+      "Cotton Leaf Curl Virus vector control (Whiteflies)"
+    ],
+    "officialProductUrl": "https://www.crop.bayer.com.pk/products/confidor.aspx",
+    "notes": "Systemic sucking pest protection."
+  }
+]
