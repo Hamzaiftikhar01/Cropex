@@ -294,8 +294,6 @@ export function parseDiseaseAnalysis(rawContent) {
  * @returns {Promise<Object>} Core identification result
  */
 export async function analyzeCropImage(imageInput) {
-  requireApiKey();
-
   if (!imageInput) {
     throw new GroqServiceError('A crop image is required for analysis.', {
       code: GroqErrorCode.INVALID_INPUT,
@@ -307,6 +305,34 @@ export async function analyzeCropImage(imageInput) {
       ? await fileToBase64DataUrl(imageInput)
       : imageInput;
 
+  const apiKey = getGroqApiKey();
+
+  // If no client-side API key is available, use the secure backend proxy endpoint
+  if (!apiKey) {
+    try {
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: imageDataUrl }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Server returned status ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      throw new GroqServiceError(
+        `Failed to analyze crop image via secure API proxy: ${error.message}`,
+        { code: GroqErrorCode.REQUEST_FAILED, cause: error }
+      );
+    }
+  }
+
+  // Fallback: If client-side API key is configured (local dev), run request client-side
   const systemMessage = {
     role: 'system',
     content: `You are CropMedic AI, an expert agricultural vision assistant.
