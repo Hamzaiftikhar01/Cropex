@@ -1,11 +1,11 @@
 function Contact() {
   const contactInfo = {
-    name: 'Muhammad Abdullah Khan',
+    name: 'Hamza Iftikhar',
     role: 'Lead AI Engineer & Fullstack Developer',
-    email: 'mabdullahkhan.tech@gmail.com',
-    github: 'https://github.com/Abdullah01607',
-    linkedin: 'https://linkedin.com/in/abdullah-khan',
-    portfolio: 'https://github.com/Abdullah01607/CropMedic-AI',
+    email: 'hamzaiftikhar@gmail.com',
+    github: 'https://github.com/Hamzaiftikhar01',
+    linkedin: 'https://linkedin.com/in/hamza-iftikhar',
+    portfolio: 'https://github.com/Hamzaiftikhar01/Crop-Medic-Ai',
     description: 'Specializing in computer vision integrations, robust offline architectures, and modular targeted crawlers for agricultural technologies.'
   };
 
@@ -75,7 +75,7 @@ function Contact() {
                   rel="noopener noreferrer"
                   className="text-sm font-bold text-crop-600 hover:text-crop-700 dark:text-crop-400 dark:hover:text-crop-300 flex items-center gap-1"
                 >
-                  github.com/Abdullah01607
+                  github.com/Hamzaiftikhar01
                   <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
@@ -94,7 +94,7 @@ function Contact() {
                   rel="noopener noreferrer"
                   className="text-sm font-bold text-crop-600 hover:text-crop-700 dark:text-crop-400 dark:hover:text-crop-300 flex items-center gap-1"
                 >
-                  linkedin.com/in/abdullah-khan
+                  linkedin.com/in/hamza-iftikhar
                   <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>

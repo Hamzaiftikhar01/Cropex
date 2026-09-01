@@ -1,4 +1,8 @@
+import { useLanguage } from '../context/LanguageContext';
+
 function About() {
+  const { t } = useLanguage();
+
   return (
     <section id="about" className="bg-earth-50/50 py-16 sm:py-24 text-left transition-colors duration-200 dark:bg-earth-900/50">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
@@ -6,101 +10,93 @@ function About() {
         {/* Title */}
         <div className="text-center mb-12">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-crop-50 px-3 py-1 text-xs font-semibold text-crop-800 ring-1 ring-crop-100 dark:bg-crop-950/30 dark:text-crop-300 dark:ring-crop-900/30">
-            🌱 About CropMedic AI
+            🌱 About Cropex
           </span>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-earth-900 sm:text-4xl dark:text-earth-50">
-            Intelligent Offline Agricultural Assistant
+            Your AI Companion for Smarter Farming
           </h2>
-          <p className="mt-4 text-earth-500 max-w-xl mx-auto dark:text-earth-400">
-            CropMedic AI empowers farmers with instantaneous, expert-level crop diagnosis and treatment suggestions without requiring internet search operations.
+          <p className="mt-4 text-base text-earth-500 max-w-2xl mx-auto dark:text-earth-450 leading-relaxed font-semibold">
+            Cropex is an AI-powered multilingual smart farming platform designed to help farmers predict crop diseases, optimize water usage, forecast harvest yield potential, and get instant agricultural insights.
           </p>
         </div>
 
         <div className="space-y-8">
-          {/* Card 1: Core Purpose */}
+          {/* Card 1: Main Mission */}
           <div className="rounded-2xl border border-earth-100 bg-white p-6 sm:p-8 shadow-soft transition-all hover:shadow-card dark:border-earth-800 dark:bg-earth-850">
             <h3 className="text-lg font-bold text-earth-900 dark:text-earth-100 flex items-center gap-2">
-              <span>🎯</span> Core Purpose
+              <span>🎯</span> Our Core Mission
             </h3>
-            <p className="mt-3 text-sm leading-relaxed text-earth-650 dark:text-earth-350">
-              Modern agriculture is severely impacted by crop diseases that spread rapidly and destroy yields. CropMedic AI was designed specifically for crop advisors, farmers, and extension workers who need high-confidence, actionable diagnostic assistance directly in the field. By utilizing local offline knowledge and strict privacy-focused queries, it ensures immediate support whenever and wherever it is needed.
+            <p className="mt-3 text-sm leading-relaxed text-earth-650 dark:text-earth-350 font-medium">
+              Traditional disease detection tools only alert farmers after visible leaf damage has already ruined the crop. Cropex stands for <strong>Prevention &gt; Detection</strong>. By analyzing micro-climate weather trends, soil types, and crop growth stages, the platform predicts outbreak probabilities beforehand, giving farmers an actionable window to protect their crop yield.
             </p>
           </div>
 
-          {/* Card 2: How it works */}
+          {/* Card 2: 5 Integrated Smart Modules */}
           <div className="rounded-2xl border border-earth-100 bg-white p-6 sm:p-8 shadow-soft transition-all hover:shadow-card dark:border-earth-800 dark:bg-earth-850">
             <h3 className="text-lg font-bold text-earth-900 dark:text-earth-100 flex items-center gap-2">
-              <span>🧠</span> How AI Analysis Works
+              <span>🚀</span> 5 Genuinely Working Core Modules
             </h3>
-            <p className="mt-3 text-sm leading-relaxed text-earth-650 dark:text-earth-350">
-              CropMedic AI uses the state-of-the-art <strong>meta-llama/llama-4-scout-17b-16e-instruct</strong> vision model via Groq's high-speed API to analyze uploading crop pictures.
-            </p>
-            <ul className="mt-4 space-y-3 pl-2">
-              <li className="text-sm text-earth-650 flex items-start gap-2.5 dark:text-earth-350">
-                <span className="text-crop-600 mt-1 select-none text-[8px]">•</span>
-                <span className="flex-1"><strong>Vision Recognition</strong>: Evaluates visual patterns, lesions, yellowing, and mold formations.</span>
-              </li>
-              <li className="text-sm text-earth-650 flex items-start gap-2.5 dark:text-earth-350">
-                <span className="text-crop-600 mt-1 select-none text-[8px]">•</span>
-                <span className="flex-1"><strong>Structured Outputs</strong>: Enforces strict structured JSON schemas directly at the API completions level.</span>
-              </li>
-              <li className="text-sm text-earth-650 flex items-start gap-2.5 dark:text-earth-350">
-                <span className="text-crop-600 mt-1 select-none text-[8px]">•</span>
-                <span className="flex-1"><strong>Non-Crop Rejection</strong>: Instantly ignores non-plant uploads to preserve resources and prevent user accidents.</span>
-              </li>
-            </ul>
+            <div className="mt-4 space-y-4">
+              <div className="border-l-2 border-crop-500 pl-4">
+                <h4 className="text-sm font-bold text-earth-850 dark:text-earth-200">1. Agricultural Weather Intelligence</h4>
+                <p className="text-xs text-earth-550 dark:text-earth-400 mt-1">
+                  Fetches live forecast variables directly from Open-Meteo with local coordinate calibrations. Flags active danger warnings (frost, heatwaves, heavy rainfall) alongside advice on crop impact.
+                </p>
+              </div>
+
+              <div className="border-l-2 border-crop-500 pl-4">
+                <h4 className="text-sm font-bold text-earth-850 dark:text-earth-200">2. Proactive Disease Risk & Outbreak Warnings</h4>
+                <p className="text-xs text-earth-550 dark:text-earth-400 mt-1">
+                  Calculates mathematical disease spore thresholds (Late Blight for Tomato/Potato, Rust for Wheat, Blast for Rice) based on 7-day average temperatures and relative humidity readings.
+                </p>
+              </div>
+
+              <div className="border-l-2 border-crop-500 pl-4">
+                <h4 className="text-sm font-bold text-earth-850 dark:text-earth-200">3. Hydrodynamic Smart Irrigation Scheduler</h4>
+                <p className="text-xs text-earth-550 dark:text-earth-400 mt-1">
+                  Recommends watering requirements by combining soil characteristics (Sandy, Loamy, Clay) with crop age factors, evaporation adjustments, and rain saving offsets.
+                </p>
+              </div>
+
+              <div className="border-l-2 border-crop-500 pl-4">
+                <h4 className="text-sm font-bold text-earth-850 dark:text-earth-200">4. Explainable Yield Regression Analytics</h4>
+                <p className="text-xs text-earth-550 dark:text-earth-400 mt-1">
+                  Forecasts expected yield ranges (maunds/acre) using a mathematical model that weights climate anomalies, sowing window alignments, and soil texture coefficients.
+                </p>
+              </div>
+
+              <div className="border-l-2 border-crop-500 pl-4">
+                <h4 className="text-sm font-bold text-earth-850 dark:text-earth-200">5. Multilingual AI Assistant with Voice Output</h4>
+                <p className="text-xs text-earth-550 dark:text-earth-400 mt-1">
+                  Provides unified agricultural guidance in English, Urdu, and Punjabi Shahmukhi script. Features browser-native Text-to-Speech (TTS) to read recommendations aloud, helping farmers with limited literacy.
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* Card 3: The Offline Knowledge Base */}
+          {/* Card 3: Manufacturer Registration Index */}
           <div className="rounded-2xl border border-earth-100 bg-white p-6 sm:p-8 shadow-soft transition-all hover:shadow-card dark:border-earth-800 dark:bg-earth-850">
             <h3 className="text-lg font-bold text-earth-900 dark:text-earth-100 flex items-center gap-2">
-              <span>📦</span> Local Knowledge Base & Company Scrapers
+              <span>📦</span> Offline registered database
             </h3>
-            <p className="mt-3 text-sm leading-relaxed text-earth-650 dark:text-earth-350">
-              Unlike typical tools that perform live web searches during farmer use, CropMedic AI relies strictly on an offline local database indexed locally. This prevents web latency, protects data, and functions correctly regardless of external website availability.
+            <p className="mt-3 text-sm leading-relaxed text-earth-650 dark:text-earth-350 font-medium">
+              To guarantee immediate support in rural fields with weak cell connectivity, Cropex bundles a local index of officially registered chemical crop treatments. Scrapers gather these indices from leading manufacturers in Pakistan:
             </p>
-            <p className="mt-3 text-sm leading-relaxed text-earth-650 dark:text-earth-350">
-              The database is updated periodically using our developer-only update pipeline. This pipeline uses modular crawlers that index crop protection solutions from trusted official manufacturers including:
-            </p>
-            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs font-semibold text-earth-800 dark:text-earth-200">
+            <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-semibold text-earth-800 dark:text-earth-200">
               <span className="bg-earth-100 px-3 py-1.5 rounded-lg text-center dark:bg-earth-800">FMC Pakistan</span>
               <span className="bg-earth-100 px-3 py-1.5 rounded-lg text-center dark:bg-earth-800">Suncrop Group</span>
               <span className="bg-earth-100 px-3 py-1.5 rounded-lg text-center dark:bg-earth-800">Syngenta Pakistan</span>
               <span className="bg-earth-100 px-3 py-1.5 rounded-lg text-center dark:bg-earth-800">Bayer Pakistan</span>
-              <span className="bg-earth-100 px-3 py-1.5 rounded-lg text-center dark:bg-earth-800">BASF Pakistan</span>
-              <span className="bg-earth-100 px-3 py-1.5 rounded-lg text-center dark:bg-earth-800">Four Brothers</span>
             </div>
           </div>
 
-          {/* Project Creator Card */}
-          <div className="rounded-2xl border border-earth-100 bg-white p-6 sm:p-8 shadow-soft transition-all hover:shadow-card dark:border-earth-800 dark:bg-earth-850">
-            <h3 className="text-lg font-bold text-earth-900 dark:text-earth-100 flex items-center gap-2">
-              <span>👨‍💻</span> Project Creator
-            </h3>
-            <p className="mt-3 text-sm leading-relaxed text-earth-650 dark:text-earth-350">
-              CropMedic AI was developed as a portfolio-ready agricultural intelligence assistant to bridge the gap between advanced deep learning vision models and local, offline-first farmer diagnostic needs.
-            </p>
-            <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-earth-100 pt-4 dark:border-earth-800">
-              <div>
-                <p className="text-sm font-bold text-earth-800 dark:text-earth-200">Muhammad Abdullah Khan</p>
-                <p className="text-xs text-earth-450 dark:text-earth-400">Lead AI Engineer & Fullstack Developer</p>
-              </div>
-              <a
-                href="mailto:mabdullahkhan.tech@gmail.com"
-                className="inline-flex items-center gap-2 rounded-xl bg-crop-50 px-4 py-2 text-xs font-bold text-crop-800 transition-all hover:bg-crop-100 dark:bg-crop-950/20 dark:text-crop-300 dark:hover:bg-crop-950/40 w-fit"
-              >
-                <span>✉️</span> mabdullahkhan.tech@gmail.com
-              </a>
-            </div>
-          </div>
-
-          {/* Card 4: Disclaimer */}
+          {/* Professional Disclaimer */}
           <div className="rounded-2xl border border-amber-200/80 bg-amber-50/50 p-6 sm:p-8 shadow-soft dark:border-amber-900/40 dark:bg-amber-950/20">
             <h3 className="text-lg font-bold text-amber-950 dark:text-amber-400 flex items-center gap-2">
               <span>⚠️</span> Professional Disclaimer
             </h3>
-            <p className="mt-3 text-sm leading-relaxed text-amber-900 dark:text-amber-300">
-              All diagnosis reports, chemical product listings, and crop treatment recommendations provided by CropMedic AI are for educational and informational purposes only. Artificial intelligence is a helper, not a replacement for on-site expert consultation. Farmers should always contact their local agricultural extension offices and carefully read and follow instructions on official manufacturer product labels before any chemical application.
+            <p className="mt-3 text-sm leading-relaxed text-amber-900 dark:text-amber-300 font-semibold italic">
+              All diagnosis reports, chemical product listings, and smart predictions provided by Cropex are for educational and informational purposes only. Farmers should consult qualified local agronomists and read official manufacturer product labels before applying crop chemicals.
             </p>
           </div>
         </div>

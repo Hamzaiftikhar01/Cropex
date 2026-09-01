@@ -11,11 +11,11 @@ function Footer() {
                 🌱
               </span>
               <span className="text-lg font-bold text-white">
-                CropMedic <span className="font-semibold text-crop-400">AI</span>
+                Crop<span className="font-semibold text-crop-400">ex</span>
               </span>
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed">
-              Empowering farmers with AI-driven crop disease detection and actionable agricultural insights.
+              Your AI Companion for Smarter Farming. Predict Early. Protect Crops. Empower Farmers.
             </p>
           </div>
 
@@ -49,20 +49,20 @@ function Footer() {
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-widest text-white">Creator & Contact</h4>
             <ul className="mt-4 space-y-2.5 text-sm">
-              <li className="text-earth-200 font-medium">Muhammad Abdullah Khan</li>
+              <li className="text-earth-200 font-medium">Hamza Iftikhar</li>
               <li>
-                <a href="mailto:mabdullahkhan.tech@gmail.com" className="transition-colors hover:text-white underline decoration-crop-500/50 hover:decoration-white">
-                  mabdullahkhan.tech@gmail.com
+                <a href="mailto:hamzaiftikhar@gmail.com" className="transition-colors hover:text-white underline decoration-crop-500/50 hover:decoration-white">
+                  hamzaiftikhar@gmail.com
                 </a>
               </li>
-              <li>support@cropmedic.ai</li>
+              <li>support@cropex.ai</li>
             </ul>
           </div>
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-earth-800 pt-8 sm:flex-row">
           <p className="text-sm text-earth-500">
-            &copy; {currentYear} CropMedic AI. Created by Muhammad Abdullah Khan. All rights reserved.
+            &copy; {currentYear} Cropex. Created by Hamza Iftikhar. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-earth-500">
             <span className="cursor-default">Privacy Policy</span>

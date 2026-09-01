@@ -1,13 +1,17 @@
 import { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 
-const navLinks = [
-  { label: 'Home', view: 'home' },
-  { label: 'About', view: 'about' },
-  { label: 'Contact', view: 'contact' },
-];
-
-function Navbar({ currentView, onNavigate, onOpenSettings }) {
+function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { language, toggleLanguage, t } = useLanguage();
+
+  const navLinks = [
+    { label: t('dashboard'), view: 'dashboard' },
+    { label: t('weather'), view: 'weather' },
+    { label: t('disease'), view: 'disease' },
+    { label: t('irrigation'), view: 'irrigation' },
+    { label: t('yield'), view: 'yield' },
+  ];
 
   const handleLinkClick = (e, view) => {
     e.preventDefault();
@@ -15,13 +19,19 @@ function Navbar({ currentView, onNavigate, onOpenSettings }) {
     setMenuOpen(false);
   };
 
-  const handleAnalyzeClick = (e) => {
+  const handleScanClick = (e) => {
     e.preventDefault();
-    onNavigate('home');
+    onNavigate('disease');
     setMenuOpen(false);
     setTimeout(() => {
       document.getElementById('upload')?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
+  };
+
+  const getLanguageLabel = () => {
+    if (language === 'en') return '🇺🇸 EN';
+    if (language === 'ur') return '🇵🇰 اردو';
+    return '🇵🇰 پنجابی';
   };
 
   return (
@@ -30,20 +40,20 @@ function Navbar({ currentView, onNavigate, onOpenSettings }) {
         
         {/* Logo */}
         <a
-          href="#home"
-          onClick={(e) => handleLinkClick(e, 'home')}
+          href="#dashboard"
+          onClick={(e) => handleLinkClick(e, 'dashboard')}
           className="flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-crop-500 rounded-lg p-1"
         >
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-crop-600 text-base text-white shadow-sm shadow-crop-600/20">
             🌱
           </span>
           <span className="text-lg font-bold tracking-tight text-earth-900 dark:text-earth-50">
-            CropMedic <span className="font-semibold text-crop-600 dark:text-crop-400">AI</span>
+            Crop<span className="font-semibold text-crop-600 dark:text-crop-400">ex</span>
           </span>
         </a>
 
         {/* Desktop Links */}
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="hidden items-center gap-3 lg:gap-4 md:flex">
           {navLinks.map((link) => {
             const isActive = currentView === link.view;
             return (
@@ -51,7 +61,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings }) {
                 <a
                   href={`#${link.view}`}
                   onClick={(e) => handleLinkClick(e, link.view)}
-                  className={`text-sm font-semibold transition-colors duration-150 py-1.5 px-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-crop-500 ${
+                  className={`text-xs lg:text-sm font-bold transition-colors duration-150 py-1.5 px-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-crop-500 ${
                     isActive
                       ? 'text-crop-600 bg-crop-50/50 dark:text-crop-400 dark:bg-crop-950/20'
                       : 'text-earth-500 hover:text-earth-900 dark:text-earth-400 dark:hover:text-earth-100'
@@ -64,15 +74,31 @@ function Navbar({ currentView, onNavigate, onOpenSettings }) {
           })}
         </ul>
 
-        {/* Buttons (Analyze & Settings Toggle) */}
-        <div className="hidden items-center gap-3 md:flex">
+        {/* Buttons (Scan, Language & Settings Toggle) */}
+        <div className="hidden items-center gap-2.5 md:flex">
           <a
             href="#upload"
-            onClick={handleAnalyzeClick}
-            className="rounded-xl bg-crop-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-crop-600/20 transition-all hover:bg-crop-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-crop-500"
+            onClick={handleScanClick}
+            className="rounded-xl bg-crop-600 px-4 py-2.5 text-xs lg:text-sm font-semibold text-white shadow-sm shadow-crop-600/20 transition-all hover:bg-crop-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-crop-500"
           >
-            Analyze Crop
+            {t('scanLeaf')}
           </a>
+
+          {/* User Display */}
+          {currentUser && (
+            <span className="text-xs font-bold text-earth-650 dark:text-earth-300 bg-earth-50 dark:bg-earth-900 border border-earth-100 dark:border-earth-800 px-2.5 py-2.5 rounded-xl shadow-xs">
+              👤 {currentUser.fullName}
+            </span>
+          )}
+
+          {/* Urdu / English / Punjabi Switcher */}
+          <button
+            type="button"
+            onClick={toggleLanguage}
+            className="rounded-xl border border-earth-200 bg-white px-3 py-2 text-xs font-bold text-earth-700 shadow-soft hover:bg-earth-55 hover:text-earth-950 dark:border-earth-850 dark:bg-earth-850 dark:text-earth-300 dark:hover:bg-earth-800 cursor-pointer transition-colors"
+          >
+            {getLanguageLabel()}
+          </button>
           
           <button
             type="button"
@@ -85,10 +111,29 @@ function Navbar({ currentView, onNavigate, onOpenSettings }) {
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           </button>
+
+          {/* Logout Button */}
+          {currentUser && (
+            <button
+              type="button"
+              onClick={onLogout}
+              className="rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-xs font-bold text-red-700 px-3.5 py-2.5 dark:border-red-900/30 dark:bg-red-950/20 dark:text-red-300 dark:hover:bg-red-900/35 cursor-pointer transition-colors"
+            >
+              {t('signOut')}
+            </button>
+          )}
         </div>
 
         {/* Mobile menu and settings toggles */}
         <div className="flex items-center gap-2 md:hidden">
+          <button
+            type="button"
+            onClick={toggleLanguage}
+            className="rounded-xl border border-earth-200 bg-white px-2.5 py-1.5 text-xs font-bold text-earth-700 shadow-soft dark:border-earth-850 dark:bg-earth-850 dark:text-earth-300 focus:outline-none focus:ring-2 focus:ring-crop-500 cursor-pointer"
+          >
+            {getLanguageLabel()}
+          </button>
+
           <button
             type="button"
             onClick={onOpenSettings}
@@ -121,7 +166,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings }) {
 
       {/* Mobile Drawer */}
       {menuOpen && (
-        <div className="border-t border-earth-100 bg-white px-4 py-4 md:hidden dark:border-earth-800 dark:bg-earth-950 transition-colors duration-200">
+        <div className="border-t border-earth-100 bg-white px-4 py-4 md:hidden dark:border-earth-800 dark:bg-earth-950 transition-colors duration-200 text-left">
           <ul className="flex flex-col gap-1">
             {navLinks.map((link) => {
               const isActive = currentView === link.view;
@@ -144,11 +189,29 @@ function Navbar({ currentView, onNavigate, onOpenSettings }) {
           </ul>
           <a
             href="#upload"
-            onClick={handleAnalyzeClick}
+            onClick={handleScanClick}
             className="mt-3 block rounded-xl bg-crop-600 px-5 py-2.5 text-center text-sm font-semibold text-white shadow-sm"
           >
-            Analyze Crop
+            {t('scanLeaf')}
           </a>
+
+          {/* Mobile User details and sign out */}
+          {currentUser && (
+            <div className="mt-4 pt-4 border-t border-earth-100 dark:border-earth-800">
+              <div className="text-xs font-bold text-earth-800 dark:text-earth-200 px-3">
+                👤 {currentUser.fullName}
+              </div>
+              <button
+                onClick={(e) => {
+                  onLogout();
+                  setMenuOpen(false);
+                }}
+                className="w-full mt-3 block rounded-xl bg-red-50 text-red-700 hover:bg-red-100 py-2.5 text-center text-sm font-semibold dark:bg-red-950/20 dark:text-red-300 dark:hover:bg-red-900/35 transition-colors cursor-pointer"
+              >
+                {t('signOut')}
+              </button>
+            </div>
+          )}
         </div>
       )}
     </header>

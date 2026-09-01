@@ -1,57 +1,63 @@
-# CropMedic AI 🌿
+# 🌾 Cropex — Your AI Farming Companion & Smart Agriculture Ecosystem
 
-CropMedic AI is a professional, production-ready agricultural intelligence assistant designed to enable offline-first plant disease diagnostics, preventative care plans, and officially registered chemical treatment listings. 
+> **Predict Early. Protect Crops. Empower Farmers.**
 
-Developed by **Muhammad Abdullah Khan** (mabdullahkhan.tech@gmail.com), this project bridges advanced machine learning vision diagnostics with robust local data registries, offering farmers and crop advisors instant guidance without relying entirely on active internet connections.
-
----
-
-## 🚀 Key Features
-
-* **Strict AI Vision Diagnostics**: Powered by the `meta-llama/llama-4-scout-17b-16e-instruct` vision model via Groq's high-speed completions API, returning strict JSON structured schemas.
-* **Non-Crop & Irrelevant Image Filtering**: Built-in safety heuristics prompt the vision pipeline to validate the image type first. If non-plant content is uploaded, the app raises a clear warning and halts api-overhead.
-* **Offline-First Local Knowledge Base**: Consolidates matches from the AI model with a local index (`diseaseIndex.json` and `products.json`) to return registered pesticide, fungicide, and herbicide solutions.
-* **Modular Developer Scraper Pipeline**: Python BeautifulSoup-based scraper modules target official agriculture company listings in Pakistan (FMC, Suncrop, Syngenta, Bayer) to feed the offline database.
-* **Link Audit Utility**: Includes a custom requests-based URL verification utility (`check_live_urls.py`) with session headers, retry rules, and status reports to catch broken product details links.
-* **Local Session History**: Persists the last 10 scans to the client browser's `localStorage` (excluding base64 image payloads to preserve storage quota) for immediate load/retrieval.
-* **Interactive Confirmations**: Replaces generic browser popups with premium custom React inline confirmation dialogues to preserve context and ensure smooth automated browser testing.
-* **Premium Client-Side PDFs**: Generates structured, multi-page PDF diagnosis reports with custom corporate color styling, clear sections, active hyperlinked recommendations, and legal disclaimers.
-* **Fully Responsive Light/Dark Modes**: Clean HSL-defined UI system with custom glassmorphism components styled using Tailwind CSS (v4) and vanilla CSS.
+Cropex is a complete **AI-powered smart farming platform** designed to help farmers predict crop diseases, reduce losses, improve yields, and make better farming decisions. Rather than simply detecting diseases after visible damage occurs, Cropex provides early warnings by combining early disease risk prediction, agricultural weather intelligence, smart irrigation scheduling, yield forecasting, and multilingual voice assistance.
 
 ---
 
-## 🔄 Workflows & Architecture
+## 🚀 Key Modules & System Features
 
-### 1. Unified Diagnostic Pipeline
-This flow illustrates how an uploaded leaf image is analyzed, filtered, matched against the local SQLite-equivalent JSON store, and delivered as a PDF report:
+### 1. Proactive Disease Outbreak Prediction (Outbreak Warnings)
+* Calculates crop-scoped disease outbreak risks (Late Blight for tomato/potato, Rust for wheat, Blast for rice) before visible symptoms damage foliage.
+* Computes risk thresholds dynamically based on 7-day average temperatures and relative humidity variables.
 
-```mermaid
-graph TD
-    A[Farmer Uploads Plant Leaf Photo] --> B[Convert to Base64 String]
-    B --> C[Groq Vision Completion API]
-    C --> D{Is agricultural crop detected?}
-    D -- No --> E[Display 'Please upload a clear plant photo' banner]
-    D -- Yes --> F[Extract Crop name & Disease tag]
-    F --> G[Search local diseaseIndex.json]
-    G --> H{Detailed disease registry found?}
-    H -- Yes --> I[Merge details and retrieve chemical treatments]
-    H -- No --> J[Load general precaution fallback with Notice]
-    I --> K[Update History list & Render result dashboard]
-    J --> K
-    K --> L[Generate Client-Side PDF Report]
-```
+### 2. Intelligent Agricultural Weather Advisor
+* Integrates coordinate-calibrated weather forecasts using real-time Open-Meteo API data.
+* Flags active regional alerts (frost, heatwaves, heavy rainfall) alongside actionable crop guidelines.
 
-### 2. Developer Data Collection Pipeline
-How scrapers harvest registrations and match active ingredients for crop protection:
+### 3. Smart Irrigation Scheduler
+* Implements a water-budget logic adjusting crop demand relative to growth stage factors.
+* Incorporates soil hydrodynamics (Sandy, Loamy, Clay) alongside evaporation multipliers and rain savings offsets to preserve aquifer reservoirs.
 
-```mermaid
-graph TD
-    A[Manufacturer Portals: FMC, Suncrop, Syngenta, Bayer] --> B[Modular Python Scrapers]
-    B --> C[BeautifulSoup4 DOM Parsing]
-    C --> D[Extract: Name, Type, Active Ingredient, URL, Details]
-    D --> E[Run check_live_urls.py Auditor]
-    E --> F[Generate reports/live_urls_report.json]
-    F --> G[Manually verify & build data/products.json]
+### 4. Explainable Yield Forecasting
+* Models expected harvest yields (maunds/acre) using a transparent regression engine.
+* Applies weights for sowing window alignments, temperature stresses, soil texture parameters, and disease risk factors.
+* Clamps regression multipliers to a 0.60 floor to prevent unrealistic compounding stress drops.
+
+### 5. Multilingual AI Assistant with Text-to-Speech (TTS)
+* Supports full localizations in **English, Urdu, and Punjabi (Shahmukhi script)**.
+* Integrated browser-native **Web Speech API (`speechSynthesis`)** that reads headlines and reasoning out loud. Uses standard Pakistani voices (`ur-PK` for Urdu/Punjabi and `en-US` for English) triggered strictly via user button gestures to bypass browser autoplay blocks.
+
+---
+
+## 🛠️ Unified System Flow
+
+```text
+                  REAL-WORLD ENVIRONMENT DATA
+                               │
+            ┌──────────────────┼──────────────────┐
+            │                  │                  │
+         Weather             Soil &            Farming
+         Forecasts           Profiles          Actions
+            │                  │                  │
+            └──────────────────┼──────────────────┘
+                               │
+                       CROPEX AGRI RULES
+                               │
+             ┌─────────────────┴─────────────────┐
+             │                                   │
+         Outbreaks                             Yields
+            │                                    │
+            └──────────────────┬─────────────────┘
+                               │
+                         PRIORITY LADDER
+                               │
+                         ADVISOR ENGINE
+                               │
+             ┌─────────────────┴─────────────────┐
+             │                                   │
+         Dashboard                          Voice (TTS)
 ```
 
 ---
@@ -59,43 +65,33 @@ graph TD
 ## 📂 Project Structure
 
 ```text
+├── api/
+│   ├── analyze.js             # Vercel serverless vision diagnostic proxy
+│   └── rephrase.js            # Vercel serverless text rephraser proxy
 ├── data/
 │   ├── diseaseIndex.json      # Offline crop-disease diagnostics database
 │   └── products.json          # Scraped agricultural products catalog
-├── reports/
-│   └── live_urls_report.json  # Link audit outputs from url check utility
-├── scripts/
-│   ├── baseScraper.py         # Modular base class for crawlers
-│   ├── bayerScraper.py        # Bayer CropScience crawler
-│   ├── fmcScraper.py          # FMC Corporation crawler
-│   ├── suncropScraper.py      # Suncrop Group crawler
-│   ├── syngentaScraper.py     # Syngenta Pakistan crawler
-│   ├── check_live_urls.py     # Link checker audit tool
-│   └── updateDatabase.py      # Orchestrates scraping output to data/
 ├── src/
 │   ├── components/
-│   │   ├── About.jsx          # Project mission & creator details
-│   │   ├── AnalysisResult.jsx # Full diagnostic result & action panel
-│   │   ├── Contact.jsx        # Developer contact forms & socials
-│   │   ├── Features.jsx       # Value propositions grid
-│   │   ├── Footer.jsx         # Copyright & quick links
-│   │   ├── HistoryList.jsx    # Offline-saved scans manager
-│   │   ├── Navbar.jsx         # Responsive main menu & theme triggers
-│   │   ├── SettingsModal.jsx  # Dark/light theme & local storage controls
-│   │   └── UploadCard.jsx     # File drag-and-drop & processing status
+│   │   ├── About.jsx          # Smart ecosystem details
+│   │   ├── AdvisorCard.jsx    # Prioritized urgency-coded AI card with TTS
+│   │   ├── FieldProfileSelector.jsx # Switch presets (Wheat/Tomato/Cotton)
+│   │   ├── Navbar.jsx         # Header containing 3-way language cycle selector
+│   │   └── SettingsModal.jsx  # Dark/light theme & local storage controls
+│   ├── context/
+│   │   └── LanguageContext.jsx# Custom i18n hook supporting template parameters
+│   ├── locales/
+│   │   └── translations.js    # EN / UR / PA Shahmukhi vocabulary dictionaries
 │   ├── pages/
-│   │   └── Home.jsx           # Main orchestrator for diagnostics
+│   │   ├── AuthView.jsx       # Bilingual login, signup, and profile onboarding
+│   │   ├── DashboardView.jsx  # Automatic entry dashboard with visual loader
+│   │   └── DiseaseView.jsx    # Diagnostic scanner with simulated demo scans
 │   ├── services/
-│   │   ├── aiService.js       # Groq OpenAI-compatible API interface
-│   │   └── knowledgeService.js# Search module linking AI outputs to data/
+│   │   └── farmAdvisor.js     # Deterministic advisor engine & rephrase caller
 │   ├── utils/
-│   │   └── pdfGenerator.js    # Client-side multi-page PDF builder
-│   ├── App.jsx                # Global routes and theme configuration
+│   │   └── agriRules.js       # Outbreak risk formulas, irrigation limits, yield regression
+│   ├── App.jsx                # Global router and auth session gates
 │   └── main.jsx               # Entry script
-├── index.html                 # HTML template with SEO tags
-├── package.json               # Frontend dependencies
-├── vite.config.js             # Vite configuration
-└── .gitignore                 # Excluded directories (modules, build, pycache)
 ```
 
 ---
@@ -104,59 +100,55 @@ graph TD
 
 ### Prerequisites
 * **Node.js**: v18.0.0 or higher
-* **Python**: v3.11.0 or higher (required for crawling scripts)
 * **Groq API Key**: Obtain a key from the [Groq Console](https://console.groq.com/keys).
 
-### 1. Setup the Web Client
-Clone the repository, install npm packages, configure environment settings, and boot the hot-reloading development server:
+### Setup Web Client
+Clone the repository, install packages, and boot the hot-reloading development server:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Abdullah01607/CropMedic-AI.git
-cd CropMedic-AI
+git clone https://github.com/Hamzaiftikhar01/Crop-Medic-Ai.git
+cd Crop-Medic-Ai
 
 # Install dependencies
 npm install
 
 # Setup environment variables
-# Copy .env.example into .env and edit with your actual key
+# Add your GROQ API KEY as VITE_GROQ_API_KEY
 cp .env.example .env
 
 # Run the development environment
 npm run dev
 ```
 
-### 2. Setup Crawlers & Audit Tools (Developer-only)
-The scraper modules rely on standard Python libraries. Install requests and beautifulsoup4:
-
-```bash
-# Install python packages
-pip install requests beautifulsoup4
-
-# Audit current URLs in products database
-python scripts/check_live_urls.py
-
-# Run targeted manufacturer scrapers
-python scripts/fmcScraper.py
-python scripts/suncropScraper.py
-```
-
 ---
 
-## 🛡️ Limitations & Future Improvements
-1. **Manufacturer Antispam blocks (403)**: Major company sites (Bayer, Syngenta) currently protect their sites using bot-detection. Future updates can leverage stealth-playwright configurations or rotate user-agent pools to bypass these barriers.
-2. **Offline Expansion**: Broadening the local database mappings in `diseaseIndex.json` to cover sub-varieties of crops and regional biological treatments.
-3. **PWA Integration**: Upgrading the React container to a Progressive Web App (PWA) to allow complete asset-caching for fieldwork without internet access.
+## 🧪 18-Point Combinatorial Verification Matrix
 
----
+Before submitting the project, verify that the AI Advisor and Speech output render complete, correct, and localized text across all variables:
 
-## 👨‍💻 Project Creator & Lead Developer
-* **Name**: Muhammad Abdullah Khan
-* **Email**: mabdullahkhan.tech@gmail.com
-* **GitHub**: [Abdullah01607](https://github.com/Abdullah01607)
-* **LinkedIn**: [Muhammad Abdullah Khan](https://linkedin.com/in/abdullah-khan)
+| Test | Profile Preset | Selected Language | Network State | Expected Priority Headline | Expected Urgency | TTS Voice |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **1** | A (Wheat) | EN (English) | Online | General status | Low (🟢 Green) | en-US |
+| **2** | A (Wheat) | UR (Urdu) | Online | General status | Low (🟢 Green) | ur-PK |
+| **3** | A (Wheat) | PA (Punjabi) | Online | General status | Low (🟢 Green) | ur-PK (fallback) |
+| **4** | A (Wheat) | EN (English) | Offline | General status | Low (🟢 Green) | en-US |
+| **5** | A (Wheat) | UR (Urdu) | Offline | General status | Low (🟢 Green) | ur-PK |
+| **6** | A (Wheat) | PA (Punjabi) | Offline | General status | Low (🟢 Green) | ur-PK (fallback) |
+| **7** | B (Tomato) | EN (English) | Online | Disease (Late Blight) | High (🔴 Red) | en-US |
+| **8** | B (Tomato) | UR (Urdu) | Online | Disease (Late Blight) | High (🔴 Red) | ur-PK |
+| **9** | B (Tomato) | PA (Punjabi) | Online | Disease (Late Blight) | High (🔴 Red) | ur-PK (fallback) |
+| **10**| B (Tomato) | EN (English) | Offline | Disease (Late Blight) | High (🔴 Red) | en-US |
+| **11**| B (Tomato) | UR (Urdu) | Offline | Disease (Late Blight) | High (🔴 Red) | ur-PK |
+| **12**| B (Tomato) | PA (Punjabi) | Offline | Disease (Late Blight) | High (🔴 Red) | ur-PK (fallback) |
+| **13**| C (Cotton) | EN (English) | Online | Irrigation (Now) | High (🔴 Red) | en-US |
+| **14**| C (Cotton) | UR (Urdu) | Online | Irrigation (Now) | High (🔴 Red) | ur-PK |
+| **15**| C (Cotton) | PA (Punjabi) | Online | Irrigation (Now) | High (🔴 Red) | ur-PK (fallback) |
+| **16**| C (Cotton) | EN (English) | Offline | Irrigation (Now) | High (🔴 Red) | en-US |
+| **17**| C (Cotton) | UR (Urdu) | Offline | Irrigation (Now) | High (🔴 Red) | ur-PK |
+| **18**| C (Cotton) | PA (Punjabi) | Offline | Irrigation (Now) | High (🔴 Red) | ur-PK (fallback) |
 
 ---
 
 ## ⚖️ Legal Disclaimer
-CropMedic AI is an educational diagnostic helper. All chemical recommendations and prevention strategies are compiled from public index resources. Farmers must consult qualified agronomists and read official manufacturer product labels before applying crop chemicals.
+Cropex is a hackathon prototype demonstrating smart decision-support concepts using simplified agronomic models. Recommendations are illustrative and do not replace professional agricultural extension services or on-site agronomist inspections.

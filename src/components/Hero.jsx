@@ -1,12 +1,15 @@
 import cropImages from '../assets/cropImages';
+import { useLanguage } from '../context/LanguageContext';
 
 const stats = [
-  { value: '50+', label: 'Crop types supported' },
-  { value: '95%', label: 'Detection accuracy' },
-  { value: '24/7', label: 'Instant analysis' },
+  { value: '7+', label: 'Strategic crop models' },
+  { value: '18+', label: 'Combinatorial matrix tests' },
+  { value: '3', label: 'Local languages supported' },
 ];
 
 function Hero() {
+  const { t } = useLanguage();
+
   return (
     <section id="home" className="relative overflow-hidden bg-white dark:bg-earth-950 transition-colors duration-200">
       {/* Decorative dot matrix grid background ornament */}
@@ -24,44 +27,48 @@ function Hero() {
       <div className="relative mx-auto max-w-7xl px-4 pt-4 pb-16 sm:px-6 sm:pt-6 sm:pb-20 lg:px-8 lg:pt-8 lg:pb-24">
         <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16 xl:gap-20 lg:pt-6">
           <div className="max-w-xl lg:max-w-none text-left">
-            {/* Subtle leaf icon ornament above the badge to balance top-left whitespace */}
+            {/* Subtle leaf icon ornament */}
             <div className="mb-6 flex items-center gap-1.5 text-crop-600 dark:text-crop-400">
               <span className="text-xl">🍃</span>
               <span className="text-[10px] font-bold uppercase tracking-wider text-crop-600/90 dark:text-crop-400/90">
-                Premium Portfolio Care Edition
+                Your AI Companion for Smarter Farming
               </span>
             </div>
 
             <span className="inline-flex items-center gap-2 rounded-full border border-earth-200 bg-white px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-earth-600 shadow-sm dark:border-earth-800 dark:bg-earth-850 dark:text-earth-300">
               <span className="h-1.5 w-1.5 rounded-full bg-crop-500" />
-              Agricultural Intelligence
+              Agricultural Operating System
             </span>
 
             <h1 className="mt-8 text-4xl font-bold leading-[1.1] tracking-tight text-earth-900 sm:text-5xl lg:text-[3.25rem] xl:text-6xl dark:text-earth-50">
-              Smarter crop care,{' '}
-              <span className="text-crop-600 dark:text-crop-400">healthier harvests</span>
+              Predict Early. <br className="hidden sm:inline" />
+              <span className="text-crop-600 dark:text-crop-400">Protect Crops. Empower Farmers.</span>
             </h1>
 
-            <p className="mt-6 text-lg leading-relaxed text-earth-500 sm:text-xl dark:text-earth-400">
-              Upload a photo and receive instant disease detection, treatment
-              guidance, and prevention insights — built for modern farming.
+            <p className="mt-6 text-base sm:text-lg leading-relaxed text-earth-500 dark:text-earth-400 font-medium">
+              Cropex is an AI-powered smart farming platform built to help farmers predict crop diseases before major symptoms appear, prevent crop losses, optimize irrigation, understand weather impacts, and receive voice-assisted agricultural guidance in English, Urdu, and Punjabi.
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
               <a
                 href="#upload"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-crop-600 px-7 py-3.5 text-sm font-semibold text-white shadow-md shadow-crop-600/20 transition-all hover:bg-crop-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-crop-500"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-crop-600 px-7 py-3.5 text-sm font-semibold text-white shadow-md shadow-crop-600/20 transition-all hover:bg-crop-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-crop-500 cursor-pointer"
               >
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                Upload Crop Image
+                {t('scanLeaf')}
               </a>
               <a
-                href="#features"
-                className="inline-flex items-center justify-center rounded-xl border border-earth-200 bg-white px-7 py-3.5 text-sm font-semibold text-earth-700 shadow-sm transition-all hover:border-earth-300 hover:bg-earth-50 hover:shadow-md dark:border-earth-800 dark:bg-earth-850 dark:text-earth-200 dark:hover:bg-earth-800"
+                href="#upload"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('upload')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="inline-flex items-center justify-center rounded-xl border border-earth-200 bg-white px-7 py-3.5 text-sm font-semibold text-earth-700 shadow-sm transition-all hover:border-earth-300 hover:bg-earth-50 hover:shadow-md dark:border-earth-800 dark:bg-earth-850 dark:text-earth-200 dark:hover:bg-earth-800 cursor-pointer"
               >
-                Explore Features
+                Explore Modules
               </a>
             </div>
 
@@ -71,7 +78,7 @@ function Hero() {
                   <p className="text-2xl font-bold tracking-tight text-earth-900 sm:text-3xl dark:text-earth-100">
                     {stat.value}
                   </p>
-                  <p className="mt-1 text-xs leading-snug text-earth-500 sm:text-sm dark:text-earth-450">
+                  <p className="mt-1 text-xs leading-snug text-earth-500 sm:text-sm dark:text-earth-450 font-medium">
                     {stat.label}
                   </p>
                 </div>
@@ -139,7 +146,7 @@ function Hero() {
                 </span>
                 <div className="text-left">
                   <p className="text-sm font-semibold text-earth-900 dark:text-earth-100">AI Verified</p>
-                  <p className="text-xs text-earth-500 dark:text-earth-400">Disease detection ready</p>
+                  <p className="text-xs text-earth-500 dark:text-earth-400 font-medium">Smart Agriculture System</p>
                 </div>
               </div>
             </div>
