@@ -15,7 +15,7 @@ function About() {
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-earth-900 sm:text-4xl dark:text-earth-50">
             Your AI Companion for Smarter Farming
           </h2>
-          <p className="mt-4 text-base text-earth-500 max-w-2xl mx-auto dark:text-earth-450 leading-relaxed font-semibold">
+          <p className="mt-4 text-base text-earth-500 max-w-2xl mx-auto dark:text-earth-300 leading-relaxed font-semibold">
             Cropex is an AI-powered multilingual smart farming platform designed to help farmers predict crop diseases, optimize water usage, forecast harvest yield potential, and get instant agricultural insights.
           </p>
         </div>

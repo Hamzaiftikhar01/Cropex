@@ -21,10 +21,10 @@ export default function AdvisorCard({ advice, loading, fieldProfile, weatherData
 
   if (loading || !advice) {
     return (
-      <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-6 shadow-soft animate-pulse flex flex-col gap-3">
-        <div className="h-4 w-32 bg-earth-200 dark:bg-earth-800 rounded"></div>
-        <div className="h-6 w-3/4 bg-earth-200 dark:bg-earth-800 rounded"></div>
-        <div className="h-4 w-5/6 bg-earth-200 dark:bg-earth-800 rounded"></div>
+      <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-5 sm:p-6 shadow-soft animate-pulse flex flex-col gap-3">
+        <div className="h-4 w-32 bg-earth-200 dark:bg-earth-800 rounded-lg"></div>
+        <div className="h-6 w-3/4 bg-earth-200 dark:bg-earth-800 rounded-lg"></div>
+        <div className="h-4 w-5/6 bg-earth-200 dark:bg-earth-800 rounded-lg"></div>
       </div>
     );
   }
@@ -99,7 +99,6 @@ export default function AdvisorCard({ advice, loading, fieldProfile, weatherData
 
   const style = getUrgencyStyles(advice.urgency);
 
-  // Trigger natural condition-aware voice in Urdu, Punjabi, or English
   const handleToggleSpeak = () => {
     if (isPlaying) {
       stopVoice();
@@ -162,14 +161,14 @@ export default function AdvisorCard({ advice, loading, fieldProfile, weatherData
               <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${style.bulletColor}`}></span>
               <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${style.bulletColor}`}></span>
             </span>
-            <span className="text-[11px] font-black uppercase tracking-wider opacity-85">
+            <span className="text-[11px] font-extrabold uppercase tracking-wider opacity-85">
               {t('verdictTitle')}
             </span>
-            <span className={`px-2.5 py-0.5 text-[10px] font-black rounded-full uppercase tracking-wider shadow-xs ${style.badgeBg}`}>
+            <span className={`px-2.5 py-0.5 text-[10px] font-extrabold rounded-full uppercase tracking-wider shadow-xs ${style.badgeBg}`}>
               {style.label}
             </span>
             {advice.source === 'llm' && (
-              <span className="text-[9px] bg-crop-600/10 text-crop-800 dark:bg-crop-400/20 dark:text-crop-300 px-2 py-0.5 rounded-full font-bold shadow-xs">
+              <span className="text-[9px] bg-crop-600/15 text-crop-800 dark:bg-crop-400/20 dark:text-crop-300 px-2 py-0.5 rounded-full font-bold shadow-xs">
                 🤖 AI
               </span>
             )}
@@ -179,10 +178,10 @@ export default function AdvisorCard({ advice, loading, fieldProfile, weatherData
           <button
             type="button"
             onClick={handleToggleSpeak}
-            className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-black border transition-all cursor-pointer shadow-sm self-start sm:self-auto ${
+            className={`h-9 inline-flex items-center justify-center gap-2 px-3.5 rounded-xl text-xs font-bold border transition-all cursor-pointer shadow-xs self-start sm:self-auto ${
               isPlaying 
                 ? 'bg-red-600 text-white border-red-700 animate-pulse' 
-                : 'bg-white/95 dark:bg-earth-900/95 border-current/25 hover:bg-white dark:hover:bg-earth-900 hover:scale-[1.02]'
+                : 'bg-white/95 dark:bg-earth-900/95 border-current/25 hover:bg-white dark:hover:bg-earth-900'
             }`}
             title={isPlaying ? "Stop Voice Output" : "Listen Detailed Recommendation"}
             aria-label="Toggle Voice Out Loud"
@@ -206,13 +205,13 @@ export default function AdvisorCard({ advice, loading, fieldProfile, weatherData
         </div>
 
         {/* Actionable Headline */}
-        <h3 className="text-lg sm:text-xl md:text-2xl font-black leading-tight tracking-tight">
+        <h3 className="text-lg sm:text-xl font-bold leading-tight tracking-tight text-left">
           {headline}
         </h3>
 
         {/* Explainable Reasoning */}
-        <div className="mt-4 pt-3.5 border-t border-current/10">
-          <h4 className="text-[11px] uppercase font-bold tracking-wider opacity-75">
+        <div className="mt-3.5 pt-3 border-t border-current/10 text-left">
+          <h4 className="text-[10px] uppercase font-bold tracking-wider opacity-75">
             {t('whyTitle')}
           </h4>
           <p className="mt-1 text-xs sm:text-sm font-medium leading-relaxed">
@@ -223,7 +222,7 @@ export default function AdvisorCard({ advice, loading, fieldProfile, weatherData
 
       {/* Secondary Signals Dropdown */}
       {renderedSecondaryNotes && renderedSecondaryNotes.length > 0 && (
-        <div className="mt-4 pt-3 border-t border-current/10 text-left">
+        <div className="mt-3.5 pt-3 border-t border-current/10 text-left">
           <button
             onClick={() => setShowSecondary(!showSecondary)}
             className="flex items-center gap-1.5 text-xs font-bold hover:opacity-80 transition-opacity focus:outline-none cursor-pointer"
@@ -233,7 +232,7 @@ export default function AdvisorCard({ advice, loading, fieldProfile, weatherData
           </button>
           
           {showSecondary && (
-            <ul className="mt-3 space-y-2 pl-3 list-disc text-xs font-semibold leading-relaxed border-l-2 border-current/20">
+            <ul className="mt-2.5 space-y-1.5 pl-3 list-disc text-xs font-semibold leading-relaxed border-l-2 border-current/20">
               {renderedSecondaryNotes.map((note, idx) => (
                 <li key={idx} className="opacity-90">{note}</li>
               ))}

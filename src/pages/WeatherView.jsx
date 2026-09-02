@@ -6,18 +6,18 @@ export default function WeatherView({ weatherData, loading, error, isFallback, f
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-crop-600"></div>
-        <p className="mt-4 text-earth-500 dark:text-earth-440 font-semibold font-medium">Loading regional weather intelligence...</p>
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <div className="animate-spin rounded-full h-10 w-10 border-2 border-crop-600 border-t-transparent"></div>
+        <p className="mt-4 text-xs font-semibold text-earth-500 dark:text-earth-400">Loading regional weather intelligence...</p>
       </div>
     );
   }
 
   if (error || !weatherData) {
     return (
-      <div className="bg-red-50 text-red-800 p-6 rounded-2xl border border-red-200 dark:bg-red-950/20 dark:text-red-300 dark:border-red-900/30 text-left">
-        <h4 className="font-bold text-lg font-black">Weather Data Error</h4>
-        <p className="text-sm mt-1">Failed to fetch meteorological data. Please check your internet connection.</p>
+      <div className="bg-red-50 text-red-800 p-5 rounded-2xl border border-red-200 dark:bg-red-950/20 dark:text-red-300 dark:border-red-900/30 text-left">
+        <h4 className="font-bold text-sm">Weather Telemetry Offline</h4>
+        <p className="text-xs mt-1">Failed to fetch meteorological data. Please check your internet connection.</p>
       </div>
     );
   }
@@ -25,7 +25,6 @@ export default function WeatherView({ weatherData, loading, error, isFallback, f
   const { current, daily } = weatherData;
   const coords = DISTRICT_COORDINATES[fieldProfile.district] || DISTRICT_COORDINATES['Faisalabad'];
 
-  // Calculate alerts based on forecast
   const alerts = [];
   const maxTemp = Math.max(...daily.map(d => d.tempMax));
   const minTemp = Math.min(...daily.map(d => d.tempMin));
@@ -70,7 +69,6 @@ export default function WeatherView({ weatherData, loading, error, isFallback, f
     });
   }
 
-  // Get weekday name translated
   const getWeekday = (dateStr) => {
     const d = new Date(dateStr);
     const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
@@ -81,7 +79,6 @@ export default function WeatherView({ weatherData, loading, error, isFallback, f
     return dayName;
   };
 
-  // Weather Code Emoji Picker
   const getWeatherEmoji = (code) => {
     if (code === 0) return '☀️';
     if (code === 1 || code === 2 || code === 3) return '⛅';
@@ -106,12 +103,7 @@ export default function WeatherView({ weatherData, loading, error, isFallback, f
       'Rain Showers': 'تیز بارش',
       'Thunderstorms': 'گرج چمک',
       'Overcast & Humid': 'ابر آلود اور نمی',
-      'Drizzle & Foggy': 'بوندا باندی اور دھند',
-      'Rainy & Humid': 'بارش اور نمی',
-      'Extreme Heat': 'شدید گرمی',
-      'Dry Heat / Dust Storm': 'لو اور مٹی کا طوفان',
-      'Breezy & Warm': 'تیز ہوا اور گرمی',
-      'Sunny & Windy': 'دھوپ اور ہوا'
+      'Extreme Heat': 'شدید گرمی'
     };
     return descMap[desc] || desc;
   };
@@ -132,29 +124,31 @@ export default function WeatherView({ weatherData, loading, error, isFallback, f
                   : 'bg-blue-50 border-blue-200 text-blue-900 dark:bg-blue-950/20 dark:border-blue-900/30 dark:text-blue-300'
               }`}
             >
-              <div className="font-bold flex-1">{alert.title}</div>
-              <div className="text-xs md:text-sm">{alert.desc}</div>
+              <div className="font-bold text-xs sm:text-sm flex-1">{alert.title}</div>
+              <div className="text-xs">{alert.desc}</div>
             </div>
           ))}
         </div>
       )}
 
       {/* Header Info */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-2 border-b border-earth-100 dark:border-earth-800">
         <div>
-          <h2 className="text-xl font-bold text-earth-900 dark:text-earth-50">{t('weather')}</h2>
-          <p className="text-xs text-earth-500 dark:text-earth-450 mt-0.5">
-            {t('district')}: <span className="font-semibold text-earth-700 dark:text-earth-300">{t('dist_' + fieldProfile.district.toLowerCase())}</span> ({coords.latitude}°N, {coords.longitude}°E)
+          <h2 className="text-xl sm:text-2xl font-bold text-earth-900 dark:text-earth-50 tracking-tight font-sans">
+            {t('weather')}
+          </h2>
+          <p className="text-xs text-earth-500 dark:text-earth-300 mt-0.5 font-medium">
+            {t('district')}: <span className="font-bold text-earth-700 dark:text-earth-300">{t('dist_' + fieldProfile.district.toLowerCase())}</span> ({coords.latitude}°N, {coords.longitude}°E)
           </p>
         </div>
         {isFallback && (
-          <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 shadow-sm">
+          <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 shadow-xs">
             📊 {t('switchPreset')}
           </span>
         )}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-3 items-stretch">
         {/* Current Weather Card */}
         <div className="bg-gradient-to-br from-crop-600 to-crop-700 text-white rounded-2xl p-6 shadow-md md:col-span-1 flex flex-col justify-between">
           <div>
@@ -167,7 +161,7 @@ export default function WeatherView({ weatherData, loading, error, isFallback, f
             </div>
             
             <div className="my-6">
-              <span className="text-6xl font-black tracking-tight">{current.temp}°</span>
+              <span className="text-5xl sm:text-6xl font-black tracking-tight">{current.temp}°</span>
               <span className="text-2xl text-crop-100 font-bold">C</span>
               <div className="text-sm font-bold text-crop-50 mt-1">{translateWeatherDesc(current.description)}</div>
             </div>
@@ -190,29 +184,31 @@ export default function WeatherView({ weatherData, loading, error, isFallback, f
         </div>
 
         {/* 7-Day Forecast Strip Card */}
-        <div className="bg-white border border-earth-100 rounded-2xl p-5 shadow-soft md:col-span-2 dark:bg-earth-900 dark:border-earth-850 flex flex-col justify-between">
+        <div className="bg-white border border-earth-100 rounded-2xl p-5 sm:p-6 shadow-soft md:col-span-2 dark:bg-earth-900 dark:border-earth-800 flex flex-col justify-between">
           <div>
-            <h4 className="text-sm font-bold text-earth-800 dark:text-earth-200 mb-3.5">{t('forecastOutlook')}</h4>
+            <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-earth-800 dark:text-earth-200 mb-3.5">
+              {t('forecastOutlook')}
+            </h4>
             
-            <div className="overflow-x-auto">
-              <div className="flex sm:grid sm:grid-cols-7 gap-2.5 min-w-[500px] sm:min-w-0">
+            <div className="overflow-x-auto pb-1">
+              <div className="flex sm:grid sm:grid-cols-7 gap-2.5 min-w-[520px] sm:min-w-0">
                 {daily.map((day, idx) => (
                   <div 
                     key={day.date} 
                     className={`flex-1 p-3 rounded-xl border text-center transition-all flex flex-col justify-between min-h-[140px] ${
                       idx === 0 
-                        ? 'border-crop-500 bg-crop-50/20 dark:bg-crop-950/10'
-                        : 'border-earth-100 bg-earth-50/30 dark:border-earth-855 dark:bg-earth-950/20'
+                        ? 'border-crop-500 bg-crop-50/20 dark:bg-crop-950/20'
+                        : 'border-earth-100 bg-earth-50/30 dark:border-earth-800 dark:bg-earth-950/20'
                     }`}
                   >
                     <div>
-                      <div className={`text-xs font-bold ${idx === 0 ? 'text-crop-600 dark:text-crop-400' : 'text-earth-500 dark:text-earth-450'}`}>
+                      <div className={`text-xs font-bold ${idx === 0 ? 'text-crop-600 dark:text-crop-400' : 'text-earth-600 dark:text-earth-200'}`}>
                         {idx === 0 ? t('today') : getWeekday(day.date)}
                       </div>
-                      <div className="text-[9px] text-earth-400 dark:text-earth-550 mb-1.5">{day.date.split('-').slice(1).join('/')}</div>
+                      <div className="text-[9px] text-earth-400 dark:text-earth-350 mb-1.5">{day.date.split('-').slice(1).join('/')}</div>
                     </div>
                     
-                    <div className="text-2xl my-2.5">{getWeatherEmoji(day.conditionCode)}</div>
+                    <div className="text-2xl my-2">{getWeatherEmoji(day.conditionCode)}</div>
                     
                     <div>
                       <div className="text-xs font-bold text-earth-800 dark:text-earth-100">
@@ -228,20 +224,22 @@ export default function WeatherView({ weatherData, loading, error, isFallback, f
             </div>
           </div>
           
-          <p className="text-[10px] text-earth-450 dark:text-earth-500 mt-4 italic">
-            * Precipitation values represent probability max. Temperature data is measured standard at 2 meters above ground canopy.
+          <p className="text-[10px] text-earth-500 dark:text-earth-350 mt-4 italic">
+            * Precipitation values represent probability max. Temperature data measured at 2 meters canopy height.
           </p>
         </div>
       </div>
 
       {/* Farming Decisions Guide */}
-      <div className="bg-earth-50 border border-earth-100 rounded-2xl p-5 dark:bg-earth-900 dark:border-earth-850">
-        <h4 className="text-sm font-bold text-earth-800 dark:text-earth-200 mb-2.5">{t('farmingAction')}</h4>
-        <ul className="text-xs text-earth-660 dark:text-earth-400 space-y-2 list-disc pl-4 font-semibold leading-relaxed">
+      <div className="bg-white border border-earth-100 rounded-2xl p-5 sm:p-6 dark:bg-earth-900 dark:border-earth-800 shadow-soft">
+        <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-earth-800 dark:text-earth-200 mb-3">
+          {t('farmingAction')}
+        </h4>
+        <ul className="text-xs text-earth-700 dark:text-earth-300 space-y-2 list-disc pl-4 font-medium leading-relaxed">
           {isUrdu ? (
             <>
               {current.temp > 35 && (
-                <li>شدید گرمی کی وجہ سے زمین سے نمی جلدی اڑ جاتی ہے۔ فصلوں کے گرد گھاس پھوس (mulch) بچھائیں تاکہ نمی برقرار رہے۔</li>
+                <li>شدید گرمی کی وجہ سے زمین سے نمی جلدی اڑ جاتی ہے۔ فصلوں کے گرد ملچنگ کریں تاکہ نمی برقرار رہے۔</li>
               )}
               {current.humidity > 80 && (
                 <li>ہوا میں زیادہ نمی فنگس پھیلنے میں مدد کرتی ہے۔ پتوں کے نچلے حصے کا باقاعدگی سے معائنہ کریں۔</li>
@@ -254,7 +252,7 @@ export default function WeatherView({ weatherData, loading, error, isFallback, f
           ) : isPunjabi ? (
             <>
               {current.temp > 35 && (
-                <li>شدید گرمی دی وجہ توں مٹی وچوں نمی جلدی اڑ جاندی اے۔ فصل دے آس پاس پرالی یا گھاس پھوس (mulch) پاؤ تاں جے نمی برقرار رہے۔</li>
+                <li>شدید گرمی دی وجہ توں مٹی وچوں نمی جلدی اڑ جاندی اے۔ فصل دے آس پاس گھاس پھوس پاؤ تاں جے نمی برقرار رہے۔</li>
               )}
               {current.humidity > 80 && (
                 <li>ہوا وچ زیادہ نمی فنگس پھیلان وچ مدد کردی اے۔ پتیاں دے ہیٹھلے حصے دی باقاعدگی نال جانچ کرو۔</li>

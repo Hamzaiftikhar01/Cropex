@@ -6,11 +6,12 @@
       "company": "Syngenta Pakistan",
       "companyName": "Syngenta Pakistan",
       "productType": "Fungicide",
-      "activeIngredient": "Azoxystrobin + Difenoconazole",
+      "activeIngredient": "Azoxystrobin 200g/L + Difenoconazole 125g/L",
       "targetDiseases": ["Leaf Rust", "Early Blight", "Blast", "Purple Blotch", "Powdery Mildew"],
       "targetCrops": ["Wheat", "Tomato", "Potato", "Rice", "Onion", "Chili"],
-      "officialProductUrl": "https://www.syngenta.com.pk/product/crop-protection/fungicide/amistar-top",
-      "notes": "Apply preventively or at first sign of disease. Ensure thorough leaf coverage."
+      "officialProductUrl": "https://www.syngenta.com.pk/product/amistar-top",
+      "description": "A systemic broad-spectrum fungicide with preventative and curative activity, highly effective against rust, early blight, and leaf spot diseases.",
+      "notes": "A systemic broad-spectrum fungicide with preventative and curative activity, highly effective against rust, early blight, and leaf spot diseases."
     },
     {
       "id": "syngenta_ridomil_gold",
@@ -18,11 +19,12 @@
       "company": "Syngenta Pakistan",
       "companyName": "Syngenta Pakistan",
       "productType": "Fungicide",
-      "activeIngredient": "Metalaxyl-M + Mancozeb",
+      "activeIngredient": "Metalaxyl-M 4% + Mancozeb 64% WP",
       "targetDiseases": ["Late Blight", "Downy Mildew"],
       "targetCrops": ["Potato", "Tomato", "Onion"],
-      "officialProductUrl": "https://www.syngenta.com.pk/product/crop-protection/fungicide/ridomil-gold-wg",
-      "notes": "Excellent root and foliage systemic action. Apply during cool, wet conditions."
+      "officialProductUrl": "https://www.syngenta.com.pk/product/ridomil-gold-wg",
+      "description": "Excellent root and foliage systemic action providing dual protective and curative suppression of oomycetes.",
+      "notes": "Excellent root and foliage systemic action providing dual protective and curative suppression of oomycetes."
     },
     {
       "id": "fmc_cabrio_top",
@@ -30,35 +32,38 @@
       "company": "FMC Pakistan",
       "companyName": "FMC Pakistan",
       "productType": "Fungicide",
-      "activeIngredient": "Pyraclostrobin + Metiram",
-      "targetDiseases": ["Early Blight", "Late Blight", "Anthracnose"],
+      "activeIngredient": "Pyraclostrobin 5% + Metiram 55%",
+      "targetDiseases": ["Early Blight", "Late Blight", "Anthracnose", "Powdery Mildew"],
       "targetCrops": ["Tomato", "Potato", "Chili"],
       "officialProductUrl": "https://ag.fmc.com/pk/en/products/fungicides/cabrio-top",
-      "notes": "Provides broad-spectrum control and enhances green leaf health."
+      "description": "A high-performance fungicide offering superior protective and curative control against early blight, late blight, and powdery mildew on vegetable crops.",
+      "notes": "A high-performance fungicide offering superior protective and curative control against early blight, late blight, and powdery mildew on vegetable crops."
     },
     {
       "id": "bayer_nativo",
-      "name": "Nativo",
-      "company": "Bayer Pakistan",
-      "companyName": "Bayer Pakistan",
+      "name": "Nativo 75 WG",
+      "company": "Bayer Crop Science Pakistan",
+      "companyName": "Bayer Crop Science Pakistan",
       "productType": "Fungicide",
-      "activeIngredient": "Tebuconazole + Trifloxystrobin",
-      "targetDiseases": ["Blast", "Leaf Rust", "Powdery Mildew", "Purple Blotch"],
-      "targetCrops": ["Rice", "Wheat", "Chili", "Onion"],
-      "officialProductUrl": "https://www.crop.bayer.com.pk/products/nativo.aspx",
-      "notes": "Dual-action protective and curative fungicide. High efficacy at low dose rates."
+      "activeIngredient": "Tebuconazole 50% + Trifloxystrobin 25%",
+      "targetDiseases": ["Blast", "Leaf Rust", "Powdery Mildew", "Purple Blotch", "Late Blight"],
+      "targetCrops": ["Rice", "Wheat", "Chili", "Onion", "Tomato"],
+      "officialProductUrl": "https://www.cropscience.bayer.com.pk/en-pk/products/fungicides/nativo-75-wg.html",
+      "description": "Dual-action protective and curative systemic fungicide delivering broad-spectrum control and prolonged green foliage retention.",
+      "notes": "Dual-action protective and curative systemic fungicide delivering broad-spectrum control and prolonged green foliage retention."
     },
     {
       "id": "bayer_infinito",
       "name": "Infinito",
-      "company": "Bayer Pakistan",
-      "companyName": "Bayer Pakistan",
+      "company": "Bayer Crop Science Pakistan",
+      "companyName": "Bayer Crop Science Pakistan",
       "productType": "Fungicide",
       "activeIngredient": "Fluopicolide + Propamocarb Hydrochloride",
       "targetDiseases": ["Late Blight", "Downy Mildew"],
       "targetCrops": ["Potato", "Tomato", "Onion"],
-      "officialProductUrl": "https://www.crop.bayer.com.pk/products/infinito.aspx",
-      "notes": "Excellent weather resistance. Prevents spore germination and mycelial growth."
+      "officialProductUrl": "https://www.cropscience.bayer.com.pk/en-pk/products/fungicides/infinito.html",
+      "description": "Excellent weather resistance and translaminar mobility. Prevents spore germination and suppresses mycelial expansion.",
+      "notes": "Excellent weather resistance and translaminar mobility. Prevents spore germination and suppresses mycelial expansion."
     },
     {
       "id": "suncrop_sun_cop",
@@ -67,21 +72,23 @@
       "companyName": "Suncrop Group",
       "productType": "Fungicide",
       "activeIngredient": "Copper Oxychloride 50% WP",
-      "targetDiseases": ["Bacterial Leaf Blight", "Bacterial Blight", "Anthracnose", "Red Rot"],
-      "targetCrops": ["Rice", "Cotton", "Chili", "Sugarcane"],
-      "officialProductUrl": "https://suncropgroup.com/pesticides/fungicides",
-      "notes": "Contact protective fungicide. Useful for suppressing bacterial and fungal pathogens."
+      "targetDiseases": ["Bacterial Leaf Blight", "Bacterial Blight", "Anthracnose", "Red Rot", "Leaf Spot"],
+      "targetCrops": ["Rice", "Cotton", "Chili", "Sugarcane", "Wheat"],
+      "officialProductUrl": "https://www.suncropgroup.com/",
+      "description": "Contact protective broad-spectrum fungicide and bactericide useful for suppressing severe fungal and bacterial outbreaks.",
+      "notes": "Contact protective broad-spectrum fungicide and bactericide useful for suppressing severe fungal and bacterial outbreaks."
     },
     {
       "id": "bayer_confidor",
       "name": "Confidor",
-      "company": "Bayer Pakistan",
-      "companyName": "Bayer Pakistan",
+      "company": "Bayer Crop Science Pakistan",
+      "companyName": "Bayer Crop Science Pakistan",
       "productType": "Insecticide",
       "activeIngredient": "Imidacloprid 200 SL",
       "targetDiseases": ["Cotton Leaf Curl Virus vector control (Whiteflies)", "Thrips control", "Aphids control"],
       "targetCrops": ["Cotton", "Chili", "Onion"],
-      "officialProductUrl": "https://www.crop.bayer.com.pk/products/confidor.aspx",
+      "officialProductUrl": "https://www.cropscience.bayer.com.pk/en-pk/products/insecticides/confidor-200-sl.html",
+      "description": "Systemic insecticide targeting sucking pests. Primarily used to control whiteflies that transmit leaf curl virus.",
       "notes": "Systemic insecticide targeting sucking pests. Primarily used to control whiteflies that transmit leaf curl virus."
     },
     {
@@ -93,8 +100,9 @@
       "activeIngredient": "Indoxacarb 150 SC",
       "targetDiseases": ["Armyworm control", "Bollworm control"],
       "targetCrops": ["Cotton", "Maize"],
-      "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides",
-      "notes": "Broad-spectrum larvicide with contact and stomach action. Rapid feeding cessation."
+      "officialProductUrl": "https://ag.fmc.com/pk/en/products/insecticides/steward",
+      "description": "Broad-spectrum larvicide with contact and stomach action, causing rapid feeding cessation in chewing pests.",
+      "notes": "Broad-spectrum larvicide with contact and stomach action, causing rapid feeding cessation in chewing pests."
     },
     {
       "id": "syngenta_match",
@@ -102,11 +110,12 @@
       "company": "Syngenta Pakistan",
       "companyName": "Syngenta Pakistan",
       "productType": "Insecticide",
-      "activeIngredient": "Lufenuron",
+      "activeIngredient": "Lufenuron 50 EC",
       "targetDiseases": ["Armyworm control", "Helicoverpa control"],
       "targetCrops": ["Cotton", "Maize", "Tomato"],
-      "officialProductUrl": "https://www.syngenta.com.pk/product/crop-protection/insecticide/match-050-ec",
-      "notes": "Insect growth regulator (IGR) that inhibits chitin synthesis in lepidopteran larvae."
+      "officialProductUrl": "https://www.syngenta.com.pk/product/match-050-ec",
+      "description": "Insect growth regulator (IGR) that inhibits chitin synthesis in lepidopteran larvae preventing foliar damage.",
+      "notes": "Insect growth regulator (IGR) that inhibits chitin synthesis in lepidopteran larvae preventing foliar damage."
     }
   ]
 }

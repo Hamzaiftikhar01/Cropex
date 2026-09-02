@@ -35,10 +35,10 @@ export function getDiseaseById(diseaseId) {
     .map((productId) => {
       const prod = productsData.products.find((p) => p.id === productId);
       if (prod) {
-        // Enforce backward compatibility by guaranteeing companyName exists
         return {
           ...prod,
-          companyName: prod.companyName || prod.company
+          companyName: prod.companyName || prod.company,
+          description: prod.description || prod.notes || 'A high-performance product offering superior protective and curative control against registered crop diseases.'
         };
       }
       return null;
@@ -55,6 +55,11 @@ export function getDiseaseById(diseaseId) {
     description: match.description,
     symptoms: match.symptoms || [],
     causes: match.causes || [],
+    recommendedActions: match.recommendedActions || [
+      'Prune lower branches to improve air circulation and prevent soil-splash contact',
+      'Apply protective copper-based or systemic fungicides immediately',
+      'Remove and safely discard heavily infected crop foliage'
+    ],
     prevention: match.prevention || [],
     bestPractices: match.bestPractices || [],
     recommendedProducts: resolvedProducts,
@@ -89,6 +94,7 @@ export function searchKnowledgeBase(cropName, diseaseName) {
       description: `The ${cropName} plant appears healthy with no visible signs of infection or pests.`,
       symptoms: ['No active symptoms detected.'],
       causes: [],
+      recommendedActions: ['Continue standard crop management routine.'],
       prevention: [
         'Maintain regular watering and fertilization schedules.',
         'Perform weekly leaf inspections for early detection.',
@@ -99,7 +105,7 @@ export function searchKnowledgeBase(cropName, diseaseName) {
         'Rotate crop placements in the next planting cycle.'
       ],
       recommendedProducts: [],
-      recommendedProductsMessage: 'No recommended products are currently indexed for this disease.'
+      recommendedProductsMessage: 'No chemical products are required for healthy foliage.'
     };
   }
 

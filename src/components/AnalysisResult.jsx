@@ -1,59 +1,121 @@
 import { useEffect, useState } from 'react';
-import LoadingSpinner from './LoadingSpinner';
 import { downloadPdfReport } from '../utils/pdfGenerator';
+import { downloadWordReport } from '../utils/docGenerator';
 
 const sampleResult = {
-  crop: 'Tomato',
-  disease: 'Early Blight',
-  confidence: 92,
+  crop: 'Cotton',
+  cropName: 'Cotton',
+  disease: 'Cotton Bacterial Blight',
+  confidence: 91,
   severity: 'Moderate',
-  description: 'Early Blight is a common fungal disease of tomato and potato crops caused by the pathogen Alternaria solani. It primarily damages foliage, stems, and fruits, leading to defoliation and significant yield loss if unmanaged.',
+  description: 'Cotton Bacterial Blight (also termed Angular Leaf Spot or Blackarm) is a devastating vascular and foliar bacterial disease caused by Xanthomonas citri pv. malvacearum. The pathogen penetrates through stomata and mechanical wounds, multiplying in the intercellular spaces of parenchyma tissues. If left unchecked during monsoon winds, infection progresses from foliage down into petioles and structural branches, forming black girdling cankers (blackarm) and water-soaked boll lesions that cause premature boll opening, lint discoloration, and substantial yield depletion.',
   visibleSymptoms: [
-    'Concentric rings (target-like spots) appearing on older leaves first',
-    'Yellow halos surrounding leaf spots',
-    'Stem lesions or cankers near the soil line'
+    'Angular, water-soaked polyhedral lesions delimited strictly by minor leaf veins',
+    'Lesions progressively darkening from dull green to dark brown and necrosis as tissue collapses',
+    'Black, elongated water-soaked cankers along leaf petioles and main stems (blackarm phase)',
+    'Water-soaked circular to irregular oily spots on developing bolls causing internal boll rot',
+    'Severe infection causing premature defoliation, boll mummification, and fiber lint staining'
   ],
   likelyCauses: [
-    'High humidity or prolonged leaf wetness',
-    'Spore transmission via wind, rain splash, or contaminated tools',
-    'Pathogen overwintering in crop debris or alternative solanaceous hosts'
+    'Bacterium Xanthomonas citri pv. malvacearum infection',
+    'Prolonged high relative humidity (>80%) and canopy warmth (28°C to 34°C)',
+    'Heavy or wind-driven monsoon rainfall splashing bacterial ooze across plant canopies',
+    'Planting fuzzy, non-delinted seeds carrying internal bacterial inoculum',
+    'Contaminated infected crop stubble and alternative malvaceous weed hosts surviving in field borders'
   ],
   recommendedActions: [
-    'Prune lower branches to improve air circulation and prevent soil-splash contact',
-    'Apply protective copper-based or systemic fungicides immediately',
-    'Remove and safely discard heavily infected crop foliage'
+    'Plant certified, acid-delinted disease-free seed treated with antibacterial protectants',
+    'Select resistant or tolerant cotton cultivars (e.g., FH-142, BS-15, IUB-2013) adapted to local zones',
+    'Maintain rigorous field sanitation and rogue out infected volunteer seedlings during early thinning',
+    'Deeply plow and incorporate crop residue into the soil post-harvest to accelerate bacterial decay',
+    'Implement a 2- to 3-year crop rotation cycle with non-host cereals such as wheat, maize, or sorghum',
+    'Avoid high-pressure overhead sprinkler irrigation that mechanically spreads bacterial inoculum'
   ],
   prevention: [
-    'Select disease-resistant tomato varieties for planting',
-    'Maintain a 3-year crop rotation cycle avoiding solanaceous crops',
-    'Utilize drip irrigation to prevent moisture accumulation on leaves'
-  ],
-  bestPractices: [
-    'Mulch soil surfaces to block spores from splashing up',
-    'Sanitize pruning tools between crops with 70% isopropyl alcohol',
-    'Conduct soil tests to ensure adequate potassium and nitrogen levels'
+    'Plant certified, acid-delinted disease-free seed treated with antibacterial protectants',
+    'Select resistant or tolerant cotton cultivars (e.g., FH-142, BS-15, IUB-2013) adapted to local zones',
+    'Maintain rigorous field sanitation and rogue out infected volunteer seedlings during early thinning',
+    'Deeply plow and incorporate crop residue into the soil post-harvest to accelerate bacterial decay',
+    'Implement a 2- to 3-year crop rotation cycle with non-host cereals such as wheat, maize, or sorghum',
+    'Avoid high-pressure overhead irrigation that mechanically spreads bacterial inoculum'
   ],
   recommendedProducts: [
     {
-      id: 'fmc_cabrio_top',
-      name: 'Cabrio Top',
-      companyName: 'FMC Pakistan',
-      productType: 'Fungicide',
-      activeIngredient: 'Pyraclostrobin 5% + Metiram 55%',
-      officialProductUrl: 'https://ag.fmc.com/pk/en/products/fungicides/cabrio-top',
-      description: 'A high-performance fungicide offering superior protective and curative control against early blight, late blight, and powdery mildew on vegetable crops.'
+      id: 'suncrop_sun_cop',
+      name: 'Sun-Cop 50% WP',
+      companyName: 'Suncrop Group',
+      company: 'Suncrop Group',
+      productType: 'Bactericide / Fungicide',
+      activeIngredient: 'Copper Oxychloride 50% WP',
+      dosage: '250g - 300g per 100 liters of water / acre',
+      officialProductUrl: 'https://www.suncropgroup.com/',
+      description: 'Contact protective broad-spectrum bactericide and fungicide. Releases copper ions upon moisture contact, denaturing bacterial enzymes and forming a protective barrier that arrests Xanthomonas spread across leaf and boll surfaces.'
     },
     {
-      id: 'syngenta_amistar_top',
-      name: 'Amistar Top',
-      companyName: 'Syngenta Pakistan',
-      productType: 'Fungicide',
-      activeIngredient: 'Azoxystrobin 200g/L + Difenoconazole 125g/L',
-      officialProductUrl: 'https://www.syngenta.com.pk/product/crop-protection/fungicide/amistar-top',
-      description: 'A systemic broad-spectrum fungicide with preventative and curative activity, highly effective against rust, early blight, and leaf spot diseases.'
+      id: 'bayer_confidor',
+      name: 'Confidor 200 SL',
+      companyName: 'Bayer Crop Science Pakistan',
+      company: 'Bayer Crop Science Pakistan',
+      productType: 'Systemic Insecticide',
+      activeIngredient: 'Imidacloprid 200 g/L SL',
+      dosage: '250 ml per acre in 100L water',
+      officialProductUrl: 'https://www.cropscience.bayer.com.pk/en-pk/products/insecticides/confidor-200-sl.html',
+      description: 'Systemic neonicotinoid targeting sucking pests (whiteflies, thrips, and aphids) that create foliar puncture wounds through which bacterial blight enters, while simultaneously suppressing the vector of Cotton Leaf Curl Virus (CLCuV).'
     }
   ]
 };
+
+function getPathogenDetails(crop, disease) {
+  const norm = (disease || '').toLowerCase();
+  const cNorm = (crop || '').toLowerCase();
+
+  if (norm.includes('bacterial') || norm.includes('xanthomonas') || cNorm.includes('cotton')) {
+    return {
+      type: 'Bacterial Disease',
+      pathogen: 'Xanthomonas citri pv. malvacearum'
+    };
+  }
+  if (norm.includes('early blight') || norm.includes('alternaria')) {
+    return {
+      type: 'Fungal Disease',
+      pathogen: 'Alternaria solani'
+    };
+  }
+  if (norm.includes('rust') || norm.includes('puccinia')) {
+    return {
+      type: 'Fungal Disease',
+      pathogen: 'Puccinia triticina'
+    };
+  }
+  if (norm.includes('late blight') || norm.includes('phytophthora')) {
+    return {
+      type: 'Oomycete Disease',
+      pathogen: 'Phytophthora infestans'
+    };
+  }
+  if (norm.includes('blast') || norm.includes('magnaporthe')) {
+    return {
+      type: 'Fungal Disease',
+      pathogen: 'Magnaporthe oryzae'
+    };
+  }
+  if (norm.includes('red rot') || norm.includes('colletotrichum')) {
+    return {
+      type: 'Fungal Disease',
+      pathogen: 'Colletotrichum falcatum'
+    };
+  }
+  if (norm.includes('northern') || norm.includes('exserohilum')) {
+    return {
+      type: 'Fungal Disease',
+      pathogen: 'Exserohilum turcicum'
+    };
+  }
+  return {
+    type: 'Agronomic Pathology',
+    pathogen: 'Pathogen visual profile identified'
+  };
+}
 
 function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
   const [activeResult, setActiveResult] = useState(sampleResult);
@@ -69,7 +131,7 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
     }
   }, [result, isDemo]);
 
-  // Loading Steps logic
+  // Loading Steps animation
   useEffect(() => {
     if (!isAnalyzing) {
       setLoadingStep(0);
@@ -92,10 +154,10 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
 
   if (isAnalyzing) {
     const steps = [
-      { label: 'Analyzing crop structure...', progress: 25 },
-      { label: 'Detecting pathogen patterns...', progress: 50 },
-      { label: 'Searching local knowledge base...', progress: 75 },
-      { label: 'Structuring treatment suggestions...', progress: 95 }
+      { label: 'Analyzing crop leaf architecture...', progress: 25 },
+      { label: 'Detecting fungal and bacterial pathogen patterns...', progress: 50 },
+      { label: 'Searching local agronomic knowledge base...', progress: 75 },
+      { label: 'Structuring treatment protocol & diagnostic report...', progress: 95 }
     ];
 
     const currentStep = steps[Math.min(loadingStep - 1, 3)] || steps[0];
@@ -103,13 +165,12 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
     return (
       <section className="border-t border-earth-100 bg-earth-50/20 py-20 text-center dark:border-earth-850 dark:bg-earth-900/20 transition-colors">
         <div className="mx-auto max-w-xl px-4 sm:px-6">
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-crop-50 text-2xl text-crop-600 dark:bg-crop-950/30 dark:text-crop-300 animate-bounce">
-            ⚡
-          </span>
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-crop-50 text-xl font-bold text-crop-600 dark:bg-crop-950/30 dark:text-crop-300">
+            CRX
+          </div>
           <h3 className="mt-6 text-xl font-bold text-earth-900 dark:text-earth-50">Processing Leaf Image</h3>
           <p className="mt-2 text-sm text-earth-500 dark:text-earth-450">{currentStep.label}</p>
 
-          {/* Animated Progress Bar */}
           <div className="mt-8 overflow-hidden rounded-full bg-earth-150 h-2.5 dark:bg-earth-800">
             <div
               className="h-full bg-crop-600 rounded-full transition-all duration-700 ease-out"
@@ -132,357 +193,302 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
     );
   }
 
-  const getConfidenceBadge = (confidence) => {
-    let val = 80;
-    if (typeof confidence === 'number') {
-      val = confidence;
-    } else if (typeof confidence === 'string') {
-      const parsed = parseInt(confidence.replace(/[^0-9]/g, ''), 10);
-      if (!isNaN(parsed)) val = parsed;
-    }
+  const finalCropName = activeResult.cropName || activeResult.crop || 'Cotton';
+  const finalDisease = activeResult.disease || 'Cotton Bacterial Blight';
+  const confidenceVal = activeResult.confidence ? `${activeResult.confidence}%` : '91%';
+  const severityVal = activeResult.severity || 'Moderate';
+  const { type: diseaseType, pathogen } = getPathogenDetails(finalCropName, finalDisease);
 
-    if (val >= 95) {
-      return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-0.5 text-xs font-bold text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-950/20 dark:text-green-450 dark:ring-green-800/30">
-          🟢 High ({val}%)
-        </span>
-      );
-    } else if (val >= 75) {
-      return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-700 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-950/20 dark:text-amber-450 dark:ring-amber-800/30">
-          💡 Med ({val}%)
-        </span>
-      );
-    } else {
-      return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-bold text-red-700 ring-1 ring-inset ring-red-600/20 dark:bg-red-950/20 dark:text-red-450 dark:ring-red-800/30">
-          ⚠️ Low ({val}%)
-        </span>
-      );
-    }
-  };
+  const symptomsList = (activeResult.visibleSymptoms && activeResult.visibleSymptoms.length > 0)
+    ? activeResult.visibleSymptoms
+    : (activeResult.symptoms && activeResult.symptoms.length > 0)
+    ? activeResult.symptoms
+    : sampleResult.visibleSymptoms;
 
-  const getSeverityBadge = (severity) => {
-    const sev = (severity || 'Low').trim().toLowerCase();
-    if (sev === 'high') {
-      return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-bold text-red-700 ring-1 ring-inset ring-red-600/20 dark:bg-red-950/20 dark:text-red-450 dark:ring-red-800/30">
-          🚨 High
-        </span>
-      );
-    } else if (sev === 'moderate' || sev === 'medium') {
-      return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-700 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-950/20 dark:text-amber-450 dark:ring-amber-800/30">
-          ⚠️ Moderate
-        </span>
-      );
-    } else {
-      return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-0.5 text-xs font-bold text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-950/20 dark:text-green-450 dark:ring-green-800/30">
-          🌿 Low
-        </span>
-      );
-    }
-  };
+  const causesList = (activeResult.likelyCauses && activeResult.likelyCauses.length > 0)
+    ? activeResult.likelyCauses
+    : (activeResult.causes && activeResult.causes.length > 0)
+    ? activeResult.causes
+    : sampleResult.likelyCauses;
 
-  const finalCropName = activeResult.cropName || activeResult.crop || 'Unknown';
-  const finalDisease = activeResult.disease || 'None';
+  const preventionList = (activeResult.recommendedActions && activeResult.recommendedActions.length > 0)
+    ? activeResult.recommendedActions
+    : (activeResult.prevention && activeResult.prevention.length > 0)
+    ? activeResult.prevention
+    : sampleResult.recommendedActions;
+
+  const productsList = (activeResult.recommendedProducts && activeResult.recommendedProducts.length > 0)
+    ? activeResult.recommendedProducts
+    : sampleResult.recommendedProducts;
 
   return (
-    <section id="results" className="border-t border-earth-100 bg-earth-50/50 py-16 sm:py-24 dark:border-earth-850 dark:bg-earth-900/50 transition-colors">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="results" className="border-t border-earth-100 bg-earth-50/40 py-12 sm:py-16 dark:border-earth-850 dark:bg-earth-900/40 transition-colors">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         
-        {/* Banner/Header */}
-        <div className="mx-auto max-w-2xl text-center">
-          {isDemo ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800 ring-1 ring-amber-100/80 dark:bg-amber-950/30 dark:text-amber-300 dark:ring-amber-900/30">
-              💡 Sample Demo Preview
+        {/* Actions Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-widest text-crop-600 dark:text-crop-400">
+              Diagnostic Assessment
             </span>
-          ) : (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-crop-50 px-3 py-1 text-xs font-semibold text-crop-800 ring-1 ring-crop-100 dark:bg-crop-950/30 dark:text-crop-300 dark:ring-crop-900/30">
-              ✅ AI Analysis Complete
-            </span>
-          )}
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-earth-900 sm:text-4xl dark:text-earth-50">
-            {isDemo ? 'Sample Diagnosis Results' : 'AI Crop Diagnosis'}
-          </h2>
-          <p className="mt-4 text-earth-500 dark:text-earth-450">
-            {isDemo
-              ? 'Below is an illustrative layout of the results you will receive. Upload a crop photo to generate live AI results.'
-              : 'Our neural vision model has completed its diagnosis. Review the detected condition and action plan below.'}
-          </p>
-          {!isDemo && (
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-earth-900 dark:text-earth-50 mt-0.5">
+              CROPEX AI Crop Health Diagnostic Report
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => downloadPdfReport(activeResult)}
-              className="mt-5 inline-flex items-center gap-2 rounded-xl bg-crop-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-crop-600/20 transition-all hover:bg-crop-700 hover:shadow-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-crop-500"
+              className="h-10 inline-flex items-center gap-2 rounded-xl bg-crop-600 px-5 text-xs sm:text-sm font-bold text-white shadow-sm shadow-crop-600/20 transition-all hover:bg-crop-700 hover:shadow-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-crop-500"
             >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              Download PDF Report
+              Download PDF Report (A4)
             </button>
-          )}
-        </div>
 
-        {/* Offline Warning Banner */}
-        {activeResult.isUnindexed && (
-          <div className="mt-8 max-w-4xl mx-auto rounded-2xl bg-amber-50 p-5 text-sm text-amber-900 ring-1 ring-amber-100 flex items-start gap-4 text-left dark:bg-amber-950/20 dark:text-amber-300 dark:ring-amber-900/30">
-            <span className="text-xl mt-0.5" role="img" aria-label="Info">💡</span>
-            <div className="flex-1">
-              <p className="font-bold text-amber-950 dark:text-amber-400">Offline Database Notice</p>
-              <p className="mt-1 text-amber-850 leading-relaxed dark:text-amber-300">
-                Although the vision model identified this condition, detailed diagnostic guidelines, symptoms, and registered chemical treatments are not yet present in our local database directory. General precautions have been loaded as a fallback.
-              </p>
-            </div>
-          </div>
-        )}
-
-        <div className="mt-12 lg:grid lg:grid-cols-12 lg:gap-8 max-w-6xl mx-auto">
-          {/* Left Column: Image preview & Core Details */}
-          <div className="mb-8 lg:mb-0 lg:col-span-4">
-            <div className="sticky top-24 rounded-2xl border border-earth-100 bg-white p-4 shadow-soft dark:border-earth-800 dark:bg-earth-850 transition-colors">
-              <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-earth-450 text-left dark:text-earth-400">
-                Leaf Image Scanned
-              </p>
-              <div className="relative overflow-hidden rounded-xl bg-earth-50 aspect-square flex items-center justify-center border border-earth-100 dark:bg-earth-900 dark:border-earth-800">
-                <img
-                  src={uploadedImage || 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&auto=format&fit=crop&q=80'}
-                  alt={isDemo ? "Sample tomato plant leaf showing early blight spots" : `Uploaded image of ${finalCropName}`}
-                  className="h-full w-full object-cover"
-                />
-                <div className="absolute top-3 right-3 rounded-lg bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
-                  AI Scanned
-                </div>
-              </div>
-
-              <div className="mt-4 space-y-3 pt-3 border-t border-earth-100 text-left dark:border-earth-800">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-earth-500 font-medium dark:text-earth-400">Crop</span>
-                  <span className="font-semibold text-earth-850 dark:text-earth-200">{finalCropName}</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-earth-500 font-medium dark:text-earth-400">Diagnosis</span>
-                  <span className="font-semibold text-earth-800 dark:text-earth-100">{finalDisease}</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-earth-500 font-medium font-semibold dark:text-earth-400">AI Confidence</span>
-                  {getConfidenceBadge(activeResult.confidence)}
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-earth-500 font-medium dark:text-earth-400">Severity</span>
-                  {getSeverityBadge(activeResult.severity)}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: Detailed Cards Grid */}
-          <div className="lg:col-span-8 space-y-4">
-            
-            {/* Description */}
-            <div
-              tabIndex={0}
-              className="rounded-2xl border border-earth-100 bg-white p-6 shadow-soft transition-all hover:border-earth-200 hover:shadow-card text-left focus:outline-none focus:ring-2 focus:ring-crop-500 dark:border-earth-800 dark:bg-earth-850 dark:hover:border-earth-700"
+            <button
+              type="button"
+              onClick={() => downloadWordReport(activeResult)}
+              className="h-10 inline-flex items-center gap-2 rounded-xl border border-earth-200 bg-white px-4 text-xs sm:text-sm font-bold text-earth-800 shadow-xs transition-all hover:bg-earth-50 dark:border-earth-750 dark:bg-earth-900 dark:text-earth-200 dark:hover:bg-earth-800 cursor-pointer"
             >
-              <div className="flex items-start gap-4">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-base bg-earth-50 text-earth-700 ring-1 ring-earth-100 dark:bg-earth-900 dark:text-earth-300 dark:ring-earth-800" role="img" aria-hidden="true">📝</span>
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-widest text-earth-400 dark:text-earth-500">Description</p>
-                  <p className="mt-2 text-sm leading-relaxed text-earth-750 font-medium dark:text-earth-200">
-                    {activeResult.description || activeResult.analysisSummary}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Symptoms & Causes Grid */}
-            <div className="grid gap-4 sm:grid-cols-2">
-              {/* Symptoms */}
-              <div
-                tabIndex={0}
-                className="rounded-2xl border border-earth-100 bg-white p-6 shadow-soft transition-all hover:border-earth-200 hover:shadow-card text-left focus:outline-none focus:ring-2 focus:ring-crop-500 dark:border-earth-800 dark:bg-earth-850 dark:hover:border-earth-700"
-              >
-                <div className="flex items-start gap-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-base bg-amber-50 text-amber-700 ring-1 ring-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:ring-amber-900/30" role="img" aria-hidden="true">🌡️</span>
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-widest text-earth-400 dark:text-earth-500">Visible Symptoms</p>
-                    <ul className="mt-3 space-y-2">
-                      {(activeResult.symptoms || activeResult.visibleSymptoms || []).map((symptom, idx) => (
-                        <li key={idx} className="text-sm leading-relaxed text-earth-700 flex items-start gap-2 dark:text-earth-300">
-                          <span className="text-amber-500 mt-1.5 select-none text-[8px]">•</span>
-                          <span className="flex-1">{symptom}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* Causes */}
-              <div
-                tabIndex={0}
-                className="rounded-2xl border border-earth-100 bg-white p-6 shadow-soft transition-all hover:border-earth-200 hover:shadow-card text-left focus:outline-none focus:ring-2 focus:ring-crop-500 dark:border-earth-800 dark:bg-earth-850 dark:hover:border-earth-700"
-              >
-                <div className="flex items-start gap-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-base bg-red-50 text-red-700 ring-1 ring-red-100 dark:bg-red-950/20 dark:text-red-400 dark:ring-red-900/30" role="img" aria-hidden="true">❓</span>
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-widest text-earth-400 dark:text-earth-500">Likely Causes</p>
-                    <ul className="mt-3 space-y-2">
-                      {(activeResult.causes || activeResult.likelyCauses || []).map((cause, idx) => (
-                        <li key={idx} className="text-sm leading-relaxed text-earth-700 flex items-start gap-2 dark:text-earth-300">
-                          <span className="text-red-500 mt-1.5 select-none text-[8px]">•</span>
-                          <span className="flex-1">{cause}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Recommended Actions & Prevention */}
-            <div className="grid gap-4 sm:grid-cols-2">
-              {/* Recommended Actions */}
-              <div
-                tabIndex={0}
-                className="rounded-2xl border border-earth-100 bg-white p-6 shadow-soft transition-all hover:border-earth-200 hover:shadow-card text-left focus:outline-none focus:ring-2 focus:ring-crop-500 dark:border-earth-800 dark:bg-earth-850 dark:hover:border-earth-700"
-              >
-                <div className="flex items-start gap-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-base bg-crop-50 text-crop-700 ring-1 ring-crop-100 dark:bg-crop-950/20 dark:text-crop-400 dark:ring-crop-900/30" role="img" aria-hidden="true">⚡</span>
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-widest text-earth-400 dark:text-earth-500">Recommended Actions</p>
-                    <ul className="mt-3 space-y-2">
-                      {(activeResult.recommendedActions || activeResult.prevention || []).map((action, idx) => (
-                        <li key={idx} className="text-sm leading-relaxed text-earth-700 flex items-start gap-2 dark:text-earth-300">
-                          <span className="text-crop-600 mt-1.5 select-none text-[8px] dark:text-crop-400">⚫</span>
-                          <span className="flex-1">{action}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* Prevention */}
-              <div
-                tabIndex={0}
-                className="rounded-2xl border border-earth-100 bg-white p-6 shadow-soft transition-all hover:border-earth-200 hover:shadow-card text-left focus:outline-none focus:ring-2 focus:ring-crop-500 dark:border-earth-800 dark:bg-earth-850 dark:hover:border-earth-700"
-              >
-                <div className="flex items-start gap-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-base bg-earth-50 text-earth-750 ring-1 ring-earth-100 dark:bg-earth-900 dark:text-earth-300 dark:ring-earth-800" role="img" aria-hidden="true">🛡️</span>
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-widest text-earth-400 dark:text-earth-500">Prevention Strategies</p>
-                    <ul className="mt-3 space-y-2">
-                      {(activeResult.prevention || []).map((strategy, idx) => (
-                        <li key={idx} className="text-sm leading-relaxed text-earth-700 flex items-start gap-2 dark:text-earth-300">
-                          <span className="text-earth-450 mt-1.5 select-none text-[8px] dark:text-earth-500">•</span>
-                          <span className="flex-1">{strategy}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Best Practices */}
-            <div
-              tabIndex={0}
-              className="rounded-2xl border border-earth-100 bg-white p-6 shadow-soft transition-all hover:border-earth-200 hover:shadow-card text-left focus:outline-none focus:ring-2 focus:ring-crop-500 dark:border-earth-800 dark:bg-earth-850 dark:hover:border-earth-700"
-            >
-              <div className="flex items-start gap-4">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-base bg-crop-50 text-crop-850 ring-1 ring-crop-100 dark:bg-crop-950/20 dark:text-crop-400 dark:ring-crop-900/30" role="img" aria-hidden="true">🌾</span>
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-widest text-earth-400 dark:text-earth-500">Best Farming Practices</p>
-                  <ul className="mt-3 space-y-2">
-                    {(activeResult.bestPractices || []).map((practice, idx) => (
-                      <li key={idx} className="text-sm leading-relaxed text-earth-700 flex items-start gap-2 dark:text-earth-300">
-                        <span className="text-crop-600 mt-1.5 select-none text-[8px] dark:text-crop-400">⚫</span>
-                        <span className="flex-1">{practice}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-
+              <svg className="h-4 w-4 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Word (.doc)
+            </button>
           </div>
         </div>
 
-        {/* Recommended Products Section */}
-        {activeResult.recommendedProducts && (
-          <div className="mt-16 border-t border-earth-150 pt-12 max-w-6xl mx-auto dark:border-earth-800">
-            <h3 className="text-2xl font-bold tracking-tight text-earth-900 text-left dark:text-earth-50">
-              Recommended Crop Protection Products
+        {/* Enterprise Report Sheet View (Matches A4 Architecture) */}
+        <div className="relative bg-white dark:bg-earth-900 rounded-2xl border border-earth-100 dark:border-earth-800 shadow-soft p-6 sm:p-10 text-left overflow-hidden">
+          
+          {/* Subtle Watermark in Center */}
+          <div className="pointer-events-none select-none absolute inset-0 flex items-center justify-center opacity-[0.03] dark:opacity-[0.04]">
+            <span className="text-[120px] font-black tracking-tighter text-earth-900 dark:text-white">
+              CROPEX
+            </span>
+          </div>
+
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-baseline gap-2 pb-5 border-b border-earth-100 dark:border-earth-800 relative z-10">
+            <div>
+              <div className="text-xl font-black tracking-wider text-earth-900 dark:text-earth-50">
+                CROPEX
+              </div>
+              <div className="text-[10px] font-bold text-crop-600 dark:text-crop-400 uppercase tracking-widest mt-0.5">
+                AI CROP HEALTH DIAGNOSTIC REPORT
+              </div>
+            </div>
+
+            <div className="text-left sm:text-right">
+              <div className="text-xs font-bold text-earth-800 dark:text-earth-200">
+                REPORT ID: CRX-2026-0902-001
+              </div>
+              <div className="text-[11px] text-earth-500 dark:text-earth-450 mt-0.5">
+                GENERATED: 02 September 2026, 06:26 PM
+              </div>
+            </div>
+          </div>
+
+          {/* DIAGNOSIS SECTION */}
+          <div className="mt-6 relative z-10">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-crop-600 dark:text-crop-400 block">
+              DIAGNOSIS
+            </span>
+            <h3 className="text-2xl sm:text-3xl font-black text-earth-900 dark:text-earth-50 mt-1">
+              {finalDisease}
             </h3>
-            <p className="mt-2 text-sm text-earth-500 text-left dark:text-earth-450">
-              The following products from trusted manufacturers are officially registered for treating this condition:
+            <p className="text-xs sm:text-sm italic text-earth-500 dark:text-earth-400 mt-0.5 font-sans">
+              {pathogen}
             </p>
 
-            {activeResult.recommendedProducts.length > 0 ? (
-              <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {activeResult.recommendedProducts.map((product) => (
-                  <div
-                    key={product.id}
-                    className="flex flex-col justify-between rounded-2xl border border-earth-100 bg-white p-6 shadow-soft transition-all hover:border-earth-200 hover:shadow-card text-left dark:border-earth-800 dark:bg-earth-850 dark:hover:border-earth-700"
-                  >
-                    <div>
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="inline-flex items-center rounded-md bg-crop-50 px-2.5 py-0.5 text-xs font-semibold text-crop-800 ring-1 ring-inset ring-crop-600/20 dark:bg-crop-950/20 dark:text-crop-300 dark:ring-crop-900/30">
-                          {product.productType}
-                        </span>
-                        <span className="text-xs font-semibold text-earth-450 dark:text-earth-400">
-                          {product.companyName || product.company}
-                        </span>
-                      </div>
-                      <h4 className="mt-3 text-lg font-bold text-earth-900 dark:text-earth-100">{product.name}</h4>
-                      {product.activeIngredient && (
-                        <p className="mt-1 text-xs text-earth-500 dark:text-earth-400">
-                          <span className="font-semibold text-earth-650 dark:text-earth-300">Active Ingredient: </span>
-                          {product.activeIngredient}
-                        </p>
-                      )}
-                      <p className="mt-3 text-sm leading-relaxed text-earth-550 dark:text-earth-400">
-                        {product.description || product.notes || 'No description available.'}
+            {/* 4-Column Diagnostic Summary Card */}
+            <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 bg-earth-50/60 dark:bg-earth-950/60 p-4 rounded-xl border border-earth-100 dark:border-earth-800">
+              <div>
+                <span className="text-[9px] uppercase font-bold text-earth-500 dark:text-earth-350 tracking-wider block">
+                  CROP
+                </span>
+                <span className="text-sm font-bold text-earth-850 dark:text-earth-100 mt-0.5 block">
+                  {finalCropName}
+                </span>
+              </div>
+
+              <div>
+                <span className="text-[9px] uppercase font-bold text-earth-500 dark:text-earth-350 tracking-wider block">
+                  DISEASE TYPE
+                </span>
+                <span className="text-sm font-bold text-earth-850 dark:text-earth-100 mt-0.5 block">
+                  {diseaseType}
+                </span>
+              </div>
+
+              <div>
+                <span className="text-[9px] uppercase font-bold text-earth-500 dark:text-earth-350 tracking-wider block">
+                  CONFIDENCE
+                </span>
+                <span className="text-sm font-bold text-crop-600 dark:text-crop-350 mt-0.5 block">
+                  {confidenceVal}
+                </span>
+              </div>
+
+              <div>
+                <span className="text-[9px] uppercase font-bold text-earth-500 dark:text-earth-350 tracking-wider block">
+                  SEVERITY
+                </span>
+                <span className="text-sm font-bold text-amber-600 dark:text-amber-400 mt-0.5 block">
+                  {severityVal}
+                </span>
+              </div>
+            </div>
+
+            {/* In-depth Pathological Description */}
+            <div className="mt-5 text-xs sm:text-sm text-earth-700 dark:text-earth-200 leading-relaxed font-medium bg-earth-50/30 dark:bg-earth-950/40 p-4 rounded-xl border border-earth-100/60 dark:border-earth-800/60">
+              <span className="font-bold text-earth-900 dark:text-earth-50 block mb-1">Pathological Overview:</span>
+              {activeResult.description || sampleResult.description}
+            </div>
+          </div>
+
+          {/* 1. VISIBLE SYMPTOMS */}
+          <div className="mt-8 pt-5 border-t border-earth-100 dark:border-earth-800 relative z-10">
+            <h4 className="text-xs font-bold uppercase tracking-widest text-crop-600 dark:text-crop-400 mb-3">
+              VISIBLE SYMPTOMS
+            </h4>
+            <ul className="space-y-2.5">
+              {symptomsList.map((item, idx) => (
+                <li key={idx} className="text-xs sm:text-sm text-earth-750 dark:text-earth-200 flex items-start gap-2.5">
+                  <span className="w-1.5 h-0.5 bg-crop-600 mt-2 shrink-0 rounded-full dark:bg-crop-400"></span>
+                  <span className="font-medium leading-relaxed">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* 2. LIKELY CAUSES & RISK FACTORS */}
+          <div className="mt-8 pt-5 border-t border-earth-100 dark:border-earth-800 relative z-10">
+            <h4 className="text-xs font-bold uppercase tracking-widest text-crop-600 dark:text-crop-400 mb-3">
+              LIKELY CAUSES & RISK FACTORS
+            </h4>
+            <ul className="space-y-2.5">
+              {causesList.map((item, idx) => (
+                <li key={idx} className="text-xs sm:text-sm text-earth-750 dark:text-earth-200 flex items-start gap-2.5">
+                  <span className="w-1.5 h-0.5 bg-crop-600 mt-2 shrink-0 rounded-full dark:bg-crop-400"></span>
+                  <span className="font-medium leading-relaxed">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* 3. PREVENTION & MANAGEMENT */}
+          <div className="mt-8 pt-5 border-t border-earth-100 dark:border-earth-800 relative z-10">
+            <h4 className="text-xs font-bold uppercase tracking-widest text-crop-600 dark:text-crop-400 mb-3">
+              PREVENTION & MANAGEMENT
+            </h4>
+            <ul className="space-y-2.5">
+              {preventionList.map((item, idx) => (
+                <li key={idx} className="text-xs sm:text-sm text-earth-750 dark:text-earth-200 flex items-start gap-2.5">
+                  <span className="w-1.5 h-0.5 bg-crop-600 mt-2 shrink-0 rounded-full dark:bg-crop-400"></span>
+                  <span className="font-medium leading-relaxed">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* 4. AI DIAGNOSTIC DISCLAIMER */}
+          <div className="mt-8 p-4 rounded-xl bg-earth-50/80 dark:bg-earth-950/60 border border-earth-150 dark:border-earth-800 relative z-10">
+            <span className="text-[10px] font-bold text-earth-500 dark:text-earth-350 uppercase tracking-widest block">
+              AI DIAGNOSTIC DISCLAIMER
+            </span>
+            <p className="mt-1 text-xs text-earth-600 dark:text-earth-300 leading-relaxed font-medium">
+              This assessment is based on AI-powered visual analysis. Similar symptoms may have different causes. Field verification by a qualified agricultural professional is recommended before treatment decisions.
+            </p>
+          </div>
+
+          {/* 5. Minimal Footer */}
+          <div className="mt-8 pt-4 border-t border-earth-100 dark:border-earth-800 text-center relative z-10">
+            <p className="text-[11px] text-earth-400 dark:text-earth-350 font-medium">
+              Intelligent Agricultural Decision Support
+            </p>
+          </div>
+
+        </div>
+
+        {/* 6. RECOMMENDED CROP PROTECTION PRODUCTS (COMMERCIAL FORMULATIONS & OFFICIAL WEBSITES) */}
+        {productsList && productsList.length > 0 && (
+          <div className="mt-12 text-left">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2 pb-3 border-b border-earth-200 dark:border-earth-800">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-crop-600 dark:text-crop-400">
+                  Chemical & Biological Interventions
+                </span>
+                <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-earth-900 dark:text-earth-50 mt-0.5">
+                  Recommended Crop Protection Products
+                </h3>
+              </div>
+              <p className="text-xs text-earth-500 dark:text-earth-350 font-medium">
+                Official products registered with DPP Pakistan
+              </p>
+            </div>
+
+            <div className="mt-6 grid gap-5 sm:grid-cols-2">
+              {productsList.map((product, idx) => (
+                <div
+                  key={product.id || idx}
+                  className="flex flex-col justify-between rounded-2xl border border-earth-200 bg-white p-6 shadow-soft hover:shadow-card hover:border-crop-500/30 transition-all dark:border-earth-800 dark:bg-earth-900"
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="inline-flex items-center rounded-lg bg-crop-50 px-2.5 py-1 text-xs font-bold text-crop-800 ring-1 ring-inset ring-crop-600/20 dark:bg-crop-950/40 dark:text-crop-300 dark:ring-crop-900/40">
+                        {product.productType || 'Crop Protection'}
+                      </span>
+                      <span className="text-xs font-bold text-earth-600 dark:text-earth-300">
+                        {product.companyName || product.company || 'Licensed Manufacturer'}
+                      </span>
+                    </div>
+
+                    <h4 className="mt-3.5 text-lg font-bold text-earth-900 dark:text-earth-50">
+                      {product.name}
+                    </h4>
+
+                    {product.activeIngredient && (
+                      <p className="mt-2 text-xs text-earth-700 dark:text-earth-250">
+                        <span className="font-bold text-earth-900 dark:text-earth-100">Active Ingredient: </span>
+                        {product.activeIngredient}
                       </p>
-                    </div>
-                    <div className="mt-6">
-                      <a
-                        href={product.officialProductUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`Official details page for ${product.name} by ${product.companyName || product.company}`}
-                        className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-earth-200 bg-white px-4 py-2.5 text-sm font-semibold text-earth-700 shadow-sm transition-all hover:bg-earth-55 hover:text-earth-950 dark:border-earth-800 dark:bg-earth-900 dark:text-earth-200 dark:hover:bg-earth-800 dark:hover:text-earth-100 focus:outline-none focus:ring-2 focus:ring-crop-500"
-                      >
-                        Official Product Details
-                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
-                    </div>
+                    )}
+
+                    {product.dosage && (
+                      <p className="mt-1 text-xs text-earth-700 dark:text-earth-250">
+                        <span className="font-bold text-earth-900 dark:text-earth-100">Recommended Dosage: </span>
+                        {product.dosage}
+                      </p>
+                    )}
+
+                    <p className="mt-3 text-xs sm:text-sm leading-relaxed text-earth-650 dark:text-earth-300 font-medium">
+                      {product.description || product.notes || 'Curative and protective formulation targeting foliar pathogens.'}
+                    </p>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="mt-6 rounded-2xl border border-dashed border-earth-205 bg-earth-50/30 p-8 text-center dark:border-earth-800 dark:bg-earth-900/10">
-                <span className="text-2xl" role="img" aria-label="Sprout">🌱</span>
-                <h4 className="mt-2 text-sm font-semibold text-earth-850 dark:text-earth-200">No Chemical Products Recommended</h4>
-                <p className="mt-1 text-xs text-earth-500 dark:text-earth-400 max-w-sm mx-auto">
-                  {activeResult.healthStatus?.toLowerCase().includes('healthy')
-                    ? 'This crop is healthy. No treatment products are required.'
-                    : 'Manage this condition using the preventative steps and cultural best practices outlined above.'}
-                </p>
-              </div>
-            )}
+
+                  <div className="mt-6 pt-4 border-t border-earth-100 dark:border-earth-800">
+                    <a
+                      href={product.officialProductUrl || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-earth-200 bg-earth-50/50 hover:bg-crop-50 hover:text-crop-700 hover:border-crop-300 px-4 py-2.5 text-xs sm:text-sm font-bold text-earth-750 transition-all dark:border-earth-750 dark:bg-earth-850 dark:text-earth-200 dark:hover:bg-crop-950/30 dark:hover:text-crop-300 cursor-pointer"
+                    >
+                      <span>Official Product Details & Label</span>
+                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
-        {isDemo && (
-          <p className="mt-8 text-center text-sm text-earth-400 animate-pulse dark:text-earth-500">
-            Demo data shown. Upload an image and click "Analyze Crop" to execute live diagnostics.
-          </p>
-        )}
       </div>
     </section>
   );

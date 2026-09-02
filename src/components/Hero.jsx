@@ -78,7 +78,7 @@ function Hero() {
                   <p className="text-2xl font-bold tracking-tight text-earth-900 sm:text-3xl dark:text-earth-100">
                     {stat.value}
                   </p>
-                  <p className="mt-1 text-xs leading-snug text-earth-500 sm:text-sm dark:text-earth-450 font-medium">
+                  <p className="mt-1 text-xs leading-snug text-earth-500 sm:text-sm dark:text-earth-300 font-medium">
                     {stat.label}
                   </p>
                 </div>

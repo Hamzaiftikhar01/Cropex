@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import AdvisorCard from '../components/AdvisorCard';
 import { calculateDiseaseRisk, calculateIrrigation, calculateYieldForecast } from '../utils/agriRules';
@@ -5,59 +6,17 @@ import { calculateDiseaseRisk, calculateIrrigation, calculateYieldForecast } fro
 export default function DashboardView({ fieldProfile, weatherData, loading, onNavigate, advice, adviceLoading }) {
   const { t, language } = useLanguage();
 
-  const getCropIcon = (crop) => {
-    const icons = { wheat: '🌾', rice: '🌾', cotton: '🌿', sugarcane: '🎋', maize: '🌽', potato: '🥔', tomato: '🍅' };
-    return icons[crop.toLowerCase()] || '🌱';
-  };
-
-  const translateWeatherDesc = (desc) => {
-    if (language === 'en') return desc;
-    const descMap = {
-      'Clear Sky': 'صاف آسمان',
-      'Clear Sunny': 'صاف دھوپ',
-      'Partly Cloudy': 'جزوی ابر آلود',
-      'Foggy': 'دھند',
-      'Light Drizzle': 'ہلکی بوندا باندی',
-      'Rainy': 'بارش',
-      'Rain Showers': 'تیز بارش',
-      'Thunderstorms': 'گرج چمک',
-      'Overcast & Humid': 'ابر آلود اور نمی',
-      'Drizzle & Foggy': 'بوندا باندی اور دھند',
-      'Rainy & Humid': 'بارش اور نمی',
-      'Extreme Heat': 'شدید گرمی',
-      'Dry Heat / Dust Storm': 'لو اور مٹی کا طوفان',
-      'Breezy & Warm': 'تیز ہوا اور گرمی',
-      'Sunny & Windy': 'دھوپ اور ہوا'
-    };
-    return descMap[desc] || desc;
-  };
-
-  // Visually calm loading state
   if (loading || !weatherData) {
-    const cropIcon = getCropIcon(fieldProfile.cropType);
-    const loadingText = language === 'ur' 
-      ? 'فصل کے کوائف اور سفارشات تیار ہو رہی ہیں...' 
-      : language === 'pa' 
-      ? 'فصل دے کوائف تے سفارشات تیار ہو رہیاں نیں...' 
-      : 'Synthesizing agricultural intelligence and models...';
-
     return (
-      <div className="bg-white border border-earth-100 dark:bg-earth-900 dark:border-earth-850 rounded-2xl p-12 flex flex-col items-center justify-center shadow-soft">
-        <div className="relative flex h-16 w-16 items-center justify-center">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-crop-600/10 opacity-75"></span>
-          <span className="relative text-4xl">{cropIcon}</span>
-        </div>
-        <div className="mt-6 flex items-center gap-2.5">
-          <div className="animate-spin rounded-full h-4.5 w-4.5 border-2 border-t-transparent border-crop-600"></div>
-          <p className="text-xs sm:text-sm font-semibold text-earth-700 dark:text-earth-300">
-            {loadingText}
-          </p>
-        </div>
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <div className="animate-spin rounded-full h-10 w-10 border-2 border-crop-600 border-t-transparent"></div>
+        <p className="mt-4 text-xs font-semibold text-earth-500 dark:text-earth-400">
+          Syncing field telemetry...
+        </p>
       </div>
     );
   }
 
-  // Pre-calculate variables for dashboard summaries
   const riskInfo = calculateDiseaseRisk(fieldProfile.cropType, weatherData, language);
   const irrInfo = calculateIrrigation(
     fieldProfile.cropType,
@@ -76,96 +35,126 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
     language
   );
 
-  // Read logged-in user name
-  const currentUser = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('cropex_current_user') || 'null') : null;
-  const farmerName = currentUser ? currentUser.fullName : 'Farmer';
-
-  // Dynamic Contextual AI Insight Lines
-  const getContextualInsight = () => {
-    const cropLabel = t('crop_' + fieldProfile.cropType.toLowerCase());
-    if (weatherData.daily && weatherData.daily[0].precipitationProb > 60) {
-      return language === 'ur'
-        ? "کراپیکس انٹیلیجنس: کل متوقع بارش کی وجہ سے آبپاشی کی ضرورت کم ہو سکتی ہے۔"
-        : language === 'pa'
-        ? "کراپیکس انٹیلیجنس: کل متوقع بارش دی وجہ توں پانی دی لوڑ گھٹ ہو سکدی اے۔"
-        : "Cropex Intelligence: Rainfall expected tomorrow may reduce your irrigation requirement.";
-    }
-    if (weatherData.current.humidity > 80) {
-      return language === 'ur'
-        ? `رسک انٹیلیجنس: ہوا میں نمی کا تناسب ${weatherData.current.humidity}% ہے — فنگس پھیلنے کا خطرہ زیادہ ہے۔`
-        : language === 'pa'
-        ? `رسک انٹیلیجنس: ہوا وچ نمی دا تناسب ${weatherData.current.humidity}% اے — فنگس پھیل پین دا خطرہ زیادہ اے۔`
-        : `Risk Insight: Ambient humidity averages ${weatherData.current.humidity}% — conditions favor fungal spore propagation.`;
-    }
-    if (Math.max(...weatherData.daily.map(d => d.tempMax)) >= 40) {
-      return language === 'ur'
-        ? "ہیٹ ویو الرٹ: شدید گرمی کا دباؤ پایا گیا ہے — مٹی میں پانی کی مقدار کی جانچ کریں۔"
-        : language === 'pa'
-        ? "ہیٹ ویو الرٹ: شدید گرمی دا دباؤ پایا گیا اے — مٹی وچ پانی دی مقدار چیک کرو۔"
-        : "Weather Alert: Extreme heat stress detected — increase monitored crop transpiration checks.";
-    }
-    return language === 'ur'
-      ? `پیداوار کا اندازہ: موجودہ موسمی حالات کے مطابق ${cropLabel} کی پیداواری صلاحیت مستحکم ہے۔`
-      : language === 'pa'
-      ? `پیداوار دا اندازہ: موجودہ موسمی حالات دے مطابق ${cropLabel} دی پیداواری صلاحیت مستحکم اے۔`
-      : `Yield Forecast: Current conditions align with optimal ${cropLabel} potential yield output.`;
+  // Weather description translations
+  const translateWeatherDesc = (desc) => {
+    if (language === 'en') return desc;
+    const descMap = {
+      'Clear Sky': 'صاف آسمان',
+      'Clear Sunny': 'صاف دھوپ',
+      'Partly Cloudy': 'جزوی طور پر ابر آلود',
+      'Foggy': 'دھند',
+      'Light Drizzle': 'ہلکی بوندا باندی',
+      'Rainy': 'بارش',
+      'Rain Showers': 'تیز بارش',
+      'Thunderstorms': 'گرج چمک کے ساتھ طوفان',
+      'Overcast & Humid': 'ابر آلود اور نمی',
+      'Extreme Heat': 'شدید گرمی'
+    };
+    return descMap[desc] || desc;
   };
 
-  // Dynamic Command Center Health Index Calculations
-  const calculateHealthIndex = () => {
-    let score = 100;
-    if (riskInfo.percentage >= 70) score -= 22;
-    else if (riskInfo.percentage > 30) score -= 12;
+  // Crop icons
+  const getCropIcon = (crop) => {
+    switch (crop.toLowerCase()) {
+      case 'wheat': return '🌾';
+      case 'rice': return '🌾';
+      case 'cotton': return '🌿';
+      case 'sugarcane': return '🎋';
+      case 'maize': return '🌽';
+      case 'potato': return '🥔';
+      case 'tomato': return '🍅';
+      default: return '🌱';
+    }
+  };
 
-    if (irrInfo.recommendation === 'Irrigate Now') score -= 15;
+  // Overall Farm Health Score calculation
+  const calculateHealthScore = () => {
+    let score = 100;
+    if (riskInfo.riskLevel === 'High') score -= 25;
+    else if (riskInfo.riskLevel === 'Medium') score -= 12;
+
+    if (irrInfo.recommendation === 'Irrigate Now') score -= 20;
     else if (irrInfo.recommendation === 'Irrigate in 2 Days') score -= 8;
 
-    const maxTemp = Math.max(...weatherData.daily.map(d => d.tempMax));
-    if (maxTemp >= 40) score -= 10;
-
-    return Math.max(40, score);
+    if (weatherData.current.temp >= 38) score -= 10;
+    return Math.max(20, Math.min(100, score));
   };
 
-  const healthScore = calculateHealthIndex();
+  const healthScore = calculateHealthScore();
 
-  const getHealthLevel = (score) => {
-    if (score >= 85) return { 
-      text: language === 'ur' ? 'مستحکم' : language === 'pa' ? 'ٹھیک' : 'Optimal / Stable', 
-      badge: 'bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-300' 
-    };
-    if (score >= 65) return { 
-      text: language === 'ur' ? 'نگرانی درکار' : language === 'pa' ? 'نگرانی لوڑ' : 'Monitor / Warning', 
-      badge: 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300' 
-    };
-    return { 
-      text: language === 'ur' ? 'فوری توجہ' : language === 'pa' ? 'فوری دھیان' : 'Action Required', 
-      badge: 'bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300' 
+  const getHealthState = (score) => {
+    if (score >= 80) {
+      return {
+        text: language === 'ur' ? 'بہترین حالت' : language === 'pa' ? 'بہترین حالت' : 'Optimal Condition',
+        color: 'text-green-600 dark:text-green-400',
+        badge: 'bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-300 border border-green-200 dark:border-green-900/50'
+      };
+    }
+    if (score >= 60) {
+      return {
+        text: language === 'ur' ? 'توجہ طلب' : language === 'pa' ? 'دھیان دی لوڑ' : 'Attention Needed',
+        color: 'text-amber-600 dark:text-amber-400',
+        badge: 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50'
+      };
+    }
+    return {
+      text: language === 'ur' ? 'فوری عمل درکار' : language === 'pa' ? 'فوری عمل کرو' : 'Action Required',
+      color: 'text-red-600 dark:text-red-400',
+      badge: 'bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300 border border-red-200 dark:border-red-900/50'
     };
   };
 
-  const healthState = getHealthLevel(healthScore);
+  const healthState = getHealthState(healthScore);
+
+  const getContextualInsight = () => {
+    if (weatherData.current.temp >= 38) {
+      return language === 'ur'
+        ? 'شدید درجہ حرارت کی وجہ سے نمی کے اخراج میں تیزی آ گئی ہے۔ شام کے وقت آبپاشی کی منصوبہ بندی کریں۔'
+        : language === 'pa'
+        ? 'شدید گرمی نال نمی تیزی نال گھٹ رہی اے۔ شام ویلے پانی لان دی تیاری کرو۔'
+        : 'Severe atmospheric temperature is driving rapid moisture loss. Schedule evening irrigation.';
+    }
+    if (riskInfo.riskLevel === 'High') {
+      return language === 'ur'
+        ? `ہوا میں نمی بڑھنے کے باعث ${t('crop_' + fieldProfile.cropType.toLowerCase())} پر فنگس کے جراثیم متحرک ہیں۔`
+        : language === 'pa'
+        ? `ہوا دی نمی دی وجہ توں ${t('crop_' + fieldProfile.cropType.toLowerCase())} اُتے فنگس دا خطرہ ودھ گیا اے۔`
+        : `Elevated microclimate humidity is promoting fungal propagation on ${t('crop_' + fieldProfile.cropType.toLowerCase())}.`;
+    }
+    if (irrInfo.recommendation === 'Irrigate Now') {
+      return language === 'ur'
+        ? 'زمین میں جڑوں کی نمی ختم ہو چکی ہے۔ اگلے 24 گھنٹوں میں پانی دینا ضروری ہے۔'
+        : language === 'pa'
+        ? 'مٹی وچ نمی مک چکی اے۔ اگلے 24 گھنٹیاں وچ پانی دینا ضروری اے۔'
+        : 'Root zone moisture depleted. Irrigation required within the next 24 hours.';
+    }
+    return language === 'ur'
+      ? 'کھیت کے تمام پیرامیٹرز معمول کے مطابق اور سازگار ہیں۔'
+      : language === 'pa'
+      ? 'کھیت دے سارے حالات ٹھیک تے سازگار نیں۔'
+      : 'All primary environmental sensors and crop bio-metrics are operating within safe baseline parameters.';
+  };
 
   return (
     <div className="space-y-6 text-left">
       
-      {/* 1. Context Command Strip */}
-      <div className="bg-white/80 dark:bg-earth-900/80 backdrop-blur border border-earth-200 dark:border-earth-800 rounded-2xl p-4 sm:p-5 shadow-soft flex flex-col md:flex-row justify-between items-start md:items-center gap-3.5">
+      {/* 1. Header Command Bar: Greeting & Contextual Insight */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-5 rounded-2xl bg-white dark:bg-earth-900 border border-earth-100 dark:border-earth-800 shadow-soft">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm">👋</span>
-            <h2 className="text-base sm:text-lg font-black text-earth-900 dark:text-earth-50 tracking-tight">
-              {language === 'ur' ? `خوش آمدید، ${farmerName}` : language === 'pa' ? `جی آیاں نوں، ${farmerName}` : `Welcome back, ${farmerName}`}
-            </h2>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-crop-50 text-crop-800 dark:bg-crop-950/30 dark:text-crop-300 border border-crop-200/50 dark:border-crop-900/40">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <h1 className="text-xl sm:text-2xl font-bold text-earth-900 dark:text-earth-50 tracking-tight font-sans">
+              {language === 'ur' ? 'خوش آمدید، کسان بھائی' : language === 'pa' ? 'جی آیاں نوں، کسان ویر' : 'Farm Command Center'}
+            </h1>
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-earth-100 dark:bg-earth-800 text-earth-700 dark:text-earth-300">
               {t('dist_' + fieldProfile.district.toLowerCase())}
             </span>
           </div>
-          <p className="text-xs text-earth-500 dark:text-earth-400 mt-1 font-medium">
-            {language === 'ur' ? 'زرعی کمانڈ سنٹر آپ کے کھیت کے تازہ ترین ڈیٹا کے ساتھ فعال ہے۔' : language === 'pa' ? 'زرعی کمانڈ سنٹر کھیت دے تازہ ڈیٹا نال تیار اے۔' : 'Agricultural operating dashboard is analyzing real-time field data.'}
+          <p className="text-xs sm:text-sm text-earth-500 dark:text-earth-400 mt-1 font-medium">
+            {language === 'ur' ? 'زرعی کمانڈ سنٹر آپ کے کھیت کے تازہ ترین ڈیٹا کے ساتھ فعال ہے۔' : language === 'pa' ? 'زرعی کمانڈ سنٹر کھیت دے تازہ ڈیٹا نال تیار اے۔' : 'Agricultural intelligence system is monitoring active field conditions.'}
           </p>
         </div>
 
-        <div className="w-full md:w-auto text-xs font-bold text-crop-800 dark:text-crop-300 bg-crop-50/80 dark:bg-crop-950/30 border border-crop-200/60 dark:border-crop-900/40 px-3.5 py-2.5 rounded-xl shadow-xs">
+        <div className="w-full md:w-auto text-xs font-semibold text-crop-800 dark:text-crop-300 bg-crop-50/90 dark:bg-crop-950/40 border border-crop-200/60 dark:border-crop-900/40 px-4 py-2.5 rounded-xl shadow-xs">
           💡 {getContextualInsight()}
         </div>
       </div>
@@ -185,26 +174,26 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
         <div className="lg:col-span-7 space-y-6">
           
           {/* Farm Health Index Bar */}
-          <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-5 sm:p-6 shadow-soft flex flex-col sm:flex-row items-center justify-between gap-5">
+          <div className="bg-white border border-earth-100 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-5 sm:p-6 shadow-soft flex flex-col sm:flex-row items-center justify-between gap-5">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-earth-50 dark:bg-earth-950 border-2 border-crop-500/20 flex flex-col items-center justify-center shrink-0">
                 <span className="text-2xl sm:text-3xl font-black text-earth-900 dark:text-earth-50 leading-none">
                   {healthScore}
                 </span>
-                <span className="text-[10px] text-earth-400 font-bold mt-1">/ 100</span>
+                <span className="text-[10px] text-earth-400 dark:text-earth-300 font-bold mt-1">/ 100</span>
               </div>
 
               <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-earth-450 dark:text-earth-500 block">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-earth-500 dark:text-earth-300 block">
                   {language === 'ur' ? 'ہیلتھ انڈیکس' : language === 'pa' ? 'فارم انڈیکس' : 'Farm Health Index'}
                 </span>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider ${healthState.badge}`}>
+                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wider ${healthState.badge}`}>
                     {healthState.text}
                   </span>
                 </div>
-                <p className="text-xs text-earth-550 dark:text-earth-400 font-medium mt-1.5 leading-relaxed">
-                  {healthScore >= 85 
+                <p className="text-xs text-earth-550 dark:text-earth-300 font-medium mt-1.5 leading-relaxed">
+                  {healthScore >= 80 
                     ? (language === 'ur' ? 'کھیت کی مجموعی حالت تسلی بخش اور مستحکم ہے۔' : language === 'pa' ? 'کھیت دی مجموعی حالت ٹھیک تے مستحکم اے۔' : 'All parameters are operating within optimal seasonal ranges.')
                     : (language === 'ur' ? 'کچھ حصوں میں بیماری کے جراثیم یا پانی کی کمی کا دباؤ دیکھا گیا ہے۔' : language === 'pa' ? 'کجھ حصیاں وچ فنگس یا پانی دا دباؤ ویکھیا گیا اے۔' : 'Elevated environmental stress detected on monitored crop profiles.')}
                 </p>
@@ -213,24 +202,24 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
           </div>
 
           {/* Explainable AI Risk Center */}
-          <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
+          <div className="bg-white border border-earth-100 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-earth-100 dark:border-earth-800">
               <div className="flex items-center gap-2">
                 <span className="text-lg">🛡️</span>
-                <h3 className="text-sm font-black text-earth-900 dark:text-earth-50 uppercase tracking-wider">
+                <h3 className="text-xs sm:text-sm font-bold text-earth-900 dark:text-earth-50 uppercase tracking-wider">
                   {language === 'ur' ? 'ایکٹو رسک سنٹر (Explainable AI)' : language === 'pa' ? 'ایکٹو رسک سنٹر (Explainable AI)' : 'Active Risks (Explainable AI)'}
                 </h3>
               </div>
-              <span className="text-[10px] text-earth-400 font-semibold uppercase">Real-Time</span>
+              <span className="text-[10px] text-earth-400 dark:text-earth-300 font-semibold uppercase">Real-Time</span>
             </div>
 
             {(riskInfo.percentage >= 40 || irrInfo.recommendation === 'Irrigate Now') ? (
-              <div className="space-y-3.5">
+              <div className="space-y-3">
                 {/* Fungal Spore Threat */}
                 {riskInfo.percentage >= 40 && (
                   <div className="p-4 rounded-xl bg-red-50/70 border border-red-200 dark:bg-red-950/20 dark:border-red-900/40 text-left space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-red-700 dark:text-red-300">
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-red-700 dark:text-red-300">
                         ⚠️ Outbreak Risk • {riskInfo.percentage}%
                       </span>
                       <span className="text-xs font-bold text-red-900 dark:text-red-200">
@@ -240,53 +229,50 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                     <div className="text-xs text-earth-700 dark:text-earth-300">
                       <strong>{language === 'ur' ? 'وجہ:' : language === 'pa' ? 'وجہ:' : 'Why?'}</strong> {riskInfo.explanation}
                     </div>
-                    <div className="text-xs font-semibold text-crop-800 dark:text-crop-300 pt-1 border-t border-red-200/50 dark:border-red-900/40">
+                    <div className="text-xs font-semibold text-crop-800 dark:text-crop-300 pt-1.5 border-t border-red-200/50 dark:border-red-900/40">
                       <strong>{language === 'ur' ? 'فوری عمل:' : language === 'pa' ? 'فوری عمل:' : 'Recommended Action:'}</strong> Apply systemic protective fungicide spray to suppress spore propagation.
                     </div>
                   </div>
                 )}
 
-                {/* Moisture Stress Warning */}
+                {/* Irrigation Prompt */}
                 {irrInfo.recommendation === 'Irrigate Now' && (
-                  <div className="p-4 rounded-xl bg-amber-50/70 border border-amber-200 dark:bg-amber-950/20 dark:border-amber-900/40 text-left space-y-1.5">
+                  <div className="p-4 rounded-xl bg-blue-50/70 border border-blue-200 dark:bg-blue-950/20 dark:border-blue-900/40 text-left space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-300">
-                        💦 Irrigation Deficit
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-blue-700 dark:text-blue-300">
+                        💧 Water Depletion Alert
                       </span>
-                      <span className="text-xs font-bold text-amber-900 dark:text-amber-200">
-                        {t('crop_' + fieldProfile.cropType.toLowerCase())} Moisture Depletion
+                      <span className="text-xs font-bold text-blue-900 dark:text-blue-200">
+                        {t('soil_' + fieldProfile.soilType.toLowerCase())} Profile
                       </span>
                     </div>
                     <div className="text-xs text-earth-700 dark:text-earth-300">
                       <strong>{language === 'ur' ? 'وجہ:' : language === 'pa' ? 'وجہ:' : 'Why?'}</strong> {irrInfo.explanation}
                     </div>
-                    <div className="text-xs font-semibold text-crop-800 dark:text-crop-300 pt-1 border-t border-amber-200/50 dark:border-amber-900/40">
-                      <strong>{language === 'ur' ? 'فوری عمل:' : language === 'pa' ? 'فوری عمل:' : 'Recommended Action:'}</strong> Apply {irrInfo.litersPerAcre.toLocaleString()} Liters/acre before midday sunlight.
+                    <div className="text-xs font-semibold text-blue-800 dark:text-blue-300 pt-1.5 border-t border-blue-200/50 dark:border-blue-900/40">
+                      <strong>{language === 'ur' ? 'تجویز:' : language === 'pa' ? 'تجویز:' : 'Recommended Action:'}</strong> Apply {irrInfo.amountLitersPerAcre.toLocaleString()} Liters/Acre today.
                     </div>
                   </div>
                 )}
               </div>
             ) : (
-              <div className="p-4 rounded-xl bg-green-50/60 border border-green-200 dark:bg-green-950/20 dark:border-green-900/30 flex items-center gap-3">
-                <span className="text-xl">✅</span>
-                <div className="text-xs font-semibold text-green-900 dark:text-green-300">
-                  {language === 'ur' 
-                    ? 'تمام ماحولیاتی پیرامیٹرز اور بیماریوں کے خطرات محفوظ حد میں ہیں۔' 
-                    : language === 'pa'
-                    ? 'سارے موسمی حالات تے بیماری دا خطرہ محفوظ حد وچ اے۔'
-                    : 'All environmental indicators and fungal spore risks are currently operating within safe baseline limits.'}
-                </div>
+              <div className="py-6 text-center space-y-2">
+                <span className="text-3xl">✅</span>
+                <p className="text-xs font-bold text-crop-800 dark:text-crop-300">No Imminent Critical Pathogen or Soil Drought Alerts</p>
+                <p className="text-[11px] text-earth-500 dark:text-earth-400 max-w-sm mx-auto">
+                  Local climate conditions for {fieldProfile.district} are currently hostile to major foliar pathogen germination.
+                </p>
               </div>
             )}
           </div>
 
           {/* Active Crops Multi-Crop Monitoring Matrix */}
-          <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-5 sm:p-6 shadow-soft">
+          <div className="bg-white border border-earth-100 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-5 sm:p-6 shadow-soft">
             <div className="flex items-center justify-between pb-3 border-b border-earth-100 dark:border-earth-800">
-              <span className="text-xs font-black uppercase tracking-wider text-earth-800 dark:text-earth-200">
+              <span className="text-xs font-bold uppercase tracking-wider text-earth-800 dark:text-earth-200">
                 {language === 'ur' ? 'فعال فصلیں مانیٹرنگ شیٹ' : language === 'pa' ? 'فصلاں دی نگرانی شیٹ' : 'Active Multi-Crop Monitoring Sheet'}
               </span>
-              <span className="text-[10px] text-earth-450 font-bold">
+              <span className="text-[10px] text-earth-500 dark:text-earth-350 font-bold">
                 {t('crop_' + fieldProfile.cropType.toLowerCase())} Active
               </span>
             </div>
@@ -294,11 +280,11 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
             <div className="overflow-x-auto mt-3 -mx-5 sm:mx-0 px-5 sm:px-0">
               <table className="w-full text-left text-xs min-w-[420px]">
                 <thead>
-                  <tr className="border-b border-earth-100 dark:border-earth-800 text-earth-450 dark:text-earth-500 uppercase text-[9px] tracking-wider">
-                    <th className="pb-2 font-bold">{t('cropType')}</th>
-                    <th className="pb-2 font-bold">Health Est.</th>
-                    <th className="pb-2 font-bold">{t('sporeRisk')}</th>
-                    <th className="pb-2 font-bold text-right">Status</th>
+                  <tr className="border-b border-earth-100 dark:border-earth-800 text-earth-500 dark:text-earth-300 uppercase text-[9px] tracking-wider">
+                    <th className="pb-2.5 font-bold">{t('cropType')}</th>
+                    <th className="pb-2.5 font-bold">Health Est.</th>
+                    <th className="pb-2.5 font-bold">{t('sporeRisk')}</th>
+                    <th className="pb-2.5 font-bold text-right">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-earth-100 dark:divide-earth-800/60 font-semibold text-earth-800 dark:text-earth-200">
@@ -312,7 +298,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                     <td className="py-3 font-extrabold">{100 - Math.round(riskInfo.percentage / 2.5)}%</td>
                     <td className="py-3">{riskInfo.percentage}% ({t(riskInfo.riskLevel.toLowerCase())})</td>
                     <td className="py-3 text-right">
-                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${
                         riskInfo.riskLevel === 'High' 
                           ? 'bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300'
                           : riskInfo.riskLevel === 'Medium'
@@ -385,14 +371,14 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
         {/* Right Column: 4 Core Agricultural Intelligence Modules */}
         <div className="lg:col-span-5 space-y-4">
           <div className="flex items-center justify-between pb-1">
-            <h3 className="text-xs font-black uppercase tracking-wider text-earth-600 dark:text-earth-400">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-earth-600 dark:text-earth-400">
               {language === 'ur' ? 'زرعی ماڈیولز کا جائزہ' : language === 'pa' ? 'زرعی ماڈیولز دا جائزہ' : 'Core Agricultural Modules'}
             </h3>
             <span className="text-[10px] text-earth-400 font-bold">4 Live Engines</span>
           </div>
 
           {/* Module 1: Weather Intelligence */}
-          <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-4.5 shadow-soft hover:shadow-card transition-shadow">
+          <div className="bg-white border border-earth-100 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-5 shadow-soft hover:shadow-card transition-shadow">
             <div className="flex justify-between items-start">
               <div>
                 <span className="text-[10px] uppercase font-bold text-crop-600 dark:text-crop-400 tracking-wider">
@@ -411,14 +397,14 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
             </div>
             <button
               onClick={() => onNavigate('weather')}
-              className="w-full mt-3 py-2 text-xs font-bold text-crop-700 dark:text-crop-300 bg-crop-50 dark:bg-crop-950/30 hover:bg-crop-100 rounded-xl transition-colors cursor-pointer border border-crop-200/40 text-center"
+              className="h-9 w-full mt-3.5 inline-flex items-center justify-center text-xs font-bold text-crop-700 dark:text-crop-300 bg-crop-50 dark:bg-crop-950/30 hover:bg-crop-100 dark:hover:bg-crop-900/40 rounded-xl transition-colors cursor-pointer border border-crop-200/40"
             >
               {t('weather')} →
             </button>
           </div>
 
           {/* Module 2: Disease Risk & Diagnosis */}
-          <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-4.5 shadow-soft hover:shadow-card transition-shadow">
+          <div className="bg-white border border-earth-100 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-5 shadow-soft hover:shadow-card transition-shadow">
             <div className="flex justify-between items-start">
               <div>
                 <span className="text-[10px] uppercase font-bold text-crop-600 dark:text-crop-400 tracking-wider">
@@ -432,13 +418,13 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                     riskInfo.riskLevel === 'High' 
                       ? 'bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300' 
                       : riskInfo.riskLevel === 'Medium' 
-                      ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300'
+                      ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300' 
                       : 'bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-300'
                   }`}>
                     {t(riskInfo.riskLevel.toLowerCase())}
                   </span>
                 </div>
-                <span className="text-xs text-earth-500 dark:text-earth-450 block mt-0.5 font-medium">
+                <span className="text-xs text-earth-500 dark:text-earth-300 block mt-0.5 font-medium">
                   {riskInfo.diseaseName}
                 </span>
               </div>
@@ -446,14 +432,14 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
             </div>
             <button
               onClick={() => onNavigate('disease')}
-              className="w-full mt-3 py-2 text-xs font-bold text-crop-700 dark:text-crop-300 bg-crop-50 dark:bg-crop-950/30 hover:bg-crop-100 rounded-xl transition-colors cursor-pointer border border-crop-200/40 text-center"
+              className="h-9 w-full mt-3.5 inline-flex items-center justify-center text-xs font-bold text-crop-700 dark:text-crop-300 bg-crop-50 dark:bg-crop-950/30 hover:bg-crop-100 dark:hover:bg-crop-900/40 rounded-xl transition-colors cursor-pointer border border-crop-200/40"
             >
               {t('scanLeaf')} →
             </button>
           </div>
 
           {/* Module 3: Smart Irrigation */}
-          <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-4.5 shadow-soft hover:shadow-card transition-shadow">
+          <div className="bg-white border border-earth-100 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-5 shadow-soft hover:shadow-card transition-shadow">
             <div className="flex justify-between items-start">
               <div>
                 <span className="text-[10px] uppercase font-bold text-crop-600 dark:text-crop-400 tracking-wider">
@@ -463,7 +449,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                   <span className={`h-2.5 w-2.5 rounded-full ${
                     irrInfo.color === 'red' ? 'bg-red-500' : irrInfo.color === 'amber' ? 'bg-amber-500' : 'bg-green-500'
                   }`}></span>
-                  <span className="text-base font-extrabold text-earth-900 dark:text-earth-50">
+                  <span className="text-base font-bold text-earth-900 dark:text-earth-50">
                     {irrInfo.recommendation === 'Irrigate Now' && t('high') === 'High' ? 'Irrigate Now' : 
                      irrInfo.recommendation === 'Irrigate Now' ? (language === 'pa' ? 'اج ای پانی دیو' : 'ابھی پانی دیں') :
                      irrInfo.recommendation === 'Irrigate in 2 Days' && t('high') === 'High' ? 'Irrigate in 2 Days' :
@@ -471,7 +457,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                      t('soilAdequate')}
                   </span>
                 </div>
-                <span className="text-xs text-earth-500 dark:text-earth-450 block mt-0.5 font-medium">
+                <span className="text-xs text-earth-500 dark:text-earth-300 block mt-0.5 font-medium">
                   {irrInfo.litersPerAcre > 0 ? `${irrInfo.litersPerAcre.toLocaleString()} ${t('litersAcre')}` : t('soilAdequate')}
                 </span>
               </div>
@@ -479,14 +465,14 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
             </div>
             <button
               onClick={() => onNavigate('irrigation')}
-              className="w-full mt-3 py-2 text-xs font-bold text-crop-700 dark:text-crop-300 bg-crop-50 dark:bg-crop-950/30 hover:bg-crop-100 rounded-xl transition-colors cursor-pointer border border-crop-200/40 text-center"
+              className="h-9 w-full mt-3.5 inline-flex items-center justify-center text-xs font-bold text-crop-700 dark:text-crop-300 bg-crop-50 dark:bg-crop-950/30 hover:bg-crop-100 dark:hover:bg-crop-900/40 rounded-xl transition-colors cursor-pointer border border-crop-200/40"
             >
               {t('irrigation')} →
             </button>
           </div>
 
           {/* Module 4: Yield Forecasting */}
-          <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-4.5 shadow-soft hover:shadow-card transition-shadow">
+          <div className="bg-white border border-earth-100 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-5 shadow-soft hover:shadow-card transition-shadow">
             <div className="flex justify-between items-start">
               <div>
                 <span className="text-[10px] uppercase font-bold text-crop-600 dark:text-crop-400 tracking-wider">
@@ -496,7 +482,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                   <span className="text-2xl font-black text-crop-600 dark:text-crop-400">
                     {yieldInfo.minYield} - {yieldInfo.maxYield}
                   </span>
-                  <span className="text-xs font-semibold text-earth-500 dark:text-earth-450">
+                  <span className="text-xs font-semibold text-earth-500 dark:text-earth-300">
                     {t('maundsPerAcre')}
                   </span>
                 </div>
@@ -505,7 +491,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
             </div>
             <button
               onClick={() => onNavigate('yield')}
-              className="w-full mt-3 py-2 text-xs font-bold text-crop-700 dark:text-crop-300 bg-crop-50 dark:bg-crop-950/30 hover:bg-crop-100 rounded-xl transition-colors cursor-pointer border border-crop-200/40 text-center"
+              className="h-9 w-full mt-3.5 inline-flex items-center justify-center text-xs font-bold text-crop-700 dark:text-crop-300 bg-crop-50 dark:bg-crop-950/30 hover:bg-crop-100 dark:hover:bg-crop-900/40 rounded-xl transition-colors cursor-pointer border border-crop-200/40"
             >
               {t('yield')} →
             </button>
@@ -516,7 +502,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
       </div>
 
       {/* Scope disclaimer note for judges and users */}
-      <p className="text-[11px] text-earth-450 dark:text-earth-500 text-center pt-2 italic">
+      <p className="text-[11px] text-earth-500 dark:text-earth-350 text-center pt-2 italic">
         * {t('disclaimer')}
       </p>
     </div>

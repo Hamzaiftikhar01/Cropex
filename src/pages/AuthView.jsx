@@ -139,14 +139,14 @@ export default function AuthView({ onLoginSuccess }) {
   };
 
   return (
-    <div className="min-h-screen bg-earth-50 dark:bg-earth-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-left transition-colors duration-200">
+    <div className="min-h-screen bg-earth-50 dark:bg-earth-950 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 text-left transition-colors duration-200">
       
       {/* Language Toggle in Top Corner */}
       <div className="absolute top-4 right-4">
         <button
           type="button"
           onClick={toggleLanguage}
-          className="rounded-xl border border-earth-200 bg-white px-3 py-2 text-xs font-bold text-earth-700 shadow-soft hover:bg-earth-55 hover:text-earth-950 dark:border-earth-850 dark:bg-earth-850 dark:text-earth-300 dark:hover:bg-earth-800 cursor-pointer"
+          className="h-9 px-3 inline-flex items-center justify-center rounded-xl border border-earth-200 bg-white text-xs font-bold text-earth-700 shadow-soft hover:bg-earth-50 hover:text-earth-950 dark:border-earth-800 dark:bg-earth-900 dark:text-earth-300 dark:hover:bg-earth-850 cursor-pointer transition-colors"
         >
           {getLanguageLabel()}
         </button>
@@ -154,23 +154,23 @@ export default function AuthView({ onLoginSuccess }) {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-crop-600 text-2xl text-white shadow-md shadow-crop-600/30">
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-crop-600 text-2xl text-white shadow-sm shadow-crop-600/30">
             🌱
           </span>
         </div>
-        <h2 className="mt-4 text-center text-3xl font-black tracking-tight text-earth-900 dark:text-earth-50">
+        <h2 className="mt-3 text-center text-3xl font-black tracking-tight text-earth-900 dark:text-earth-50">
           Crop<span className="text-crop-600 dark:text-crop-400">ex</span>
         </h2>
-        <p className="mt-1 text-center text-xs text-earth-500 dark:text-earth-450 uppercase tracking-widest font-bold">
+        <p className="mt-1 text-center text-xs text-earth-500 dark:text-earth-300 uppercase tracking-widest font-bold">
           Hackathon Platform
         </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow-soft border border-earth-100 sm:rounded-3xl sm:px-10 dark:bg-earth-900 dark:border-earth-850">
+      <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-5 shadow-soft border border-earth-100 sm:rounded-2xl sm:px-8 dark:bg-earth-900 dark:border-earth-800">
           
           {errorMsg && (
-            <div className="mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs font-bold dark:bg-red-950/20 dark:border-red-900/30 dark:text-red-300">
+            <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs font-bold dark:bg-red-950/20 dark:border-red-900/30 dark:text-red-300">
               ⚠️ {errorMsg}
             </div>
           )}
@@ -178,10 +178,10 @@ export default function AuthView({ onLoginSuccess }) {
           {/* SIGN IN VIEW */}
           {mode === 'signin' && (
             <form onSubmit={handleSignIn} className="space-y-4">
-              <h3 className="text-xl font-bold text-earth-900 dark:text-earth-50 mb-1">{t('signIn')}</h3>
+              <h3 className="text-lg font-bold text-earth-900 dark:text-earth-50">{t('signIn')}</h3>
               
               <div>
-                <label className="block text-xs font-semibold text-earth-650 dark:text-earth-400 mb-1">
+                <label className="block text-xs font-semibold text-earth-700 dark:text-earth-300 mb-1.5">
                   {t('email')}
                 </label>
                 <input
@@ -189,12 +189,12 @@ export default function AuthView({ onLoginSuccess }) {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white dark:bg-earth-950 text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2.5 focus:outline-none focus:border-crop-500 focus:ring-1 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
+                  className="w-full h-10 bg-white dark:bg-earth-950 text-xs sm:text-sm border border-earth-200 dark:border-earth-800 rounded-xl px-3.5 focus:outline-none focus:ring-2 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-earth-650 dark:text-earth-400 mb-1">
+                <label className="block text-xs font-semibold text-earth-700 dark:text-earth-300 mb-1.5">
                   {t('password')}
                 </label>
                 <input
@@ -202,18 +202,18 @@ export default function AuthView({ onLoginSuccess }) {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-white dark:bg-earth-950 text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2.5 focus:outline-none focus:border-crop-500 focus:ring-1 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
+                  className="w-full h-10 bg-white dark:bg-earth-950 text-xs sm:text-sm border border-earth-200 dark:border-earth-800 rounded-xl px-3.5 focus:outline-none focus:ring-2 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full mt-2 py-3 bg-crop-600 hover:bg-crop-700 text-white rounded-xl text-sm font-bold shadow-md shadow-crop-600/20 cursor-pointer transition-colors"
+                className="w-full h-10 mt-1 inline-flex items-center justify-center bg-crop-600 hover:bg-crop-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm shadow-crop-600/30 cursor-pointer transition-colors"
               >
                 {t('signIn')}
               </button>
 
-              <p className="mt-4 text-center text-xs text-earth-500 dark:text-earth-450 font-medium">
+              <p className="mt-3 text-center text-xs text-earth-500 dark:text-earth-300 font-medium">
                 {t('noAccount')}{' '}
                 <button
                   type="button"
@@ -231,12 +231,11 @@ export default function AuthView({ onLoginSuccess }) {
 
           {/* SIGN UP VIEW */}
           {mode === 'signup' && (
-            <form onSubmit={handleSignUpSubmit} className="space-y-4">
-              <h3 className="text-xl font-bold text-earth-900 dark:text-earth-50 mb-0.5">{t('signUp')}</h3>
-              <p className="text-xs text-earth-500 dark:text-earth-450 mb-3">{t('authWelcome')}</p>
+            <form onSubmit={handleSignUpSubmit} className="space-y-3.5">
+              <h3 className="text-lg font-bold text-earth-900 dark:text-earth-50">{t('signUp')}</h3>
 
               <div>
-                <label className="block text-xs font-semibold text-earth-650 dark:text-earth-400 mb-1">
+                <label className="block text-xs font-semibold text-earth-700 dark:text-earth-300 mb-1">
                   {t('fullName')}
                 </label>
                 <input
@@ -244,26 +243,12 @@ export default function AuthView({ onLoginSuccess }) {
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full bg-white dark:bg-earth-950 text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2.5 focus:outline-none focus:border-crop-500 focus:ring-1 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
+                  className="w-full h-10 bg-white dark:bg-earth-950 text-xs sm:text-sm border border-earth-200 dark:border-earth-800 rounded-xl px-3.5 focus:outline-none focus:ring-2 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-earth-650 dark:text-earth-400 mb-1">
-                  {t('phone')}
-                </label>
-                <input
-                  type="tel"
-                  required
-                  placeholder="03001234567"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full bg-white dark:bg-earth-950 text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2.5 focus:outline-none focus:border-crop-500 focus:ring-1 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-earth-650 dark:text-earth-400 mb-1">
+                <label className="block text-xs font-semibold text-earth-700 dark:text-earth-300 mb-1">
                   {t('email')}
                 </label>
                 <input
@@ -271,12 +256,42 @@ export default function AuthView({ onLoginSuccess }) {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white dark:bg-earth-950 text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2.5 focus:outline-none focus:border-crop-500 focus:ring-1 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
+                  className="w-full h-10 bg-white dark:bg-earth-950 text-xs sm:text-sm border border-earth-200 dark:border-earth-800 rounded-xl px-3.5 focus:outline-none focus:ring-2 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
                 />
               </div>
 
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-earth-700 dark:text-earth-300 mb-1">
+                    {t('phone')}
+                  </label>
+                  <input
+                    type="tel"
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full h-10 bg-white dark:bg-earth-950 text-xs sm:text-sm border border-earth-200 dark:border-earth-800 rounded-xl px-3.5 focus:outline-none focus:ring-2 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-earth-700 dark:text-earth-300 mb-1">
+                    {t('district')}
+                  </label>
+                  <select
+                    value={district}
+                    onChange={(e) => setDistrict(e.target.value)}
+                    className="w-full h-10 bg-white dark:bg-earth-950 text-xs sm:text-sm border border-earth-200 dark:border-earth-800 rounded-xl px-3 focus:outline-none focus:ring-2 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
+                  >
+                    {DISTRICTS.map((d) => (
+                      <option key={d} value={d}>{t('dist_' + d.toLowerCase())}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
               <div>
-                <label className="block text-xs font-semibold text-earth-650 dark:text-earth-400 mb-1">
+                <label className="block text-xs font-semibold text-earth-700 dark:text-earth-300 mb-1">
                   {t('password')}
                 </label>
                 <input
@@ -284,34 +299,19 @@ export default function AuthView({ onLoginSuccess }) {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-white dark:bg-earth-950 text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2.5 focus:outline-none focus:border-crop-500 focus:ring-1 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
+                  className="w-full h-10 bg-white dark:bg-earth-950 text-xs sm:text-sm border border-earth-200 dark:border-earth-800 rounded-xl px-3.5 focus:outline-none focus:ring-2 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
                 />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-earth-650 dark:text-earth-400 mb-1">
-                  {t('district')}
-                </label>
-                <select
-                  value={district}
-                  onChange={(e) => setDistrict(e.target.value)}
-                  className="w-full bg-white dark:bg-earth-950 text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2.5 focus:outline-none focus:border-crop-500 focus:ring-1 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
-                >
-                  {DISTRICTS.map((d) => (
-                    <option key={d} value={d}>{t('dist_' + d.toLowerCase())}</option>
-                  ))}
-                </select>
               </div>
 
               <button
                 type="submit"
-                className="w-full mt-2 py-3 bg-crop-600 hover:bg-crop-700 text-white rounded-xl text-sm font-bold shadow-md shadow-crop-600/20 cursor-pointer transition-colors"
+                className="w-full h-10 mt-1 inline-flex items-center justify-center bg-crop-600 hover:bg-crop-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm shadow-crop-600/30 cursor-pointer transition-colors"
               >
-                {t('signUp')}
+                {t('nextSetup')} →
               </button>
 
-              <p className="mt-4 text-center text-xs text-earth-500 dark:text-earth-450 font-medium">
-                {t('haveAccount')}{' '}
+              <p className="mt-3 text-center text-xs text-earth-500 dark:text-earth-300 font-medium">
+                {t('alreadyAccount')}{' '}
                 <button
                   type="button"
                   onClick={() => {
@@ -326,44 +326,48 @@ export default function AuthView({ onLoginSuccess }) {
             </form>
           )}
 
-          {/* SETUP PROFILE ONBOARDING VIEW */}
+          {/* SETUP PROFILE VIEW */}
           {mode === 'setup_profile' && (
-            <form onSubmit={handleProfileSetupSubmit} className="space-y-4">
-              <h3 className="text-xl font-bold text-earth-900 dark:text-earth-50 mb-0.5">{t('setupProfileTitle')}</h3>
-              <p className="text-xs text-earth-500 dark:text-earth-450 mb-3">{t('setupProfileSubtitle')}</p>
-
+            <form onSubmit={handleProfileSetupSubmit} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-semibold text-earth-650 dark:text-earth-400 mb-1">
-                  {t('cropType')}
-                </label>
-                <select
-                  value={cropType}
-                  onChange={(e) => setCropType(e.target.value)}
-                  className="w-full bg-white dark:bg-earth-950 text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2.5 focus:outline-none focus:border-crop-500 focus:ring-1 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
-                >
-                  {CROPS.map((c) => (
-                    <option key={c} value={c}>{t('crop_' + c.toLowerCase())}</option>
-                  ))}
-                </select>
+                <h3 className="text-lg font-bold text-earth-900 dark:text-earth-50">{t('setupFarmTitle')}</h3>
+                <p className="text-xs text-earth-500 dark:text-earth-300 mt-0.5">{t('setupFarmDesc')}</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-earth-700 dark:text-earth-300 mb-1">
+                    {t('cropType')}
+                  </label>
+                  <select
+                    value={cropType}
+                    onChange={(e) => setCropType(e.target.value)}
+                    className="w-full h-10 bg-white dark:bg-earth-950 text-xs sm:text-sm border border-earth-200 dark:border-earth-800 rounded-xl px-3 focus:outline-none focus:ring-2 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
+                  >
+                    {CROPS.map((c) => (
+                      <option key={c} value={c}>{t('crop_' + c.toLowerCase())}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-earth-700 dark:text-earth-300 mb-1">
+                    {t('soilType')}
+                  </label>
+                  <select
+                    value={soilType}
+                    onChange={(e) => setSoilType(e.target.value)}
+                    className="w-full h-10 bg-white dark:bg-earth-950 text-xs sm:text-sm border border-earth-200 dark:border-earth-800 rounded-xl px-3 focus:outline-none focus:ring-2 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
+                  >
+                    {SOILS.map((s) => (
+                      <option key={s} value={s}>{t('soil_' + s.toLowerCase())}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-earth-650 dark:text-earth-400 mb-1">
-                  {t('soilType')}
-                </label>
-                <select
-                  value={soilType}
-                  onChange={(e) => setSoilType(e.target.value)}
-                  className="w-full bg-white dark:bg-earth-950 text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2.5 focus:outline-none focus:border-crop-500 focus:ring-1 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
-                >
-                  {SOILS.map((s) => (
-                    <option key={s} value={s}>{t('soil_' + s.toLowerCase())}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-earth-650 dark:text-earth-400 mb-1">
+                <label className="block text-xs font-semibold text-earth-700 dark:text-earth-300 mb-1">
                   {t('sowingDate')}
                 </label>
                 <input
@@ -371,13 +375,13 @@ export default function AuthView({ onLoginSuccess }) {
                   required
                   value={sowingDate}
                   onChange={(e) => setSowingDate(e.target.value)}
-                  className="w-full bg-white dark:bg-earth-950 text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2 focus:outline-none focus:border-crop-500 focus:ring-1 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
+                  className="w-full h-10 bg-white dark:bg-earth-950 text-xs sm:text-sm border border-earth-200 dark:border-earth-800 rounded-xl px-3.5 focus:outline-none focus:ring-2 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-earth-650 dark:text-earth-400 mb-1">
-                  {t('lastIrrigated')}
+                <label className="block text-xs font-semibold text-earth-700 dark:text-earth-300 mb-1">
+                  {t('lastIrrigated')} ({t('daysAgo')})
                 </label>
                 <input
                   type="number"
@@ -386,15 +390,15 @@ export default function AuthView({ onLoginSuccess }) {
                   required
                   value={lastIrrigated}
                   onChange={(e) => setLastIrrigated(parseInt(e.target.value) || 0)}
-                  className="w-full bg-white dark:bg-earth-950 text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2 focus:outline-none focus:border-crop-500 focus:ring-1 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
+                  className="w-full h-10 bg-white dark:bg-earth-950 text-xs sm:text-sm border border-earth-200 dark:border-earth-800 rounded-xl px-3.5 focus:outline-none focus:ring-2 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full mt-4 py-3 bg-crop-600 hover:bg-crop-700 text-white rounded-xl text-sm font-bold shadow-md shadow-crop-600/20 cursor-pointer transition-colors"
+                className="w-full h-10 mt-1 inline-flex items-center justify-center bg-crop-600 hover:bg-crop-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm shadow-crop-600/30 cursor-pointer transition-colors"
               >
-                {t('saveAndContinue')}
+                {t('finishSetup')}
               </button>
             </form>
           )}

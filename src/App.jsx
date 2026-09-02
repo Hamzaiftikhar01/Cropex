@@ -218,7 +218,7 @@ function App() {
         />
 
         {/* Navigation router for Module Views */}
-        <div className="pt-2">
+        <div>
           {currentView === 'dashboard' && (
             <DashboardView 
               fieldProfile={fieldProfile}

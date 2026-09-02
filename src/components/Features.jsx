@@ -66,7 +66,7 @@ function Features() {
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-earth-900 sm:text-4xl dark:text-earth-50">
             Built for modern agriculture
           </h2>
-          <p className="mt-4 text-earth-500 dark:text-earth-450">
+          <p className="mt-4 text-earth-500 dark:text-earth-300">
             From detection to treatment, our platform gives farmers the tools to act fast and protect their harvest.
           </p>
         </div>
@@ -81,7 +81,7 @@ function Features() {
                 {feature.icon}
               </div>
               <h3 className="text-base font-semibold text-earth-900 dark:text-earth-100">{feature.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-earth-500 dark:text-earth-400">{feature.description}</p>
+              <p className="mt-2 text-sm leading-relaxed text-earth-500 dark:text-earth-300">{feature.description}</p>
             </div>
           ))}
         </div>
