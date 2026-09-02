@@ -32,22 +32,6 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
     return descMap[desc] || desc;
   };
 
-  const getOnboardingTip = () => {
-    return (
-      <div className="bg-gradient-to-r from-crop-600/10 to-earth-500/10 border-l-4 border-crop-600 p-4 rounded-r-xl mb-6 text-left">
-        <h4 className="font-bold text-sm text-crop-800 dark:text-crop-300">{t('onboardingTitle')}</h4>
-        <p className="text-xs text-earth-650 dark:text-earth-450 mt-1 leading-relaxed">
-          {t('onboardingText')}
-        </p>
-        <ul className="text-[11px] text-earth-550 dark:text-earth-400 mt-2 space-y-1 list-disc pl-4">
-          <li><strong>{t('presetA')}</strong></li>
-          <li><strong>{t('presetB')}</strong></li>
-          <li><strong>{t('presetC')}</strong></li>
-        </ul>
-      </div>
-    );
-  };
-
   // Visually calm loading state
   if (loading || !weatherData) {
     const cropIcon = getCropIcon(fieldProfile.cropType);
@@ -55,23 +39,19 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
       ? 'فصل کے کوائف اور سفارشات تیار ہو رہی ہیں...' 
       : language === 'pa' 
       ? 'فصل دے کوائف تے سفارشات تیار ہو رہیاں نیں...' 
-      : 'Evolving crop intelligence and recommendations...';
+      : 'Synthesizing agricultural intelligence and models...';
 
     return (
-      <div className="space-y-6 text-left">
-        {getOnboardingTip()}
-        <div className="bg-white border border-earth-100 dark:bg-earth-900 dark:border-earth-850 rounded-2xl p-12 flex flex-col items-center justify-center shadow-soft">
-          <div className="relative flex h-16 w-16 items-center justify-center">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-crop-600/10 opacity-75"></span>
-            <span className="relative text-4xl">{cropIcon}</span>
-          </div>
-          
-          <div className="mt-6 flex items-center gap-2.5">
-            <div className="animate-spin rounded-full h-4.5 w-4.5 border-2 border-t-transparent border-crop-600"></div>
-            <p className="text-xs sm:text-sm font-semibold text-earth-700 dark:text-earth-300">
-              {loadingText}
-            </p>
-          </div>
+      <div className="bg-white border border-earth-100 dark:bg-earth-900 dark:border-earth-850 rounded-2xl p-12 flex flex-col items-center justify-center shadow-soft">
+        <div className="relative flex h-16 w-16 items-center justify-center">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-crop-600/10 opacity-75"></span>
+          <span className="relative text-4xl">{cropIcon}</span>
+        </div>
+        <div className="mt-6 flex items-center gap-2.5">
+          <div className="animate-spin rounded-full h-4.5 w-4.5 border-2 border-t-transparent border-crop-600"></div>
+          <p className="text-xs sm:text-sm font-semibold text-earth-700 dark:text-earth-300">
+            {loadingText}
+          </p>
         </div>
       </div>
     );
@@ -96,7 +76,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
     language
   );
 
-  // Read current user info for command center welcome
+  // Read logged-in user name
   const currentUser = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('cropex_current_user') || 'null') : null;
   const farmerName = currentUser ? currentUser.fullName : 'Farmer';
 
@@ -105,16 +85,16 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
     const cropLabel = t('crop_' + fieldProfile.cropType.toLowerCase());
     if (weatherData.daily && weatherData.daily[0].precipitationProb > 60) {
       return language === 'ur'
-        ? "کراپیکس انٹیلیجنس: کل متوقع بارش کی وجہ سے پانی کی ضرورت کم ہو سکتی ہے۔"
+        ? "کراپیکس انٹیلیجنس: کل متوقع بارش کی وجہ سے آبپاشی کی ضرورت کم ہو سکتی ہے۔"
         : language === 'pa'
         ? "کراپیکس انٹیلیجنس: کل متوقع بارش دی وجہ توں پانی دی لوڑ گھٹ ہو سکدی اے۔"
         : "Cropex Intelligence: Rainfall expected tomorrow may reduce your irrigation requirement.";
     }
     if (weatherData.current.humidity > 80) {
       return language === 'ur'
-        ? `رسک انٹیلیجنس: ہوا میں نمی کا تناسب ${weatherData.current.humidity}% ہے — فنگس پھیلنے کے امکانات زیادہ ہیں۔`
+        ? `رسک انٹیلیجنس: ہوا میں نمی کا تناسب ${weatherData.current.humidity}% ہے — فنگس پھیلنے کا خطرہ زیادہ ہے۔`
         : language === 'pa'
-        ? `رسک انٹیلیجنس: ہوا وچ نمی دا تناسب ${weatherData.current.humidity}% اے — فنگس پھیل پین دے امکانات زیادہ نیں۔`
+        ? `رسک انٹیلیجنس: ہوا وچ نمی دا تناسب ${weatherData.current.humidity}% اے — فنگس پھیل پین دا خطرہ زیادہ اے۔`
         : `Risk Insight: Ambient humidity averages ${weatherData.current.humidity}% — conditions favor fungal spore propagation.`;
     }
     if (Math.max(...weatherData.daily.map(d => d.tempMax)) >= 40) {
@@ -125,9 +105,9 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
         : "Weather Alert: Extreme heat stress detected — increase monitored crop transpiration checks.";
     }
     return language === 'ur'
-      ? `پیداوار کا اندازہ: موجودہ حالات کے مطابق ${cropLabel} کی پیداواری صلاحیت مستحکم ہے۔`
+      ? `پیداوار کا اندازہ: موجودہ موسمی حالات کے مطابق ${cropLabel} کی پیداواری صلاحیت مستحکم ہے۔`
       : language === 'pa'
-      ? `پیداوار دا اندازہ: موجودہ حالات دے مطابق ${cropLabel} دی پیداواری صلاحیت مستحکم اے۔`
+      ? `پیداوار دا اندازہ: موجودہ موسمی حالات دے مطابق ${cropLabel} دی پیداواری صلاحیت مستحکم اے۔`
       : `Yield Forecast: Current conditions align with optimal ${cropLabel} potential yield output.`;
   };
 
@@ -149,19 +129,48 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
   const healthScore = calculateHealthIndex();
 
   const getHealthLevel = (score) => {
-    if (score >= 85) return { text: language === 'ur' ? 'مستحکم' : language === 'pa' ? 'ٹھیک' : 'Stable / Optimal', color: 'text-green-600 dark:text-green-400' };
-    if (score >= 65) return { text: language === 'ur' ? 'نگرانی درکار' : language === 'pa' ? 'نگرانی لوڑ' : 'Monitor / Warning', color: 'text-amber-500 dark:text-amber-400' };
-    return { text: language === 'ur' ? 'فوری توجہ' : language === 'pa' ? 'فوری دھیان' : 'Action Required', color: 'text-red-600 dark:text-red-400' };
+    if (score >= 85) return { 
+      text: language === 'ur' ? 'مستحکم' : language === 'pa' ? 'ٹھیک' : 'Optimal / Stable', 
+      badge: 'bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-300' 
+    };
+    if (score >= 65) return { 
+      text: language === 'ur' ? 'نگرانی درکار' : language === 'pa' ? 'نگرانی لوڑ' : 'Monitor / Warning', 
+      badge: 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300' 
+    };
+    return { 
+      text: language === 'ur' ? 'فوری توجہ' : language === 'pa' ? 'فوری دھیان' : 'Action Required', 
+      badge: 'bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300' 
+    };
   };
 
   const healthState = getHealthLevel(healthScore);
 
   return (
     <div className="space-y-6 text-left">
-      {/* Onboarding Banner */}
-      {getOnboardingTip()}
+      
+      {/* 1. Context Command Strip */}
+      <div className="bg-white/80 dark:bg-earth-900/80 backdrop-blur border border-earth-200 dark:border-earth-800 rounded-2xl p-4 sm:p-5 shadow-soft flex flex-col md:flex-row justify-between items-start md:items-center gap-3.5">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm">👋</span>
+            <h2 className="text-base sm:text-lg font-black text-earth-900 dark:text-earth-50 tracking-tight">
+              {language === 'ur' ? `خوش آمدید، ${farmerName}` : language === 'pa' ? `جی آیاں نوں، ${farmerName}` : `Welcome back, ${farmerName}`}
+            </h2>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-crop-50 text-crop-800 dark:bg-crop-950/30 dark:text-crop-300 border border-crop-200/50 dark:border-crop-900/40">
+              {t('dist_' + fieldProfile.district.toLowerCase())}
+            </span>
+          </div>
+          <p className="text-xs text-earth-500 dark:text-earth-400 mt-1 font-medium">
+            {language === 'ur' ? 'زرعی کمانڈ سنٹر آپ کے کھیت کے تازہ ترین ڈیٹا کے ساتھ فعال ہے۔' : language === 'pa' ? 'زرعی کمانڈ سنٹر کھیت دے تازہ ڈیٹا نال تیار اے۔' : 'Agricultural operating dashboard is analyzing real-time field data.'}
+          </p>
+        </div>
 
-      {/* AI Farm Advisor prioritized verdict card */}
+        <div className="w-full md:w-auto text-xs font-bold text-crop-800 dark:text-crop-300 bg-crop-50/80 dark:bg-crop-950/30 border border-crop-200/60 dark:border-crop-900/40 px-3.5 py-2.5 rounded-xl shadow-xs">
+          💡 {getContextualInsight()}
+        </div>
+      </div>
+
+      {/* 2. Top AI Farm Advisor Prioritized Verdict */}
       <AdvisorCard 
         advice={advice} 
         loading={adviceLoading} 
@@ -169,138 +178,200 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
         weatherData={weatherData}
       />
 
-      {/* Dynamic Command Center Greeting & Single Line AI Insight */}
-      <div className="bg-earth-50/70 border border-earth-100 rounded-2xl p-4.5 dark:bg-earth-900/60 dark:border-earth-855 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-        <div>
-          <h2 className="text-lg font-black text-earth-900 dark:text-earth-50">
-            {language === 'ur' ? `خوش آمدید، ${farmerName}` : language === 'pa' ? `جی آیاں نوں، ${farmerName}` : `Welcome back, ${farmerName}`}
-          </h2>
-          <p className="text-xs text-earth-500 dark:text-earth-450 mt-0.5 font-semibold">
-            {language === 'ur' ? 'کمانڈ سنٹر آپ کے کھیت کا مکمل جائزہ پیش کر رہا ہے۔' : language === 'pa' ? 'کمانڈ سنٹر کھیت دا پورا جائزہ پیش کر رہیا اے۔' : 'Your agricultural command center is active.'}
-          </p>
-        </div>
-        <div className="text-xs font-bold text-crop-800 dark:text-crop-300 bg-crop-600/10 px-3.5 py-2 rounded-xl max-w-xl">
-          💡 {getContextualInsight()}
-        </div>
-      </div>
+      {/* 3. Main Command Center Grid: Left Operations Column (7 cols) + Right Modules Column (5 cols) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        {/* Left Column: Farm Health + Active Risks + Multi-Crop Monitoring Matrix */}
+        <div className="lg:col-span-7 space-y-6">
+          
+          {/* Farm Health Index Bar */}
+          <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-5 sm:p-6 shadow-soft flex flex-col sm:flex-row items-center justify-between gap-5">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-earth-50 dark:bg-earth-950 border-2 border-crop-500/20 flex flex-col items-center justify-center shrink-0">
+                <span className="text-2xl sm:text-3xl font-black text-earth-900 dark:text-earth-50 leading-none">
+                  {healthScore}
+                </span>
+                <span className="text-[10px] text-earth-400 font-bold mt-1">/ 100</span>
+              </div>
 
-      {/* Command Center: Health index and Multi-Crop Sheets */}
-      <div className="grid gap-6 md:grid-cols-12">
-        {/* Radial Index Card */}
-        <div className="bg-white border border-earth-100 rounded-2xl p-6 shadow-soft md:col-span-4 dark:bg-earth-900 dark:border-earth-850 flex flex-col justify-between items-center text-center">
-          <div className="w-full text-left">
-            <span className="text-[10px] uppercase font-bold text-earth-400 dark:text-earth-500 tracking-wider">
-              {language === 'ur' ? 'ہیلتھ انڈیکس' : language === 'pa' ? 'فارم انڈیکس' : 'Farm Health Index'}
-            </span>
-          </div>
-
-          <div className="my-6 relative flex items-center justify-center">
-            {/* Simple Circular Radial */}
-            <div className="w-32 h-32 rounded-full border-8 border-earth-50 dark:border-earth-850 flex flex-col items-center justify-center relative">
-              <span className="text-4xl font-black text-earth-900 dark:text-earth-50">{healthScore}</span>
-              <span className="text-[9px] text-earth-400 dark:text-earth-500 font-bold">/ 100</span>
+              <div>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-earth-450 dark:text-earth-500 block">
+                  {language === 'ur' ? 'ہیلتھ انڈیکس' : language === 'pa' ? 'فارم انڈیکس' : 'Farm Health Index'}
+                </span>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider ${healthState.badge}`}>
+                    {healthState.text}
+                  </span>
+                </div>
+                <p className="text-xs text-earth-550 dark:text-earth-400 font-medium mt-1.5 leading-relaxed">
+                  {healthScore >= 85 
+                    ? (language === 'ur' ? 'کھیت کی مجموعی حالت تسلی بخش اور مستحکم ہے۔' : language === 'pa' ? 'کھیت دی مجموعی حالت ٹھیک تے مستحکم اے۔' : 'All parameters are operating within optimal seasonal ranges.')
+                    : (language === 'ur' ? 'کچھ حصوں میں بیماری کے جراثیم یا پانی کی کمی کا دباؤ دیکھا گیا ہے۔' : language === 'pa' ? 'کجھ حصیاں وچ فنگس یا پانی دا دباؤ ویکھیا گیا اے۔' : 'Elevated environmental stress detected on monitored crop profiles.')}
+                </p>
+              </div>
             </div>
           </div>
 
-          <div>
-            <span className={`text-sm font-extrabold uppercase tracking-wide ${healthState.color}`}>
-              {healthState.text}
-            </span>
-            <p className="text-xs text-earth-500 dark:text-earth-455 mt-1 max-w-[200px] font-semibold">
-              {healthScore >= 85 
-                ? (language === 'ur' ? 'کھیت کی حالت تسلی بخش ہے۔' : language === 'pa' ? 'کھیت دی حالت ٹھیک اے۔' : 'All parameters are running within stable ranges.')
-                : (language === 'ur' ? 'کچھ حصوں میں بیماری یا پانی کا خطرہ ہے۔' : language === 'pa' ? 'کجھ حصیاں وچ فنگس یا پانی دا خطرہ اے۔' : 'Active anomalies detected on monitored crop profiles.')}
-            </p>
-          </div>
-        </div>
+          {/* Explainable AI Risk Center */}
+          <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-earth-100 dark:border-earth-800">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">🛡️</span>
+                <h3 className="text-sm font-black text-earth-900 dark:text-earth-50 uppercase tracking-wider">
+                  {language === 'ur' ? 'ایکٹو رسک سنٹر (Explainable AI)' : language === 'pa' ? 'ایکٹو رسک سنٹر (Explainable AI)' : 'Active Risks (Explainable AI)'}
+                </h3>
+              </div>
+              <span className="text-[10px] text-earth-400 font-semibold uppercase">Real-Time</span>
+            </div>
 
-        {/* Agricultural Crops Spreadsheet */}
-        <div className="bg-white border border-earth-100 rounded-2xl p-6 shadow-soft md:col-span-8 dark:bg-earth-900 dark:border-earth-850 flex flex-col justify-between">
-          <div>
-            <span className="text-[10px] uppercase font-bold text-earth-400 dark:text-earth-500 tracking-wider">
-              {language === 'ur' ? 'فعال فصلیں مانیٹرنگ' : language === 'pa' ? 'فصلاں دی نگرانی' : 'Active Crop Monitoring Sheet'}
-            </span>
-            
-            <div className="overflow-x-auto mt-4">
-              <table className="w-full text-left text-xs font-semibold">
+            {(riskInfo.percentage >= 40 || irrInfo.recommendation === 'Irrigate Now') ? (
+              <div className="space-y-3.5">
+                {/* Fungal Spore Threat */}
+                {riskInfo.percentage >= 40 && (
+                  <div className="p-4 rounded-xl bg-red-50/70 border border-red-200 dark:bg-red-950/20 dark:border-red-900/40 text-left space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-red-700 dark:text-red-300">
+                        ⚠️ Outbreak Risk • {riskInfo.percentage}%
+                      </span>
+                      <span className="text-xs font-bold text-red-900 dark:text-red-200">
+                        {t('crop_' + fieldProfile.cropType.toLowerCase())}: {riskInfo.diseaseName}
+                      </span>
+                    </div>
+                    <div className="text-xs text-earth-700 dark:text-earth-300">
+                      <strong>{language === 'ur' ? 'وجہ:' : language === 'pa' ? 'وجہ:' : 'Why?'}</strong> {riskInfo.explanation}
+                    </div>
+                    <div className="text-xs font-semibold text-crop-800 dark:text-crop-300 pt-1 border-t border-red-200/50 dark:border-red-900/40">
+                      <strong>{language === 'ur' ? 'فوری عمل:' : language === 'pa' ? 'فوری عمل:' : 'Recommended Action:'}</strong> Apply systemic protective fungicide spray to suppress spore propagation.
+                    </div>
+                  </div>
+                )}
+
+                {/* Moisture Stress Warning */}
+                {irrInfo.recommendation === 'Irrigate Now' && (
+                  <div className="p-4 rounded-xl bg-amber-50/70 border border-amber-200 dark:bg-amber-950/20 dark:border-amber-900/40 text-left space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-300">
+                        💦 Irrigation Deficit
+                      </span>
+                      <span className="text-xs font-bold text-amber-900 dark:text-amber-200">
+                        {t('crop_' + fieldProfile.cropType.toLowerCase())} Moisture Depletion
+                      </span>
+                    </div>
+                    <div className="text-xs text-earth-700 dark:text-earth-300">
+                      <strong>{language === 'ur' ? 'وجہ:' : language === 'pa' ? 'وجہ:' : 'Why?'}</strong> {irrInfo.explanation}
+                    </div>
+                    <div className="text-xs font-semibold text-crop-800 dark:text-crop-300 pt-1 border-t border-amber-200/50 dark:border-amber-900/40">
+                      <strong>{language === 'ur' ? 'فوری عمل:' : language === 'pa' ? 'فوری عمل:' : 'Recommended Action:'}</strong> Apply {irrInfo.litersPerAcre.toLocaleString()} Liters/acre before midday sunlight.
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="p-4 rounded-xl bg-green-50/60 border border-green-200 dark:bg-green-950/20 dark:border-green-900/30 flex items-center gap-3">
+                <span className="text-xl">✅</span>
+                <div className="text-xs font-semibold text-green-900 dark:text-green-300">
+                  {language === 'ur' 
+                    ? 'تمام ماحولیاتی پیرامیٹرز اور بیماریوں کے خطرات محفوظ حد میں ہیں۔' 
+                    : language === 'pa'
+                    ? 'سارے موسمی حالات تے بیماری دا خطرہ محفوظ حد وچ اے۔'
+                    : 'All environmental indicators and fungal spore risks are currently operating within safe baseline limits.'}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Active Crops Multi-Crop Monitoring Matrix */}
+          <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-5 sm:p-6 shadow-soft">
+            <div className="flex items-center justify-between pb-3 border-b border-earth-100 dark:border-earth-800">
+              <span className="text-xs font-black uppercase tracking-wider text-earth-800 dark:text-earth-200">
+                {language === 'ur' ? 'فعال فصلیں مانیٹرنگ شیٹ' : language === 'pa' ? 'فصلاں دی نگرانی شیٹ' : 'Active Multi-Crop Monitoring Sheet'}
+              </span>
+              <span className="text-[10px] text-earth-450 font-bold">
+                {t('crop_' + fieldProfile.cropType.toLowerCase())} Active
+              </span>
+            </div>
+
+            <div className="overflow-x-auto mt-3 -mx-5 sm:mx-0 px-5 sm:px-0">
+              <table className="w-full text-left text-xs min-w-[420px]">
                 <thead>
-                  <tr className="border-b border-earth-100 dark:border-earth-800 text-earth-400 dark:text-earth-550 uppercase text-[9px] tracking-wider">
+                  <tr className="border-b border-earth-100 dark:border-earth-800 text-earth-450 dark:text-earth-500 uppercase text-[9px] tracking-wider">
                     <th className="pb-2 font-bold">{t('cropType')}</th>
-                    <th className="pb-2 font-bold">Estimated Health</th>
+                    <th className="pb-2 font-bold">Health Est.</th>
                     <th className="pb-2 font-bold">{t('sporeRisk')}</th>
-                    <th className="pb-2 font-bold">Status</th>
+                    <th className="pb-2 font-bold text-right">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-earth-100 dark:divide-earth-800/40 text-earth-800 dark:text-earth-200">
-                  {/* Dynamic Row from Active Field Profile */}
-                  <tr className="bg-crop-50/20 dark:bg-crop-950/5">
-                    <td className="py-3 flex items-center gap-1.5 font-bold">
-                      <span>{getCropIcon(fieldProfile.cropType)}</span>
-                      <span>{t('crop_' + fieldProfile.cropType.toLowerCase())}</span>
+                <tbody className="divide-y divide-earth-100 dark:divide-earth-800/60 font-semibold text-earth-800 dark:text-earth-200">
+                  
+                  {/* Current Active Crop */}
+                  <tr className="bg-crop-50/30 dark:bg-crop-950/10">
+                    <td className="py-3 flex items-center gap-2 font-bold">
+                      <span className="text-base">{getCropIcon(fieldProfile.cropType)}</span>
+                      <span>{t('crop_' + fieldProfile.cropType.toLowerCase())} (Active)</span>
                     </td>
                     <td className="py-3 font-extrabold">{100 - Math.round(riskInfo.percentage / 2.5)}%</td>
                     <td className="py-3">{riskInfo.percentage}% ({t(riskInfo.riskLevel.toLowerCase())})</td>
-                    <td className="py-3">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase ${
+                    <td className="py-3 text-right">
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${
                         riskInfo.riskLevel === 'High' 
-                          ? 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-300'
+                          ? 'bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300'
                           : riskInfo.riskLevel === 'Medium'
-                          ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-300'
-                          : 'bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-300'
+                          ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300'
+                          : 'bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-300'
                       }`}>
-                        {riskInfo.riskLevel === 'High' ? (language === 'ur' ? 'فوری عمل' : language === 'pa' ? 'فوری عمل' : 'Action Required') :
+                        {riskInfo.riskLevel === 'High' ? (language === 'ur' ? 'فوری عمل' : language === 'pa' ? 'فوری عمل' : 'Action Req.') :
                          riskInfo.riskLevel === 'Medium' ? (language === 'ur' ? 'نگرانی' : language === 'pa' ? 'نگرانی' : 'Monitor') :
                          (language === 'ur' ? 'مستحکم' : language === 'pa' ? 'ٹھیک' : 'Stable')}
                       </span>
                     </td>
                   </tr>
 
-                  {/* Seeded Row A: Faisalabad Wheat */}
+                  {/* Wheat row (if not active) */}
                   {fieldProfile.cropType !== 'Wheat' && (
                     <tr>
-                      <td className="py-3 flex items-center gap-1.5">
-                        <span>🌾</span>
+                      <td className="py-3 flex items-center gap-2 font-semibold">
+                        <span className="text-base">🌾</span>
                         <span>{t('crop_wheat')}</span>
                       </td>
                       <td className="py-3">91%</td>
                       <td className="py-3">10% ({t('low')})</td>
-                      <td className="py-3">
+                      <td className="py-3 text-right">
                         <span className="bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-300 px-2 py-0.5 rounded text-[10px] font-bold">
-                          {language === 'ur' ? 'مستحکم' : language === 'pa' ? 'ٹھیک' : 'Stable'}
+                          Stable
                         </span>
                       </td>
                     </tr>
                   )}
 
-                  {/* Seeded Row B: Rice */}
+                  {/* Rice row (if not active) */}
                   {fieldProfile.cropType !== 'Rice' && (
                     <tr>
-                      <td className="py-3 flex items-center gap-1.5">
-                        <span>🌾</span>
+                      <td className="py-3 flex items-center gap-2 font-semibold">
+                        <span className="text-base">🌾</span>
                         <span>{t('crop_rice')}</span>
                       </td>
                       <td className="py-3">82%</td>
                       <td className="py-3">30% ({t('low')})</td>
-                      <td className="py-3">
+                      <td className="py-3 text-right">
                         <span className="bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-300 px-2 py-0.5 rounded text-[10px] font-bold">
-                          {language === 'ur' ? 'مستحکم' : language === 'pa' ? 'ٹھیک' : 'Stable'}
+                          Stable
                         </span>
                       </td>
                     </tr>
                   )}
 
-                  {/* Seeded Row C: Tomato */}
+                  {/* Tomato row (if not active) */}
                   {fieldProfile.cropType !== 'Tomato' && (
                     <tr>
-                      <td className="py-3 flex items-center gap-1.5">
-                        <span>🍅</span>
+                      <td className="py-3 flex items-center gap-2 font-semibold">
+                        <span className="text-base">🍅</span>
                         <span>{t('crop_tomato')}</span>
                       </td>
                       <td className="py-3">88%</td>
                       <td className="py-3">15% ({t('low')})</td>
-                      <td className="py-3">
+                      <td className="py-3 text-right">
                         <span className="bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-300 px-2 py-0.5 rounded text-[10px] font-bold">
-                          {language === 'ur' ? 'مستحکم' : language === 'pa' ? 'ٹھیک' : 'Stable'}
+                          Stable
                         </span>
                       </td>
                     </tr>
@@ -309,199 +380,143 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
               </table>
             </div>
           </div>
-          <p className="text-[10px] text-earth-450 dark:text-earth-500 italic mt-3">
-            * Health index resolves environmental stress, sowing timelines, and fungal spore risks.
-          </p>
         </div>
-      </div>
 
-      {/* Explainable AI Risk Center (Explain Outbreak Dangers) */}
-      {(riskInfo.percentage >= 40 || irrInfo.recommendation === 'Irrigate Now') && (
-        <div className="bg-white border border-earth-100 dark:bg-earth-900 dark:border-earth-850 rounded-2xl p-5 shadow-soft text-left space-y-4">
-          <div className="flex items-center gap-2 pb-2.5 border-b border-earth-100 dark:border-earth-800">
-            <span className="text-xl">🛡️</span>
-            <h3 className="text-sm font-black text-earth-900 dark:text-earth-100 uppercase tracking-wider">
-              {language === 'ur' ? 'ایکٹو رسک سنٹر (Explainable AI)' : language === 'pa' ? 'ایکٹو رسک سنٹر (Explainable AI)' : 'Risk Center — Explainable Spore Dangers'}
+        {/* Right Column: 4 Core Agricultural Intelligence Modules */}
+        <div className="lg:col-span-5 space-y-4">
+          <div className="flex items-center justify-between pb-1">
+            <h3 className="text-xs font-black uppercase tracking-wider text-earth-600 dark:text-earth-400">
+              {language === 'ur' ? 'زرعی ماڈیولز کا جائزہ' : language === 'pa' ? 'زرعی ماڈیولز دا جائزہ' : 'Core Agricultural Modules'}
             </h3>
+            <span className="text-[10px] text-earth-400 font-bold">4 Live Engines</span>
           </div>
 
-          <div className="grid gap-5 sm:grid-cols-2">
-            {/* Fungal Spore Threat */}
-            {riskInfo.percentage >= 40 && (
-              <div className="space-y-2">
-                <span className="text-[10px] uppercase font-bold text-red-500 tracking-wider">⚠️ Disease Threat Alert</span>
-                <h4 className="text-sm font-extrabold text-earth-800 dark:text-earth-200">
-                  {t('crop_' + fieldProfile.cropType.toLowerCase())} {riskInfo.diseaseName}
-                </h4>
-                <div className="text-xs text-earth-600 dark:text-earth-400 space-y-1 bg-earth-50 dark:bg-earth-950 p-3.5 rounded-xl border border-earth-100 dark:border-earth-800 font-semibold">
-                  <div><strong>{language === 'ur' ? 'خطرے کی وجہ؟' : language === 'pa' ? 'خطرے دی وجہ؟' : 'Why?'}</strong> {riskInfo.explanation}</div>
-                  <div className="mt-1.5 text-crop-800 dark:text-crop-300"><strong>{language === 'ur' ? 'تجویز کردہ اسپرے:' : language === 'pa' ? 'تجویز کردہ اسپرے:' : 'Action:'}</strong> Apply systemic copper fungicide immediately to suppress germination.</div>
+          {/* Module 1: Weather Intelligence */}
+          <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-4.5 shadow-soft hover:shadow-card transition-shadow">
+            <div className="flex justify-between items-start">
+              <div>
+                <span className="text-[10px] uppercase font-bold text-crop-600 dark:text-crop-400 tracking-wider">
+                  {t('weather')}
+                </span>
+                <div className="flex items-baseline gap-2 mt-1">
+                  <span className="text-2xl font-black text-earth-900 dark:text-earth-50">
+                    {weatherData.current.temp}°C
+                  </span>
+                  <span className="text-xs font-semibold text-earth-500 dark:text-earth-400">
+                    {translateWeatherDesc(weatherData.current.description)}
+                  </span>
                 </div>
               </div>
-            )}
+              <span className="text-2xl">⛅</span>
+            </div>
+            <button
+              onClick={() => onNavigate('weather')}
+              className="w-full mt-3 py-2 text-xs font-bold text-crop-700 dark:text-crop-300 bg-crop-50 dark:bg-crop-950/30 hover:bg-crop-100 rounded-xl transition-colors cursor-pointer border border-crop-200/40 text-center"
+            >
+              {t('weather')} →
+            </button>
+          </div>
 
-            {/* Smart Irrigation Warning */}
-            {irrInfo.recommendation === 'Irrigate Now' && (
-              <div className="space-y-2">
-                <span className="text-[10px] uppercase font-bold text-amber-500 tracking-wider">💦 Moisture Depletion Alert</span>
-                <h4 className="text-sm font-extrabold text-earth-800 dark:text-earth-200">
-                  {t('crop_' + fieldProfile.cropType.toLowerCase())} Hydro-stress
-                </h4>
-                <div className="text-xs text-earth-600 dark:text-earth-400 space-y-1 bg-earth-50 dark:bg-earth-950 p-3.5 rounded-xl border border-earth-100 dark:border-earth-800 font-semibold">
-                  <div><strong>{language === 'ur' ? 'خطرے کی وجہ؟' : language === 'pa' ? 'خطرے دی وجہ؟' : 'Why?'}</strong> {irrInfo.explanation}</div>
-                  <div className="mt-1.5 text-crop-800 dark:text-crop-300"><strong>{language === 'ur' ? 'تجویز کردہ عمل:' : language === 'pa' ? 'تجویز کردہ عمل:' : 'Action:'}</strong> Apply {irrInfo.litersPerAcre.toLocaleString()} Liters water per acre at dawn.</div>
+          {/* Module 2: Disease Risk & Diagnosis */}
+          <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-4.5 shadow-soft hover:shadow-card transition-shadow">
+            <div className="flex justify-between items-start">
+              <div>
+                <span className="text-[10px] uppercase font-bold text-crop-600 dark:text-crop-400 tracking-wider">
+                  {t('disease')}
+                </span>
+                <div className="flex items-baseline gap-2 mt-1">
+                  <span className="text-2xl font-black text-earth-900 dark:text-earth-50">
+                    {riskInfo.percentage}%
+                  </span>
+                  <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+                    riskInfo.riskLevel === 'High' 
+                      ? 'bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300' 
+                      : riskInfo.riskLevel === 'Medium' 
+                      ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300'
+                      : 'bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-300'
+                  }`}>
+                    {t(riskInfo.riskLevel.toLowerCase())}
+                  </span>
+                </div>
+                <span className="text-xs text-earth-500 dark:text-earth-450 block mt-0.5 font-medium">
+                  {riskInfo.diseaseName}
+                </span>
+              </div>
+              <span className="text-2xl">🦠</span>
+            </div>
+            <button
+              onClick={() => onNavigate('disease')}
+              className="w-full mt-3 py-2 text-xs font-bold text-crop-700 dark:text-crop-300 bg-crop-50 dark:bg-crop-950/30 hover:bg-crop-100 rounded-xl transition-colors cursor-pointer border border-crop-200/40 text-center"
+            >
+              {t('scanLeaf')} →
+            </button>
+          </div>
+
+          {/* Module 3: Smart Irrigation */}
+          <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-4.5 shadow-soft hover:shadow-card transition-shadow">
+            <div className="flex justify-between items-start">
+              <div>
+                <span className="text-[10px] uppercase font-bold text-crop-600 dark:text-crop-400 tracking-wider">
+                  {t('irrigation')}
+                </span>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className={`h-2.5 w-2.5 rounded-full ${
+                    irrInfo.color === 'red' ? 'bg-red-500' : irrInfo.color === 'amber' ? 'bg-amber-500' : 'bg-green-500'
+                  }`}></span>
+                  <span className="text-base font-extrabold text-earth-900 dark:text-earth-50">
+                    {irrInfo.recommendation === 'Irrigate Now' && t('high') === 'High' ? 'Irrigate Now' : 
+                     irrInfo.recommendation === 'Irrigate Now' ? (language === 'pa' ? 'اج ای پانی دیو' : 'ابھی پانی دیں') :
+                     irrInfo.recommendation === 'Irrigate in 2 Days' && t('high') === 'High' ? 'Irrigate in 2 Days' :
+                     irrInfo.recommendation === 'Irrigate in 2 Days' ? (language === 'pa' ? '2 دن وچ پانی دیو' : '2 دن میں پانی دیں') :
+                     t('soilAdequate')}
+                  </span>
+                </div>
+                <span className="text-xs text-earth-500 dark:text-earth-450 block mt-0.5 font-medium">
+                  {irrInfo.litersPerAcre > 0 ? `${irrInfo.litersPerAcre.toLocaleString()} ${t('litersAcre')}` : t('soilAdequate')}
+                </span>
+              </div>
+              <span className="text-2xl">💦</span>
+            </div>
+            <button
+              onClick={() => onNavigate('irrigation')}
+              className="w-full mt-3 py-2 text-xs font-bold text-crop-700 dark:text-crop-300 bg-crop-50 dark:bg-crop-950/30 hover:bg-crop-100 rounded-xl transition-colors cursor-pointer border border-crop-200/40 text-center"
+            >
+              {t('irrigation')} →
+            </button>
+          </div>
+
+          {/* Module 4: Yield Forecasting */}
+          <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-4.5 shadow-soft hover:shadow-card transition-shadow">
+            <div className="flex justify-between items-start">
+              <div>
+                <span className="text-[10px] uppercase font-bold text-crop-600 dark:text-crop-400 tracking-wider">
+                  {t('yield')}
+                </span>
+                <div className="flex items-baseline gap-2 mt-1">
+                  <span className="text-2xl font-black text-crop-600 dark:text-crop-400">
+                    {yieldInfo.minYield} - {yieldInfo.maxYield}
+                  </span>
+                  <span className="text-xs font-semibold text-earth-500 dark:text-earth-450">
+                    {t('maundsPerAcre')}
+                  </span>
                 </div>
               </div>
-            )}
+              <span className="text-2xl">🌾</span>
+            </div>
+            <button
+              onClick={() => onNavigate('yield')}
+              className="w-full mt-3 py-2 text-xs font-bold text-crop-700 dark:text-crop-300 bg-crop-50 dark:bg-crop-950/30 hover:bg-crop-100 rounded-xl transition-colors cursor-pointer border border-crop-200/40 text-center"
+            >
+              {t('yield')} →
+            </button>
           </div>
-        </div>
-      )}
 
-      {/* Grid of 4 Module Summaries */}
-      <div className="grid gap-5 sm:grid-cols-2">
-        
-        {/* Card 1: Weather Intelligence */}
-        <div className="bg-white border border-earth-100 dark:bg-earth-900 dark:border-earth-850 rounded-2xl p-5 shadow-soft flex flex-col justify-between hover:shadow-md transition-shadow">
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-[10px] uppercase font-bold text-crop-600 dark:text-crop-400">{t('weather')}</span>
-              <span className="text-xl">⛅</span>
-            </div>
-            <div className="my-3">
-              <span className="text-3xl font-black text-earth-900 dark:text-earth-50">{weatherData.current.temp}°C</span>
-              <span className="text-xs text-earth-500 dark:text-earth-450 block mt-1 font-semibold">
-                {translateWeatherDesc(weatherData.current.description)} in {t('dist_' + fieldProfile.district.toLowerCase())}
-              </span>
-            </div>
-          </div>
-          
-          <button
-            onClick={() => onNavigate('weather')}
-            className="w-full mt-4 text-center py-2 text-xs font-bold bg-earth-55 hover:bg-earth-100 dark:bg-earth-950 dark:hover:bg-earth-800 text-earth-700 dark:text-earth-300 rounded-xl transition-all cursor-pointer border border-earth-100 dark:border-earth-800"
-          >
-            {t('weather')} →
-          </button>
-        </div>
-
-        {/* Card 2: Disease Risk & Diagnosis */}
-        <div className="bg-white border border-earth-100 dark:bg-earth-900 dark:border-earth-850 rounded-2xl p-5 shadow-soft flex flex-col justify-between hover:shadow-md transition-shadow">
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-[10px] uppercase font-bold text-crop-600 dark:text-crop-400">{t('disease')}</span>
-              <span className="text-xl">🦠</span>
-            </div>
-            <div className="my-3">
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-black text-earth-900 dark:text-earth-50">{riskInfo.percentage}%</span>
-                <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
-                  riskInfo.riskLevel === 'High' 
-                    ? 'bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300' 
-                    : riskInfo.riskLevel === 'Medium' 
-                    ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300'
-                    : 'bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-300'
-                }`}>
-                  {t('riskLevel')}: {t(riskInfo.riskLevel.toLowerCase())}
-                </span>
-              </div>
-              <span className="text-xs text-earth-500 dark:text-earth-455 block mt-1 font-semibold">
-                {t('cropType')}: {t('crop_' + fieldProfile.cropType.toLowerCase())} • {riskInfo.diseaseName}
-              </span>
-            </div>
-          </div>
-          
-          <button
-            onClick={() => onNavigate('disease')}
-            className="w-full mt-4 text-center py-2 text-xs font-bold bg-earth-55 hover:bg-earth-100 dark:bg-earth-950 dark:hover:bg-earth-800 text-earth-700 dark:text-earth-300 rounded-xl transition-all cursor-pointer border border-earth-100 dark:border-earth-800"
-          >
-            {t('scanLeaf')} →
-          </button>
-        </div>
-
-        {/* Card 3: Smart Irrigation Advisor */}
-        <div className="bg-white border border-earth-100 dark:bg-earth-900 dark:border-earth-850 rounded-2xl p-5 shadow-soft flex flex-col justify-between hover:shadow-md transition-shadow">
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-[10px] uppercase font-bold text-crop-600 dark:text-crop-400">{t('irrigation')}</span>
-              <span className="text-xl">💦</span>
-            </div>
-            <div className="my-3">
-              <div className="flex items-center gap-2">
-                <span className={`h-3 w-3 rounded-full ${
-                  irrInfo.color === 'red' ? 'bg-red-500' : irrInfo.color === 'amber' ? 'bg-amber-500' : 'bg-green-500'
-                }`}></span>
-                <span className="text-xl font-bold text-earth-900 dark:text-earth-50">
-                  {irrInfo.recommendation === 'Irrigate Now' && t('high') === 'High' ? 'Irrigate Now' : 
-                   irrInfo.recommendation === 'Irrigate Now' ? (language === 'pa' ? 'اج ای پانی دیو' : 'ابھی پانی دیں') :
-                   irrInfo.recommendation === 'Irrigate in 2 Days' && t('high') === 'High' ? 'Irrigate in 2 Days' :
-                   irrInfo.recommendation === 'Irrigate in 2 Days' ? (language === 'pa' ? '2 دن وچ پانی دیو' : '2 دن میں پانی دیں') :
-                   t('soilAdequate')}
-                </span>
-              </div>
-              <span className="text-xs text-earth-500 dark:text-earth-455 block mt-1.5 font-semibold">
-                {irrInfo.litersPerAcre > 0 
-                  ? `${t('litersAcre')}: ${irrInfo.litersPerAcre.toLocaleString()} ${t('litersAcre')}` 
-                  : t('soilAdequate')}
-              </span>
-            </div>
-          </div>
-          
-          <button
-            onClick={() => onNavigate('irrigation')}
-            className="w-full mt-4 text-center py-2 text-xs font-bold bg-earth-55 hover:bg-earth-100 dark:bg-earth-950 dark:hover:bg-earth-800 text-earth-700 dark:text-earth-300 rounded-xl transition-all cursor-pointer border border-earth-100 dark:border-earth-800"
-          >
-            {t('irrigation')} →
-          </button>
-        </div>
-
-        {/* Card 4: Yield Forecasting */}
-        <div className="bg-white border border-earth-100 dark:bg-earth-900 dark:border-earth-850 rounded-2xl p-5 shadow-soft flex flex-col justify-between hover:shadow-md transition-shadow">
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-[10px] uppercase font-bold text-crop-600 dark:text-crop-400">{t('yield')}</span>
-              <span className="text-xl">🌾</span>
-            </div>
-            <div className="my-3">
-              <span className="text-3xl font-black text-crop-600 dark:text-crop-400">
-                {yieldInfo.minYield} - {yieldInfo.maxYield}
-              </span>
-              <span className="text-xs text-earth-500 dark:text-earth-455 block mt-1 font-semibold">
-                {t('maundsPerAcre')}
-              </span>
-            </div>
-          </div>
-          
-          <button
-            onClick={() => onNavigate('yield')}
-            className="w-full mt-4 text-center py-2 text-xs font-bold bg-earth-55 hover:bg-earth-100 dark:bg-earth-950 dark:hover:bg-earth-800 text-earth-700 dark:text-earth-300 rounded-xl transition-all cursor-pointer border border-earth-100 dark:border-earth-800"
-          >
-            {t('yield')} →
-          </button>
         </div>
 
       </div>
 
-      {/* Field Profile Status */}
-      <div className="bg-earth-50 border border-earth-100 dark:bg-earth-900 dark:border-earth-850 rounded-2xl p-5 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div>
-          <h4 className="text-sm font-bold text-earth-800 dark:text-earth-200">
-            {t('activeSoil')}: {t('soil_' + fieldProfile.soilType.toLowerCase())}
-          </h4>
-          <p className="text-xs text-earth-500 dark:text-earth-455 mt-0.5 font-semibold">
-            {t('sowingDate')}: {fieldProfile.sowingDate} • {t('lastIrrigated')}: {fieldProfile.lastIrrigatedDaysAgo ?? 3} {t('daysAgo')}
-          </p>
-        </div>
-        <button
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-          className="text-xs text-crop-600 hover:text-crop-700 font-bold underline cursor-pointer"
-        >
-          {t('changeSettings')}
-        </button>
-      </div>
-
-      {/* Scope disclaimer note for judges and users safety */}
-      <p className="text-[10px] text-earth-400 dark:text-earth-500 text-center mt-6 leading-relaxed max-w-2xl mx-auto italic">
+      {/* Scope disclaimer note for judges and users */}
+      <p className="text-[11px] text-earth-450 dark:text-earth-500 text-center pt-2 italic">
         * {t('disclaimer')}
       </p>
     </div>

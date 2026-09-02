@@ -94,109 +94,126 @@ export default function FieldProfileSelector({ activeProfile, onProfileChange })
     ? (activeProfile.namePa || activeProfile.name) 
     : activeProfile.name;
 
-  const profileDesc = language === 'ur' 
-    ? (activeProfile.descriptionUr || activeProfile.description) 
-    : language === 'pa' 
-    ? (activeProfile.descriptionPa || activeProfile.description) 
-    : activeProfile.description;
-
   return (
-    <div className="bg-earth-50 border border-earth-100 rounded-2xl p-5 shadow-soft dark:bg-earth-900 dark:border-earth-850 transition-all text-left">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-        <div>
-          <span className="text-xs font-semibold text-crop-600 dark:text-crop-400 uppercase tracking-wider">
-            {t('farmProfile')}
+    <div className="bg-white/90 dark:bg-earth-900/90 backdrop-blur border border-earth-200 dark:border-earth-800 rounded-2xl p-4 sm:p-5 shadow-soft transition-all text-left">
+      
+      {/* Top Header: Active Profile & Presets Quick Switch */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-earth-100 dark:border-earth-800">
+        
+        {/* Active Farm Status Badge */}
+        <div className="flex items-center gap-3">
+          <span className="flex h-3 w-3 rounded-full relative shrink-0">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-crop-500 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-crop-600"></span>
           </span>
-          <h3 className="text-lg font-bold text-earth-900 dark:text-earth-50 flex items-center gap-2 mt-0.5">
-            {profileName}
-          </h3>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold text-crop-700 dark:text-crop-400 uppercase tracking-wider">
+                {t('farmProfile')}
+              </span>
+              <span className="text-xs text-earth-400">•</span>
+              <span className="text-xs font-semibold text-earth-500 dark:text-earth-400">
+                {t('dist_' + activeProfile.district.toLowerCase())}
+              </span>
+            </div>
+            <h3 className="text-base sm:text-lg font-black text-earth-900 dark:text-earth-50 tracking-tight">
+              {profileName}
+            </h3>
+          </div>
         </div>
-        <button
-          onClick={() => {
-            setEditForm(activeProfile);
-            setIsEditing(!isEditing);
-          }}
-          className="px-4 py-2 text-xs font-semibold rounded-xl bg-crop-600 text-white hover:bg-crop-700 transition-colors shadow-sm cursor-pointer"
-        >
-          {isEditing ? t('cancel') : t('modifyProfile')}
-        </button>
+
+        {/* Quick Presets Segmented Control Bar */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 no-scrollbar">
+          {DEMO_PROFILES.map((p) => {
+            const isActive = activeProfile.id === p.id;
+            const shortName = language === 'ur' 
+              ? (p.id === 'wheat-faisalabad' ? '🌾 A: گندم' : p.id === 'tomato-bahawalpur' ? '🍅 B: ٹماٹر' : '🌿 C: کپاس')
+              : language === 'pa'
+              ? (p.id === 'wheat-faisalabad' ? '🌾 A: کنک' : p.id === 'tomato-bahawalpur' ? '🍅 B: ٹماٹر' : '🌿 C: کپاس')
+              : (p.id === 'wheat-faisalabad' ? '🌾 Preset A' : p.id === 'tomato-bahawalpur' ? '🍅 Preset B' : '🌿 Preset C');
+
+            return (
+              <button
+                key={p.id}
+                onClick={() => handleSelectDemo(p)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                  isActive
+                    ? 'bg-crop-600 text-white shadow-sm shadow-crop-600/30'
+                    : 'bg-earth-50 hover:bg-earth-100 text-earth-700 dark:bg-earth-850 dark:hover:bg-earth-800 dark:text-earth-300 border border-earth-200/60 dark:border-earth-750'
+                }`}
+              >
+                {shortName}
+              </button>
+            );
+          })}
+
+          <button
+            onClick={() => {
+              setEditForm(activeProfile);
+              setIsEditing(!isEditing);
+            }}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors shrink-0 cursor-pointer ${
+              isEditing
+                ? 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950/30 dark:text-red-300 dark:border-red-900'
+                : 'border-earth-200 text-earth-600 hover:bg-earth-50 dark:border-earth-800 dark:text-earth-300 dark:hover:bg-earth-850'
+            }`}
+          >
+            {isEditing ? t('cancel') : `⚙️ ${t('modifyProfile')}`}
+          </button>
+        </div>
       </div>
 
+      {/* Details View (When not editing) */}
       {!isEditing ? (
-        <div>
-          {/* Active profile quick specs */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white p-4 rounded-xl border border-earth-100 dark:bg-earth-950 dark:border-earth-800">
-            <div>
-              <div className="text-[10px] text-earth-450 dark:text-earth-500 uppercase font-semibold">{t('cropType')}</div>
-              <div className="text-sm font-bold text-earth-800 dark:text-earth-200">
-                {t('crop_' + activeProfile.cropType.toLowerCase())}
-              </div>
-            </div>
-            <div>
-              <div className="text-[10px] text-earth-450 dark:text-earth-500 uppercase font-semibold">{t('district')}</div>
-              <div className="text-sm font-bold text-earth-800 dark:text-earth-200">
-                {t('dist_' + activeProfile.district.toLowerCase())}
-              </div>
-            </div>
-            <div>
-              <div className="text-[10px] text-earth-450 dark:text-earth-500 uppercase font-semibold">{t('sowingDate')}</div>
-              <div className="text-sm font-bold text-earth-800 dark:text-earth-200">{activeProfile.sowingDate}</div>
-            </div>
-            <div>
-              <div className="text-[10px] text-earth-450 dark:text-earth-500 uppercase font-semibold">{t('soilType')}</div>
-              <div className="text-sm font-bold text-earth-800 dark:text-earth-200">
-                {t('soil_' + activeProfile.soilType.toLowerCase())}
-              </div>
-            </div>
-          </div>
-          {profileDesc && (
-            <p className="mt-2 text-xs italic text-earth-500 dark:text-earth-450">
-              * {profileDesc}
-            </p>
-          )}
-
-          {/* Quick Demo Switchers */}
-          <div className="mt-4 pt-4 border-t border-earth-100 dark:border-earth-805">
-            <span className="text-xs font-bold text-earth-450 dark:text-earth-500 block mb-2">
-              {t('switchPreset')}
+        <div className="pt-3 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <div className="bg-earth-50/70 dark:bg-earth-950/60 p-2.5 rounded-xl border border-earth-100 dark:border-earth-850">
+            <span className="text-[10px] font-bold text-earth-450 dark:text-earth-500 uppercase tracking-wider block">
+              {t('cropType')}
             </span>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-              {DEMO_PROFILES.map((p) => {
-                const displayName = language === 'ur' ? p.nameUr : language === 'pa' ? p.namePa : p.name;
-                return (
-                  <button
-                    key={p.id}
-                    onClick={() => handleSelectDemo(p)}
-                    className={`text-left p-3 rounded-xl border text-xs transition-all cursor-pointer ${
-                      activeProfile.id === p.id
-                        ? 'border-crop-500 bg-crop-50/40 text-crop-800 dark:bg-crop-950/20 dark:text-crop-300'
-                        : 'border-earth-100 hover:bg-earth-100/50 text-earth-600 dark:border-earth-800 dark:hover:bg-earth-800/40 dark:text-earth-300'
-                    }`}
-                  >
-                    <div className="font-bold">
-                      {displayName}
-                    </div>
-                    <div className="opacity-75 mt-0.5">
-                      {t('dist_' + p.district.toLowerCase())} • {t('soil_' + p.soilType.toLowerCase())}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+            <span className="text-xs sm:text-sm font-extrabold text-earth-850 dark:text-earth-150">
+              {t('crop_' + activeProfile.cropType.toLowerCase())}
+            </span>
+          </div>
+
+          <div className="bg-earth-50/70 dark:bg-earth-950/60 p-2.5 rounded-xl border border-earth-100 dark:border-earth-850">
+            <span className="text-[10px] font-bold text-earth-450 dark:text-earth-500 uppercase tracking-wider block">
+              {t('district')}
+            </span>
+            <span className="text-xs sm:text-sm font-extrabold text-earth-850 dark:text-earth-150">
+              {t('dist_' + activeProfile.district.toLowerCase())}
+            </span>
+          </div>
+
+          <div className="bg-earth-50/70 dark:bg-earth-950/60 p-2.5 rounded-xl border border-earth-100 dark:border-earth-850">
+            <span className="text-[10px] font-bold text-earth-450 dark:text-earth-500 uppercase tracking-wider block">
+              {t('soilType')}
+            </span>
+            <span className="text-xs sm:text-sm font-extrabold text-earth-850 dark:text-earth-150">
+              {t('soil_' + activeProfile.soilType.toLowerCase())}
+            </span>
+          </div>
+
+          <div className="bg-earth-50/70 dark:bg-earth-950/60 p-2.5 rounded-xl border border-earth-100 dark:border-earth-850">
+            <span className="text-[10px] font-bold text-earth-450 dark:text-earth-500 uppercase tracking-wider block">
+              {t('lastIrrigated')}
+            </span>
+            <span className="text-xs sm:text-sm font-extrabold text-earth-850 dark:text-earth-150">
+              {activeProfile.lastIrrigatedDaysAgo ?? 3} {t('daysAgo')}
+            </span>
           </div>
         </div>
       ) : (
-        <form onSubmit={handleSaveCustom} className="space-y-4 pt-3 border-t border-earth-100 dark:border-earth-805">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3.5">
-            {/* Crop Select */}
+        /* Edit Form */
+        <form onSubmit={handleSaveCustom} className="pt-3.5 space-y-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
             <div>
-              <label className="block text-[10px] uppercase font-semibold text-earth-500 dark:text-earth-400 mb-1">
+              <label className="block text-[10px] uppercase font-bold text-earth-500 dark:text-earth-400 mb-1">
                 {t('cropType')}
               </label>
               <select
                 value={editForm.cropType}
                 onChange={(e) => setEditForm({ ...editForm, cropType: e.target.value })}
-                className="w-full bg-white dark:bg-earth-950 text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2.5 focus:outline-none focus:border-crop-500 focus:ring-1 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
+                className="w-full bg-white dark:bg-earth-950 text-xs sm:text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2 font-semibold text-earth-800 dark:text-earth-200 focus:outline-none focus:ring-1 focus:ring-crop-500"
               >
                 {CROPS.map((c) => (
                   <option key={c} value={c}>{t('crop_' + c.toLowerCase())}</option>
@@ -204,15 +221,14 @@ export default function FieldProfileSelector({ activeProfile, onProfileChange })
               </select>
             </div>
 
-            {/* Location Select */}
             <div>
-              <label className="block text-[10px] uppercase font-semibold text-earth-500 dark:text-earth-400 mb-1">
+              <label className="block text-[10px] uppercase font-bold text-earth-500 dark:text-earth-400 mb-1">
                 {t('district')}
               </label>
               <select
                 value={editForm.district}
                 onChange={(e) => setEditForm({ ...editForm, district: e.target.value })}
-                className="w-full bg-white dark:bg-earth-950 text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2.5 focus:outline-none focus:border-crop-500 focus:ring-1 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
+                className="w-full bg-white dark:bg-earth-950 text-xs sm:text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2 font-semibold text-earth-800 dark:text-earth-200 focus:outline-none focus:ring-1 focus:ring-crop-500"
               >
                 {DISTRICTS.map((d) => (
                   <option key={d} value={d}>{t('dist_' + d.toLowerCase())}</option>
@@ -220,28 +236,14 @@ export default function FieldProfileSelector({ activeProfile, onProfileChange })
               </select>
             </div>
 
-            {/* Sowing Date */}
             <div>
-              <label className="block text-[10px] uppercase font-semibold text-earth-500 dark:text-earth-400 mb-1">
-                {t('sowingDate')}
-              </label>
-              <input
-                type="date"
-                value={editForm.sowingDate}
-                onChange={(e) => setEditForm({ ...editForm, sowingDate: e.target.value })}
-                className="w-full bg-white dark:bg-earth-950 text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2 focus:outline-none focus:border-crop-500 focus:ring-1 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
-              />
-            </div>
-
-            {/* Soil Type */}
-            <div>
-              <label className="block text-[10px] uppercase font-semibold text-earth-500 dark:text-earth-400 mb-1">
+              <label className="block text-[10px] uppercase font-bold text-earth-500 dark:text-earth-400 mb-1">
                 {t('soilType')}
               </label>
               <select
                 value={editForm.soilType}
                 onChange={(e) => setEditForm({ ...editForm, soilType: e.target.value })}
-                className="w-full bg-white dark:bg-earth-950 text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2.5 focus:outline-none focus:border-crop-500 focus:ring-1 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
+                className="w-full bg-white dark:bg-earth-950 text-xs sm:text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2 font-semibold text-earth-800 dark:text-earth-200 focus:outline-none focus:ring-1 focus:ring-crop-500"
               >
                 {SOILS.map((s) => (
                   <option key={s} value={s}>{t('soil_' + s.toLowerCase())}</option>
@@ -249,9 +251,8 @@ export default function FieldProfileSelector({ activeProfile, onProfileChange })
               </select>
             </div>
 
-            {/* Last Irrigated */}
             <div>
-              <label className="block text-[10px] uppercase font-semibold text-earth-500 dark:text-earth-400 mb-1">
+              <label className="block text-[10px] uppercase font-bold text-earth-500 dark:text-earth-400 mb-1">
                 {t('lastIrrigated')}
               </label>
               <input
@@ -260,22 +261,22 @@ export default function FieldProfileSelector({ activeProfile, onProfileChange })
                 max="30"
                 value={editForm.lastIrrigatedDaysAgo ?? 3}
                 onChange={(e) => setEditForm({ ...editForm, lastIrrigatedDaysAgo: parseInt(e.target.value) || 0 })}
-                className="w-full bg-white dark:bg-earth-950 text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2 focus:outline-none focus:border-crop-500 focus:ring-1 focus:ring-crop-500 text-earth-800 dark:text-earth-200"
+                className="w-full bg-white dark:bg-earth-950 text-xs sm:text-sm border border-earth-200 dark:border-earth-800 rounded-xl p-2 font-semibold text-earth-800 dark:text-earth-200 focus:outline-none focus:ring-1 focus:ring-crop-500"
               />
             </div>
           </div>
 
-          <div className="flex justify-end gap-2.5 pt-2">
+          <div className="flex justify-end gap-2 pt-1">
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              className="px-4 py-2 border border-earth-200 hover:bg-earth-100 rounded-xl text-xs font-semibold text-earth-660 dark:border-earth-800 dark:hover:bg-earth-800 dark:text-earth-300 transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-bold border border-earth-200 dark:border-earth-800 hover:bg-earth-100 dark:hover:bg-earth-800 cursor-pointer"
             >
               {t('cancel')}
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-crop-600 text-white hover:bg-crop-700 rounded-xl text-xs font-semibold transition-colors shadow-sm cursor-pointer"
+              className="px-5 py-2 rounded-xl text-xs font-bold bg-crop-600 hover:bg-crop-700 text-white shadow-sm shadow-crop-600/30 cursor-pointer"
             >
               {t('saveProfile')}
             </button>
