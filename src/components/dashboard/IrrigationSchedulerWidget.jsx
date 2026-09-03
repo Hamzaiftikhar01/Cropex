@@ -96,20 +96,40 @@ export default function IrrigationSchedulerWidget({ irrInfo, fieldProfile, onPro
           </div>
         </div>
 
-        {/* Visual Progress Bar */}
-        <div className="mt-5">
-          <div className="flex justify-between text-[10px] font-bold text-neutral-medium dark:text-earth-400 mb-1.5 px-1 uppercase">
-            <span>{isUrdu ? 'ابھی پانی دیا' : 'Fresh'}</span>
-            <span>{isUrdu ? 'خشک ہو رہا ہے' : 'Drying'}</span>
-            <span>{isUrdu ? 'پانی درکار' : 'Critical'}</span>
-          </div>
-          <div className="h-2.5 w-full bg-neutral-border dark:bg-earth-800 rounded-full overflow-hidden">
-            <div 
-              className={`h-full rounded-full transition-all duration-1000 ease-out ${
-                isUrgent ? 'bg-semantic-high' : isWarning ? 'bg-semantic-medium' : 'bg-blue-500'
-              }`}
-              style={{ width: `${Math.max(progressPercent, 5)}%` }}
-            ></div>
+        {/* Visual Timeline (Simulated Graph) */}
+        <div className="mt-8 mb-2 px-2 relative">
+          <div className="absolute top-1/2 left-0 w-full h-1 bg-neutral-border dark:bg-earth-800 -translate-y-1/2 rounded-full"></div>
+          {/* Active timeline line */}
+          <div 
+            className="absolute top-1/2 left-0 h-1 bg-blue-500 -translate-y-1/2 rounded-full transition-all duration-1000 ease-out" 
+            style={{ width: '50%' }}
+          ></div>
+          <div className="relative flex justify-between">
+            {/* Node 1: Past Irrigation (Simulated) */}
+            <div className="flex flex-col items-center">
+              <div className="w-4 h-4 bg-blue-500 rounded-full border-2 border-white dark:border-earth-900 z-10"></div>
+              <span className="text-[10px] font-bold text-neutral-medium dark:text-earth-400 mt-2 absolute top-4 whitespace-nowrap -translate-x-1/2 left-1/2">
+                {isUrdu ? 'پچھلا' : isPunjabi ? 'پچھلا' : 'Previous'}
+              </span>
+            </div>
+            {/* Node 2: Last Irrigated (Truth) */}
+            <div className="flex flex-col items-center">
+              <div className="w-5 h-5 bg-blue-500 rounded-full border-2 border-white dark:border-earth-900 z-10 flex items-center justify-center shadow-soft">
+                <Check size={12} className="text-white" />
+              </div>
+              <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400 mt-2 absolute top-4 whitespace-nowrap -translate-x-1/2 left-1/2">
+                {isUrdu ? 'آخری پانی' : isPunjabi ? 'آخری پانی' : 'Last'} (-{daysAgo}d)
+              </span>
+            </div>
+            {/* Node 3: Current/Next */}
+            <div className="flex flex-col items-center">
+              <div className={`w-5 h-5 rounded-full border-2 border-white dark:border-earth-900 z-10 flex items-center justify-center ${daysAgo === 0 ? 'bg-blue-300' : isUrgent ? 'bg-semantic-high animate-pulse' : isWarning ? 'bg-semantic-medium' : 'bg-neutral-border dark:bg-earth-700'}`}>
+                 {isUrgent && <Droplets size={12} className="text-white" />}
+              </div>
+              <span className={`text-[10px] font-bold mt-2 absolute top-4 whitespace-nowrap -translate-x-1/2 left-1/2 ${isUrgent ? 'text-semantic-high' : isWarning ? 'text-semantic-medium' : 'text-neutral-medium dark:text-earth-400'}`}>
+                {isUrdu ? 'اگلا پانی' : isPunjabi ? 'اگلا پانی' : 'Target'}
+              </span>
+            </div>
           </div>
         </div>
       </div>
