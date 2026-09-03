@@ -1,28 +1,37 @@
 import { calculateDiseaseRisk, calculateIrrigation, calculateYieldForecast, getGrowthStage } from '../utils/agriRules';
+import { translations } from '../locales/translations';
 
 /**
  * Executes Layer 1 (Deterministic Priority Ladder) of the Farm Advisor.
  * Returns structured translation keys and parameters.
+ * 
+ * @DataContract
+ * @param {object} fieldProfile - The user's active profile containing cropType, soilType, sowingDate
+ * @param {object} weatherData - Open-Meteo payload containing { daily: [...], current: {...} }
+ * @returns {object} { priority: string, urgency: string, headlineKey: string, reasoningKey: string, reasoningData: object, secondaryNotes: array }
+ * @fallback If the LLM rephraser endpoint (Layer 2) times out or fails, the UI natively renders the headlineKey and reasoningKey via local translations, ensuring the verdict is never dropped.
  */
-export function getDeterministicAdvice(fieldProfile, weatherData) {
+export function getDeterministicAdvice(fieldProfile, weatherData, language = 'en') {
   // 1. Calculate inputs from all modules
-  const riskInfo = calculateDiseaseRisk(fieldProfile.cropType, weatherData);
+  const riskInfo = calculateDiseaseRisk(fieldProfile.cropType, weatherData, language);
   const irrInfo = calculateIrrigation(
     fieldProfile.cropType,
     fieldProfile.soilType,
     fieldProfile.sowingDate,
     fieldProfile.lastIrrigatedDaysAgo ?? 3,
-    weatherData
+    weatherData,
+    language
   );
   const yieldInfo = calculateYieldForecast(
     fieldProfile.cropType,
     fieldProfile.soilType,
     fieldProfile.sowingDate,
     weatherData,
-    riskInfo.percentage
+    riskInfo.percentage,
+    language
   );
 
-  const { stage } = getGrowthStage(fieldProfile.cropType, fieldProfile.sowingDate);
+  const { stage } = getGrowthStage(fieldProfile.cropType, fieldProfile.sowingDate, language);
 
   // Extract weather factors
   const daily = weatherData?.daily || [];
@@ -143,13 +152,31 @@ export function getDeterministicAdvice(fieldProfile, weatherData) {
     }
   });
 
+  // Resolve translation keys to actual text for LLM rephraser
+  const dict = translations[language] || translations.en;
+  const resolveKey = (key, data) => {
+    let text = dict[key] || key;
+    if (data) {
+      Object.keys(data).forEach((k) => {
+        text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), data[k]);
+      });
+    }
+    return text;
+  };
+
+  const headline = resolveKey(headlineKey, reasoningData);
+  const reasoning = resolveKey(reasoningKey, reasoningData);
+
   return {
     priority,
     urgency,
     headlineKey,
     reasoningKey,
     reasoningData,
-    secondaryNotes
+    headline,
+    reasoning,
+    secondaryNotes,
+    language
   };
 }
 
@@ -161,9 +188,9 @@ export async function getRephrasedAdvice(deterministicAdvice, language = 'en') {
   const timeoutId = setTimeout(() => controller.abort(), 2500); // Strict 2.5 second timeout
 
   try {
-    // Generate raw string representation for LLM to rephrase
-    const rawHeadline = deterministicAdvice.headlineKey; 
-    const rawReasoning = deterministicAdvice.reasoningKey;
+    // Use pre-resolved translated text for LLM to rephrase
+    const rawHeadline = deterministicAdvice.headline;
+    const rawReasoning = deterministicAdvice.reasoning;
 
     const response = await fetch('/api/rephrase', {
       method: 'POST',

@@ -13,6 +13,13 @@ const SOIL_UR = { sandy: 'ریتیلی', loamy: 'میرا (لوامی)', clay: '
 
 /**
  * Calculates crop-scoped disease risk based on 7-day weather variables
+ * 
+ * @DataContract
+ * @param {string} cropType - The crop enum (e.g., 'wheat', 'rice')
+ * @param {object} weatherData - Open-Meteo payload containing { daily: [...] }
+ * @param {string} [language='en'] - Output language code ('en', 'ur', 'pa')
+ * @returns {object} { diseaseName: string, riskLevel: 'Low'|'Medium'|'High', percentage: number, explanation: string }
+ * @fallback Returns a generic 'Low' risk (10%) gracefully if weatherData is missing.
  */
 export function calculateDiseaseRisk(cropType, weatherData, language = 'en') {
   const isUrdu = language === 'ur';
@@ -258,6 +265,16 @@ export function getGrowthStage(cropType, sowingDate, language = 'en') {
 
 /**
  * Calculates optimal irrigation scheduling using a water-budget logic
+ * 
+ * @DataContract
+ * @param {string} cropType - The crop enum (e.g., 'wheat', 'rice')
+ * @param {string} soilType - 'sandy', 'loamy', or 'clay'
+ * @param {string} sowingDate - ISO string Date (e.g., '2026-08-01')
+ * @param {number} lastIrrigatedDaysAgo - Days elapsed since last manual watering
+ * @param {object} weatherData - Open-Meteo payload containing { daily: [...] }
+ * @param {string} [language='en'] - Output language code ('en', 'ur', 'pa')
+ * @returns {object} { recommendation: string, color: string, litersPerAcre: number, explanation: string }
+ * @fallback Clamps litersPerAcre to a max of 80000. Offsets requirement by recent 72hr rain.
  */
 export function calculateIrrigation(cropType, soilType, sowingDate, lastIrrigatedDaysAgo, weatherData, language = 'en') {
   const crop = (cropType || '').toLowerCase();
@@ -292,15 +309,21 @@ export function calculateIrrigation(cropType, soilType, sowingDate, lastIrrigate
 
   // 4. Soil Interval parameters (Sandy / Loamy / Clay)
   let soilInterval = 6;
-  let litersPerAcre = 30000;
   if (soil === 'sandy') {
     soilInterval = 3;
-    litersPerAcre = 15000;
   } else if (soil === 'clay') {
     soilInterval = 9;
-    litersPerAcre = 45000;
   }
-
+  
+  // Base requirement is daily demand * days since last irrigation * 4046 (sq meters per acre) / 1000 to get thousands, but we'll use a simpler heuristic:
+  // liters = adjustedDemand (mm) * 4000 (roughly liters per acre per mm) * daysSinceIrrigation
+  let rawLiters = adjustedDemand * 4000 * daysSinceIrrigation;
+  
+  // Rain offset: 1mm of rain saves roughly 4000 liters
+  rawLiters -= (next3DaysRain * 4000);
+  
+  // Sanity Clamps (Floor at 0, Ceiling at 80,000)
+  const litersPerAcre = Math.min(80000, Math.max(0, rawLiters));
   // Humidity adjustment
   let humidityAlert = '';
   if (avgHumid > 80) {
@@ -361,6 +384,16 @@ export function calculateIrrigation(cropType, soilType, sowingDate, lastIrrigate
 
 /**
  * Calculates yield estimate using clamped environment regressions
+ * 
+ * @DataContract
+ * @param {string} cropType - The crop enum (e.g., 'wheat', 'rice')
+ * @param {string} soilType - 'sandy', 'loamy', or 'clay'
+ * @param {string} sowingDate - ISO string Date
+ * @param {object} weatherData - Open-Meteo payload
+ * @param {number} diseaseRiskPercentage - The calculated risk % (0-100) from calculateDiseaseRisk
+ * @param {string} [language='en'] - Output language code
+ * @returns {object} { expectedYield: string, expectedYieldUr: string, factors: string[] }
+ * @fallback Total stress multiplier is hard-clamped at a floor of 0.60 to prevent unrealistic zero-yield forecasts.
  */
 export function calculateYieldForecast(cropType, soilType, sowingDate, weatherData, diseaseRiskPercentage, language = 'en') {
   const crop = (cropType || '').toLowerCase();

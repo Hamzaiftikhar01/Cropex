@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 
-function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout }) {
+function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout, darkMode, onToggleDarkMode }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const { language, toggleLanguage, t } = useLanguage();
+  const dropdownRef = useRef(null);
 
   const navLinks = [
     { label: t('dashboard'), view: 'dashboard' },
     { label: t('weather'), view: 'weather' },
     { label: t('disease'), view: 'disease' },
-    { label: t('irrigation'), view: 'irrigation' },
+    { label: t('guides'), view: 'guides' },
     { label: t('yield'), view: 'yield' },
   ];
 
@@ -34,21 +36,32 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
     return '🇵🇰 پنجابی';
   };
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setProfileDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-40 border-b border-earth-100 bg-white/90 backdrop-blur-md transition-colors duration-200 dark:border-earth-800 dark:bg-earth-950/90">
+    <header className="sticky top-0 z-40 border-b border-neutral-border bg-neutral-surface/90 backdrop-blur-md transition-colors duration-200">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
         
         {/* Logo */}
         <a
           href="#dashboard"
           onClick={(e) => handleLinkClick(e, 'dashboard')}
-          className="flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-crop-500 rounded-xl p-1"
+          className="flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-brand-primary rounded-xl p-1"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-crop-600 text-base text-white shadow-sm shadow-crop-600/20">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-primary text-base text-neutral-surface shadow-sm">
             🌱
           </span>
-          <span className="text-lg font-bold tracking-tight text-earth-900 dark:text-earth-50 font-sans">
-            Crop<span className="font-semibold text-crop-600 dark:text-crop-400">ex</span>
+          <span className="text-lg font-bold tracking-tight text-neutral-high font-sans">
+            Crop<span className="font-semibold text-brand-primary">ex</span>
           </span>
         </a>
 
@@ -61,10 +74,10 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
                 <a
                   href={`#${link.view}`}
                   onClick={(e) => handleLinkClick(e, link.view)}
-                  className={`text-xs lg:text-sm font-semibold transition-all py-2 px-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-crop-500 ${
+                  className={`text-xs lg:text-sm font-semibold transition-all py-2 px-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary ${
                     isActive
-                      ? 'text-crop-700 bg-crop-50 dark:text-crop-300 dark:bg-crop-950/30 font-bold shadow-xs'
-                      : 'text-earth-600 hover:text-earth-900 hover:bg-earth-50 dark:text-earth-400 dark:hover:text-earth-100 dark:hover:bg-earth-900/50'
+                      ? 'text-brand-primary bg-brand-surface font-bold shadow-xs'
+                      : 'text-neutral-medium hover:text-neutral-high hover:bg-neutral-fill'
                   }`}
                 >
                   {link.label}
@@ -75,83 +88,99 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
         </ul>
 
         {/* Right Action Controls */}
-        <div className="hidden md:flex items-center gap-2">
-          {/* Scan Leaf Button */}
+        <div className="hidden md:flex items-center gap-3">
+          {/* Scan Leaf Button (Primary CTA) */}
           <a
             href="#upload"
             onClick={handleScanClick}
-            className="h-9 inline-flex items-center justify-center rounded-xl bg-crop-600 px-4 text-xs lg:text-sm font-semibold text-white shadow-sm shadow-crop-600/20 transition-all hover:bg-crop-700 focus:outline-none focus:ring-2 focus:ring-crop-500 cursor-pointer"
+            className="h-9 inline-flex items-center justify-center rounded-xl bg-brand-primary px-4 text-xs lg:text-sm font-semibold text-neutral-surface shadow-sm transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand-primary cursor-pointer"
           >
             {t('scanLeaf')}
           </a>
 
-          {/* User Display */}
-          {currentUser && (
-            <div className="h-9 inline-flex items-center gap-1.5 text-xs font-semibold text-earth-700 dark:text-earth-300 bg-earth-50 dark:bg-earth-900 border border-earth-100 dark:border-earth-800 px-3 rounded-xl shadow-xs">
-              <span className="opacity-75">👤</span>
-              <span className="max-w-[120px] truncate">{currentUser.fullName}</span>
-            </div>
-          )}
-
-          {/* Language Switcher */}
+          {/* Language Toggle Button */}
           <button
-            type="button"
-            onClick={toggleLanguage}
-            className="h-9 inline-flex items-center justify-center rounded-xl border border-earth-200 bg-white px-3 text-xs font-bold text-earth-700 shadow-soft hover:bg-earth-50 hover:text-earth-950 dark:border-earth-800 dark:bg-earth-900 dark:text-earth-300 dark:hover:bg-earth-850 cursor-pointer transition-colors"
+            onClick={() => toggleLanguage()}
+            className="h-9 inline-flex items-center justify-center rounded-xl bg-neutral-fill border border-neutral-border px-3 text-xs font-bold text-neutral-high shadow-sm hover:bg-neutral-border focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors cursor-pointer"
+            title="Toggle Language (English / Urdu / Punjabi)"
           >
             {getLanguageLabel()}
           </button>
-          
-          {/* Settings Trigger */}
+
+          {/* Dark Mode Toggle Button */}
           <button
-            type="button"
-            onClick={onOpenSettings}
-            className="h-9 w-9 inline-flex items-center justify-center rounded-xl border border-earth-200 bg-white text-earth-600 shadow-soft hover:bg-earth-50 hover:text-earth-950 dark:border-earth-800 dark:bg-earth-900 dark:text-earth-300 dark:hover:bg-earth-850 focus:outline-none focus:ring-2 focus:ring-crop-500 cursor-pointer"
-            aria-label="System Settings"
+            onClick={onToggleDarkMode}
+            className="h-9 w-9 inline-flex items-center justify-center rounded-xl bg-neutral-fill border border-neutral-border text-neutral-high shadow-sm hover:bg-neutral-border focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors cursor-pointer"
+            title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
-            <svg className="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
+            {darkMode ? '☀️' : '🌙'}
           </button>
 
-          {/* Logout Button */}
-          {currentUser && (
+          {/* Profile Menu Dropdown */}
+          <div className="relative" ref={dropdownRef}>
             <button
-              type="button"
-              onClick={onLogout}
-              className="h-9 inline-flex items-center justify-center rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-xs font-bold text-red-700 px-3.5 dark:border-red-900/30 dark:bg-red-950/20 dark:text-red-300 dark:hover:bg-red-900/35 cursor-pointer transition-colors"
+              onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+              className="h-9 w-9 inline-flex items-center justify-center rounded-full bg-neutral-fill border border-neutral-border text-neutral-high shadow-sm hover:bg-neutral-border focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors cursor-pointer"
             >
-              {t('signOut')}
+              👤
             </button>
-          )}
+
+            {profileDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-neutral-surface border border-neutral-border rounded-xl shadow-card py-1 z-50">
+                {currentUser && (
+                  <div className="px-4 py-2 border-b border-neutral-border">
+                    <p className="text-xs font-bold text-neutral-high truncate">{currentUser.fullName}</p>
+                    <p className="text-[10px] text-neutral-medium truncate">{currentUser.email}</p>
+                  </div>
+                )}
+                
+
+                <button
+                  onClick={() => { onOpenSettings(); setProfileDropdownOpen(false); }}
+                  className="w-full text-left px-4 py-2 text-xs font-semibold text-neutral-medium hover:bg-neutral-fill hover:text-neutral-high transition-colors"
+                >
+                  ⚙️ {t('settings')}
+                </button>
+
+                {currentUser && (
+                  <button
+                    onClick={() => { onLogout(); setProfileDropdownOpen(false); }}
+                    className="w-full text-left px-4 py-2 text-xs font-bold text-semantic-high hover:bg-neutral-fill transition-colors"
+                  >
+                    🚪 {t('signOut')}
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Mobile Controls */}
         <div className="flex items-center gap-1.5 md:hidden">
           <button
-            type="button"
-            onClick={toggleLanguage}
-            className="h-9 inline-flex items-center justify-center rounded-xl border border-earth-200 bg-white px-2.5 text-xs font-bold text-earth-700 shadow-soft dark:border-earth-800 dark:bg-earth-900 dark:text-earth-300"
+            onClick={onToggleDarkMode}
+            className="h-9 w-9 inline-flex items-center justify-center rounded-xl bg-neutral-fill border border-neutral-border text-neutral-high shadow-sm hover:bg-neutral-border focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors cursor-pointer"
+            title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
-            {getLanguageLabel()}
+            {darkMode ? '☀️' : '🌙'}
           </button>
-
+          <button
+            onClick={() => toggleLanguage()}
+            className="h-9 inline-flex items-center justify-center rounded-xl bg-neutral-fill border border-neutral-border px-2.5 text-xs font-bold text-neutral-high shadow-sm hover:bg-neutral-border focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors cursor-pointer"
+          >
+            {getLanguageLabel().split(' ')[0]} {/* Just show flag on mobile */}
+          </button>
+          <a
+            href="#upload"
+            onClick={handleScanClick}
+            className="h-9 inline-flex items-center justify-center rounded-xl bg-brand-primary px-3 text-xs font-semibold text-neutral-surface shadow-sm"
+          >
+            {t('scanLeaf')}
+          </a>
+          
           <button
             type="button"
-            onClick={onOpenSettings}
-            className="h-9 w-9 inline-flex items-center justify-center rounded-xl border border-earth-200 bg-white text-earth-600 shadow-soft dark:border-earth-800 dark:bg-earth-900 dark:text-earth-300"
-            aria-label="System Settings"
-          >
-            <svg className="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            className="h-9 w-9 inline-flex items-center justify-center rounded-xl p-1 text-earth-700 hover:bg-earth-50 dark:text-earth-300 dark:hover:bg-earth-800 transition-colors"
+            className="h-9 w-9 inline-flex items-center justify-center rounded-xl p-1 text-neutral-high hover:bg-neutral-fill transition-colors"
             aria-label="Toggle menu"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((prev) => !prev)}
@@ -169,7 +198,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
 
       {/* Mobile Drawer */}
       {menuOpen && (
-        <div className="border-t border-earth-100 bg-white px-4 py-4 md:hidden dark:border-earth-800 dark:bg-earth-950 transition-colors duration-200 text-left space-y-3">
+        <div className="border-t border-neutral-border bg-neutral-surface px-4 py-4 md:hidden text-left space-y-3">
           <ul className="flex flex-col gap-1">
             {navLinks.map((link) => {
               const isActive = currentView === link.view;
@@ -180,8 +209,8 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
                     onClick={(e) => handleLinkClick(e, link.view)}
                     className={`block rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold transition-colors ${
                       isActive
-                        ? 'text-crop-600 bg-crop-50 dark:text-crop-400 dark:bg-crop-950/20'
-                        : 'text-earth-600 hover:bg-earth-50 dark:text-earth-300 dark:hover:bg-earth-900'
+                        ? 'text-brand-primary bg-brand-surface'
+                        : 'text-neutral-medium hover:bg-neutral-fill hover:text-neutral-high'
                     }`}
                   >
                     {link.label}
@@ -191,30 +220,36 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
             })}
           </ul>
 
-          <a
-            href="#upload"
-            onClick={handleScanClick}
-            className="block rounded-xl bg-crop-600 px-4 py-2.5 text-center text-xs font-semibold text-white shadow-sm"
-          >
-            {t('scanLeaf')}
-          </a>
-
-          {currentUser && (
-            <div className="pt-3 border-t border-earth-100 dark:border-earth-800 flex items-center justify-between">
-              <div className="text-xs font-semibold text-earth-800 dark:text-earth-200">
-                👤 {currentUser.fullName}
+          <div className="pt-3 border-t border-neutral-border flex flex-col gap-2">
+            {currentUser && (
+              <div className="px-3.5 py-1">
+                <p className="text-xs font-bold text-neutral-high truncate">{currentUser.fullName}</p>
               </div>
+            )}
+            <button
+              onClick={() => { toggleLanguage(); setMenuOpen(false); }}
+              className="text-left rounded-xl px-3.5 py-2.5 text-xs font-semibold text-neutral-medium hover:bg-neutral-fill"
+            >
+              🌐 {getLanguageLabel()}
+            </button>
+            <button
+              onClick={() => { onOpenSettings(); setMenuOpen(false); }}
+              className="text-left rounded-xl px-3.5 py-2.5 text-xs font-semibold text-neutral-medium hover:bg-neutral-fill"
+            >
+              ⚙️ {t('settings')}
+            </button>
+            {currentUser && (
               <button
                 onClick={(e) => {
                   onLogout();
                   setMenuOpen(false);
                 }}
-                className="text-xs font-bold text-red-600 hover:text-red-700 cursor-pointer"
+                className="text-left rounded-xl px-3.5 py-2.5 text-xs font-bold text-semantic-high hover:bg-neutral-fill"
               >
-                {t('signOut')}
+                🚪 {t('signOut')}
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       )}
     </header>

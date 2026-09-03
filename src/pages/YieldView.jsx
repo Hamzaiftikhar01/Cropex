@@ -40,7 +40,7 @@ export default function YieldView({ fieldProfile, weatherData }) {
           <h2 className="text-xl sm:text-2xl font-bold text-earth-900 dark:text-earth-50 tracking-tight font-sans">
             {t('yieldForecastTitle')}
           </h2>
-          <p className="text-xs text-earth-500 dark:text-earth-300 mt-0.5 font-medium">
+          <p className="text-xs text-earth-800 dark:text-earth-300 mt-0.5 font-medium">
             {t('yieldSubtitle')}
           </p>
         </div>
@@ -174,7 +174,7 @@ export default function YieldView({ fieldProfile, weatherData }) {
             <div className="mt-4 pt-3.5 border-t border-earth-100 dark:border-earth-800">
               <label className="flex items-center justify-between cursor-pointer">
                 <span className="text-xs font-semibold text-earth-700 dark:text-earth-300">
-                  {t('simulateHeatwave')}
+                  {t('simHeatwave')}
                 </span>
                 <input 
                   type="checkbox"

@@ -151,7 +151,12 @@ export const translations = {
     emailExists: "Email already registered.",
     setupProfileTitle: "Configure Your Field Profile",
     setupProfileSubtitle: "Please choose your crop type and soil conditions to initialize predictions.",
-    saveAndContinue: "Save & Continue"
+    saveAndContinue: "Save & Continue",
+    nextSetup: "Next: Setup Profile",
+    riskLevel: "Risk Level",
+    noLeafPhoto: "No leaf photo on hand?",
+    guides: "Crop Guides",
+    irrTip4: "Consider drip irrigation for high-value crops. It saves 40-60% water compared to flood irrigation and increases yield by 20-30%."
   },
   ur: {
     appName: "کراپیکس (Cropex)",
@@ -304,7 +309,12 @@ export const translations = {
     emailExists: "یہ ای میل پہلے سے رجسٹرڈ ہے۔",
     setupProfileTitle: "فارم پروفائل ترتیب دیں",
     setupProfileSubtitle: "پیشن گوئی شروع کرنے کے لیے اپنی فصل اور مٹی کی قسم کا انتخاب کریں۔",
-    saveAndContinue: "محفوظ کریں اور آگے بڑھیں"
+    saveAndContinue: "محفوظ کریں اور آگے بڑھیں",
+    nextSetup: "اگلا: پروفائل ترتیب دیں",
+    riskLevel: "خطرے کی سطح",
+    noLeafPhoto: "پتے کی تصویر نہیں ہے؟",
+    guides: "فصل کی رہنمائی",
+    irrTip4: "اعلیٰ قیمت والی فصلوں کے لیے ڈرپ ایریگیشن پر غور کریں۔ یہ سیلابی آبپاشی کے مقابلے میں 40-60% پانی بچاتا ہے اور پیداوار میں 20-30% اضافہ کرتا ہے۔"
   },
   pa: {
     appName: "کراپیکس (Cropex)",
@@ -457,6 +467,11 @@ export const translations = {
     emailExists: "ایہہ ای میل پہلے توں رجسٹرڈ اے۔",
     setupProfileTitle: "فارم پروفائل سیٹ کرو",
     setupProfileSubtitle: "پیشن گوئی شروع کرن لئی اپنی فصل تے مٹی دی قسم چنو۔",
-    saveAndContinue: "محفوظ کرو تے اگے ودھو"
+    saveAndContinue: "محفوظ کرو تے اگے ودھو",
+    nextSetup: "اگے: پروفائل سیٹ کرو",
+    riskLevel: "خطرے دی سطح",
+    noLeafPhoto: "پتے دی تصویر نہیں اے؟",
+    guides: "فصل دی رہنمائی",
+    irrTip4: "اعلیٰ قیمت والیاں فصلاں لئی ڈرپ ایریگیشن تے غور کرو۔ ایہہ سیلابی آبپاشی نالوں 40-60% پانی بچاندا اے تے پیداوار وچ 20-30% وادھا کردا اے۔"
   }
 };

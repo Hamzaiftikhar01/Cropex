@@ -1,30 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { speakInSelectedLanguage, stopVoice } from '../utils/voicePlayer';
 
 export default function AdvisorCard({ advice, loading, fieldProfile, weatherData }) {
   const { t, language } = useLanguage();
   const [showSecondary, setShowSecondary] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  // Stop playback on unmount or when language/profile changes
-  useEffect(() => {
-    return () => {
-      stopVoice();
-    };
-  }, []);
-
-  useEffect(() => {
-    stopVoice();
-    setIsPlaying(false);
-  }, [language, fieldProfile]);
 
   if (loading || !advice) {
     return (
-      <div className="bg-white border border-earth-200 dark:bg-earth-900 dark:border-earth-800 rounded-2xl p-5 sm:p-6 shadow-soft animate-pulse flex flex-col gap-3">
-        <div className="h-4 w-32 bg-earth-200 dark:bg-earth-800 rounded-lg"></div>
-        <div className="h-6 w-3/4 bg-earth-200 dark:bg-earth-800 rounded-lg"></div>
-        <div className="h-4 w-5/6 bg-earth-200 dark:bg-earth-800 rounded-lg"></div>
+      <div className="bg-neutral-surface dark:bg-earth-900 border border-neutral-border dark:border-earth-800 rounded-2xl p-5 sm:p-6 shadow-soft animate-pulse flex flex-col gap-3">
+        <div className="h-4 w-32 bg-neutral-fill dark:bg-earth-800 rounded-lg"></div>
+        <div className="h-8 w-3/4 bg-neutral-fill dark:bg-earth-800 rounded-lg"></div>
+        <div className="h-4 w-5/6 bg-neutral-fill dark:bg-earth-800 rounded-lg"></div>
       </div>
     );
   }
@@ -75,84 +61,35 @@ export default function AdvisorCard({ advice, loading, fieldProfile, weatherData
   const getUrgencyStyles = (level) => {
     if (level === 'high') {
       return {
-        cardBg: 'bg-red-50/80 dark:bg-red-950/20 border-red-200 dark:border-red-900/40 text-red-900 dark:text-red-300',
-        badgeBg: 'bg-red-600 text-white',
-        bulletColor: 'bg-red-600',
+        cardBorder: 'border-semantic-high border-[1.5px]',
+        badgeBg: 'bg-semantic-high text-neutral-surface',
+        bulletColor: 'bg-semantic-high',
+        textColor: 'text-semantic-high',
         label: t('high')
       };
     }
     if (level === 'medium') {
       return {
-        cardBg: 'bg-amber-50/80 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/40 text-amber-900 dark:text-amber-300',
-        badgeBg: 'bg-amber-500 text-white',
-        bulletColor: 'bg-amber-500',
+        cardBorder: 'border-semantic-medium border-[1.5px]',
+        badgeBg: 'bg-semantic-medium text-neutral-surface',
+        bulletColor: 'bg-semantic-medium',
+        textColor: 'text-semantic-medium',
         label: t('medium')
       };
     }
     return {
-      cardBg: 'bg-green-50/80 dark:bg-green-950/20 border-green-200 dark:border-green-900/40 text-green-900 dark:text-green-300',
-      badgeBg: 'bg-green-600 text-white',
-      bulletColor: 'bg-green-600',
+      cardBorder: 'border-semantic-low border-[1.5px]',
+      badgeBg: 'bg-semantic-low text-neutral-surface',
+      bulletColor: 'bg-semantic-low',
+      textColor: 'text-semantic-low',
       label: t('low')
     };
   };
 
   const style = getUrgencyStyles(advice.urgency);
 
-  const handleToggleSpeak = () => {
-    if (isPlaying) {
-      stopVoice();
-      setIsPlaying(false);
-      return;
-    }
-
-    const cropLabel = fieldProfile ? t('crop_' + fieldProfile.cropType.toLowerCase()) : '';
-    const distLabel = fieldProfile ? t('dist_' + fieldProfile.district.toLowerCase()) : '';
-
-    let textToSpeak = '';
-
-    if (language === 'ur') {
-      const intro = `السلام علیکم کسان بھائی۔ ضلع ${distLabel} میں آپ کی ${cropLabel} کی فصل کے لیے کراپیکس کی تفصیلی رپورٹ۔ `;
-      const main = `${headline}۔ ${reasoning}۔ `;
-      const sec = renderedSecondaryNotes.length > 0 ? `دیگر اہم اشارے: ${renderedSecondaryNotes.join('۔ ')}۔ ` : '';
-      const outro = `کراپیکس کے ساتھ اپنی فصل کو محفوظ بنائیں۔`;
-      textToSpeak = `${intro} ${main} ${sec} ${outro}`;
-    } else if (language === 'pa') {
-      const intro = `السلام علیکم کسان بھائیو۔ ضلع ${distLabel} وچ تواڈی ${cropLabel} دی فصل لئی کراپیکس دی رپورٹ۔ `;
-      const main = `${headline}۔ ${reasoning}۔ `;
-      const sec = renderedSecondaryNotes.length > 0 ? `ہور اہم اشارے: ${renderedSecondaryNotes.join('۔ ')}۔ ` : '';
-      const outro = `کراپیکس نال اپنی فصل نوں محفوظ بناؤ۔`;
-      textToSpeak = `${intro} ${main} ${sec} ${outro}`;
-    } else {
-      const intro = `Hello Farmer! Here is your Cropex intelligence report for ${cropLabel} in ${distLabel}. `;
-      const main = `${headline}. ${reasoning}. `;
-      const sec = renderedSecondaryNotes.length > 0 ? `Additional signals: ${renderedSecondaryNotes.join('. ')}. ` : '';
-      const outro = `Stay protected with Cropex.`;
-      textToSpeak = `${intro} ${main} ${sec} ${outro}`;
-    }
-
-    speakInSelectedLanguage({
-      text: textToSpeak.trim(),
-      language,
-      onStart: () => setIsPlaying(true),
-      onEnd: () => setIsPlaying(false),
-      onError: () => setIsPlaying(false)
-    });
-  };
-
-  const getVoiceButtonLabel = () => {
-    if (isPlaying) {
-      if (language === 'ur') return 'روکیں (Stop)';
-      if (language === 'pa') return 'روکو (Stop)';
-      return 'Stop Voice';
-    }
-    if (language === 'ur') return '🔊 اردو میں سنیں';
-    if (language === 'pa') return '🔊 پنجابی وچ سنو';
-    return '🔊 Listen in English';
-  };
-
   return (
-    <div className={`p-5 sm:p-6 rounded-2xl border-2 shadow-soft transition-all duration-200 flex flex-col justify-between ${style.cardBg}`}>
+    <div className={`p-5 sm:p-6 rounded-2xl bg-neutral-surface dark:bg-earth-900 shadow-soft transition-all duration-200 flex flex-col justify-between ${style.cardBorder}`}>
       <div>
         {/* Header Indicator */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
@@ -161,60 +98,29 @@ export default function AdvisorCard({ advice, loading, fieldProfile, weatherData
               <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${style.bulletColor}`}></span>
               <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${style.bulletColor}`}></span>
             </span>
-            <span className="text-[11px] font-extrabold uppercase tracking-wider opacity-85">
+            <span className="text-xs font-semibold uppercase tracking-wider text-neutral-medium">
               {t('verdictTitle')}
             </span>
             <span className={`px-2.5 py-0.5 text-[10px] font-extrabold rounded-full uppercase tracking-wider shadow-xs ${style.badgeBg}`}>
               {style.label}
             </span>
             {advice.source === 'llm' && (
-              <span className="text-[9px] bg-crop-600/15 text-crop-800 dark:bg-crop-400/20 dark:text-crop-300 px-2 py-0.5 rounded-full font-bold shadow-xs">
+              <span className="text-[9px] bg-brand-surface text-brand-primary px-2 py-0.5 rounded-full font-bold shadow-xs">
                 🤖 AI
               </span>
             )}
           </div>
-
-          {/* Multilingual Voice Speaker Button */}
-          <button
-            type="button"
-            onClick={handleToggleSpeak}
-            className={`h-9 inline-flex items-center justify-center gap-2 px-3.5 rounded-xl text-xs font-bold border transition-all cursor-pointer shadow-xs self-start sm:self-auto ${
-              isPlaying 
-                ? 'bg-red-600 text-white border-red-700 animate-pulse' 
-                : 'bg-white/95 dark:bg-earth-900/95 border-current/25 hover:bg-white dark:hover:bg-earth-900'
-            }`}
-            title={isPlaying ? "Stop Voice Output" : "Listen Detailed Recommendation"}
-            aria-label="Toggle Voice Out Loud"
-          >
-            {isPlaying ? (
-              <>
-                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                  <rect x="6" y="6" width="12" height="12" rx="2" />
-                </svg>
-                <span>{getVoiceButtonLabel()}</span>
-              </>
-            ) : (
-              <>
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                </svg>
-                <span>{getVoiceButtonLabel()}</span>
-              </>
-            )}
-          </button>
         </div>
 
-        {/* Actionable Headline */}
-        <h3 className="text-lg sm:text-xl font-bold leading-tight tracking-tight text-left">
+        {/* Actionable Headline (The Hero) */}
+        <h3 className="text-xl sm:text-2xl font-bold text-neutral-high dark:text-earth-50 tracking-tight leading-tight mt-2">
           {headline}
         </h3>
 
         {/* Explainable Reasoning */}
-        <div className="mt-3.5 pt-3 border-t border-current/10 text-left">
-          <h4 className="text-[10px] uppercase font-bold tracking-wider opacity-75">
-            {t('whyTitle')}
-          </h4>
-          <p className="mt-1 text-xs sm:text-sm font-medium leading-relaxed">
+        <div className="mt-4 pt-3 text-left">
+          <p className="text-sm sm:text-base text-neutral-medium dark:text-earth-300 leading-relaxed max-w-3xl">
+            <span className="font-semibold text-neutral-high dark:text-earth-100">{t('whyTitle')}: </span>
             {reasoning}
           </p>
         </div>
@@ -222,21 +128,33 @@ export default function AdvisorCard({ advice, loading, fieldProfile, weatherData
 
       {/* Secondary Signals Dropdown */}
       {renderedSecondaryNotes && renderedSecondaryNotes.length > 0 && (
-        <div className="mt-3.5 pt-3 border-t border-current/10 text-left">
+        <div className="mt-4 pt-3 border-t border-neutral-border dark:border-earth-800 text-left">
           <button
             onClick={() => setShowSecondary(!showSecondary)}
-            className="flex items-center gap-1.5 text-xs font-bold hover:opacity-80 transition-opacity focus:outline-none cursor-pointer"
+            className="flex items-center gap-1.5 text-[13px] font-semibold text-neutral-high dark:text-earth-200 hover:bg-neutral-fill dark:hover:bg-earth-800 py-1.5 px-2 -ml-2 rounded-lg transition-colors focus:outline-none cursor-pointer w-full sm:w-auto"
           >
-            <span>{showSecondary ? '▼' : '▶'}</span>
+            <svg 
+              className={`w-4 h-4 transition-transform duration-200 ${showSecondary ? 'rotate-90' : ''}`}
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
             <span>{showSecondary ? t('hideSignals') : t('showSignals')}</span>
           </button>
           
           {showSecondary && (
-            <ul className="mt-2.5 space-y-1.5 pl-3 list-disc text-xs font-semibold leading-relaxed border-l-2 border-current/20">
-              {renderedSecondaryNotes.map((note, idx) => (
-                <li key={idx} className="opacity-90">{note}</li>
-              ))}
-            </ul>
+            <div className="mt-4 pt-4 border-t border-neutral-border dark:border-earth-800">
+              <ul className="space-y-2">
+                {renderedSecondaryNotes.map((note, idx) => (
+                  <li key={idx} className="text-sm text-neutral-medium dark:text-earth-300 flex items-start gap-2">
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-neutral-medium dark:bg-earth-500 shrink-0"></span>
+                    {note}
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
       )}

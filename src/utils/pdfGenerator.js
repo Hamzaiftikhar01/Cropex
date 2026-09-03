@@ -1,4 +1,5 @@
 import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 /**
  * Helper to identify scientific pathogen name and disease class
@@ -359,4 +360,41 @@ export function downloadPdfReport(result) {
   const cleanCrop = crop.replace(/[^a-zA-Z0-9]/g, '_');
   const cleanDate = now.toISOString().split('T')[0];
   doc.save(`CROPEX_Diagnostic_Report_${cleanCrop}_${cleanDate}.pdf`);
+}
+
+/**
+ * Captures an HTML element and exports it as a PDF.
+ * This inherently handles RTL and complex text shaping (Urdu/Punjabi) 
+ * because the browser renders the text onto the canvas first.
+ */
+export async function downloadElementAsPdf(elementId, filename = 'Cropex_Dashboard.pdf') {
+  const element = document.getElementById(elementId);
+  if (!element) {
+    console.error(`Element with id ${elementId} not found.`);
+    return;
+  }
+
+  try {
+    const canvas = await html2canvas(element, {
+      scale: 2, // High resolution
+      useCORS: true,
+      logging: false,
+      backgroundColor: document.documentElement.classList.contains('dark') ? '#0f172a' : '#ffffff' // matches dark mode bg
+    });
+
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({
+      orientation: canvas.width > canvas.height ? 'landscape' : 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save(filename);
+  } catch (error) {
+    console.error('Failed to generate PDF from element:', error);
+  }
 }

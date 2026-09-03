@@ -152,7 +152,7 @@ async function groqRequest(path, options = {}) {
 // Chat completions (foundation for image + text analysis)
 // =============================================================================
 
-export async function createChatCompletion(messages, { temperature = 0.2, maxTokens = 1024, responseFormat = null } = {}) {
+export async function createChatCompletion(messages, { model = GROQ_MODEL, temperature = 0.2, maxTokens = 1024, responseFormat = null } = {}) {
   if (!Array.isArray(messages) || messages.length === 0) {
     throw new GroqServiceError('Messages array is required and must not be empty.', {
       code: GroqErrorCode.INVALID_INPUT,
@@ -160,7 +160,7 @@ export async function createChatCompletion(messages, { temperature = 0.2, maxTok
   }
 
   const payload = {
-    model: GROQ_MODEL,
+    model,
     messages,
     temperature,
     max_tokens: maxTokens,
@@ -385,4 +385,83 @@ Do not include any introductory or concluding text. Do not wrap the JSON in mark
 
   const rawContent = extractAssistantContent(completion);
   return parseDiseaseAnalysis(rawContent);
+}
+
+// =============================================================================
+// Chatbot
+// =============================================================================
+
+export async function generateChatResponse(messageHistory, contextData) {
+  const { fieldProfile, weatherData } = contextData || {};
+
+  const systemPrompt = `You are a highly intelligent, empathetic agricultural expert assistant.
+You must prioritize local context: District: ${fieldProfile?.district || 'Unknown'}, Crop: ${fieldProfile?.cropType || 'Unknown'}.
+Weather Context: ${JSON.stringify(weatherData || {})}`;
+
+  const messages = [
+    { role: 'system', content: systemPrompt },
+    ...messageHistory.map(msg => ({
+      role: msg.role,
+      content: msg.content
+    }))
+  ];
+
+  const apiKey = getGroqApiKey();
+  
+  if (apiKey) {
+    const completion = await createChatCompletion(messages, {
+      model: 'openai/gpt-oss-120b',
+      temperature: 0.5,
+      maxTokens: 512,
+    });
+    return extractAssistantContent(completion);
+  }
+
+  // Fallback
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages })
+    });
+    const data = await response.json();
+    return data.reply || data.content; // fallback extraction based on expected proxy response
+  } catch (error) {
+    throw new GroqServiceError(
+      `Failed to generate chat response: ${error.message}`,
+      { code: GroqErrorCode.REQUEST_FAILED, cause: error }
+    );
+  }
+}
+
+// =============================================================================
+// Localized Tips
+// =============================================================================
+
+export async function getLocalCropAdvice(cropName, district) {
+  const messages = [
+    {
+      role: 'system',
+      content: `You are an expert agronomist. Provide a very short (2-3 sentences), highly localized tip about growing ${cropName} specifically in the ${district} district of Pakistan. Keep it extremely simple, friendly, no markdown.`
+    },
+    {
+      role: 'user',
+      content: `Give me a local tip for ${cropName} in ${district}.`
+    }
+  ];
+  
+  const apiKey = getGroqApiKey();
+  if (apiKey) {
+    try {
+      const completion = await createChatCompletion(messages, {
+        model: 'openai/gpt-oss-120b',
+        temperature: 0.3,
+        maxTokens: 150
+      });
+      return extractAssistantContent(completion);
+    } catch (e) {
+      return `For best results in ${district}, always consult your local agriculture extension office regarding specific sowing dates for ${cropName}.`;
+    }
+  }
+  return `For best results in ${district}, always consult your local agriculture extension office regarding specific sowing dates for ${cropName}.`;
 }

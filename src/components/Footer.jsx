@@ -3,7 +3,7 @@ function Footer() {
 
   return (
     <footer className="border-t border-earth-200 bg-earth-900 text-earth-400">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 pt-14 pb-28 sm:px-6 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-2.5">
@@ -47,24 +47,21 @@ function Footer() {
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-widest text-white">Creator & Contact</h4>
-            <ul className="mt-4 space-y-2.5 text-sm">
-              <li className="text-earth-200 font-medium">Hamza Iftikhar</li>
-              <li>
-                <a href="mailto:hamzaiftikhar@gmail.com" className="transition-colors hover:text-white underline decoration-crop-500/50 hover:decoration-white">
-                  hamzaiftikhar@gmail.com
-                </a>
-              </li>
-              <li>support@cropex.ai</li>
+            <h4 className="text-xs font-semibold uppercase tracking-widest text-white">Creator &amp; Contact</h4>
+            <p className="mt-4 text-sm font-semibold text-crop-400">Team Twisted Minds</p>
+            <ul className="mt-3 space-y-2.5 text-sm text-earth-200">
+              {['Muhammad Ahmad', 'Hamza Iftikhar', 'Muhammad Abdullah Khan', 'Haseeb Jahangir'].map((member) => (
+                <li key={member}>{member}</li>
+              ))}
             </ul>
           </div>
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-earth-800 pt-8 sm:flex-row">
-          <p className="text-sm text-earth-500">
-            &copy; {currentYear} Cropex. Created by Hamza Iftikhar. All rights reserved.
+          <p className="text-sm text-earth-400">
+            &copy; {currentYear} Cropex. Created by Team Twisted Minds. All rights reserved.
           </p>
-          <div className="flex gap-6 text-sm text-earth-500">
+          <div className="flex gap-6 text-sm text-earth-400">
             <span className="cursor-default">Privacy Policy</span>
             <span className="cursor-default">Terms of Service</span>
           </div>

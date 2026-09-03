@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { supabase } from '../lib/supabase';
 
-const CROPS = ['Wheat', 'Rice', 'Cotton', 'Sugarcane', 'Maize', 'Potato', 'Tomato'];
-const DISTRICTS = ['Faisalabad', 'Bahawalpur', 'Multan', 'Sargodha', 'Hyderabad'];
-const SOILS = ['Sandy', 'Loamy', 'Clay'];
-
-export default function AuthView({ onLoginSuccess }) {
+export default function AuthView({ onLoginSuccess, refData, currentUser }) {
+  const CROPS = refData?.cropNames || ['Wheat', 'Rice', 'Cotton', 'Sugarcane', 'Maize', 'Potato', 'Tomato'];
+  const DISTRICTS = refData?.districtNames || ['Faisalabad', 'Bahawalpur', 'Multan', 'Sargodha', 'Hyderabad'];
+  const SOILS = refData?.soilNames || ['Sandy', 'Loamy', 'Clay'];
   const { t, language, toggleLanguage } = useLanguage();
-  const [mode, setMode] = useState('signin'); // 'signin' | 'signup' | 'setup_profile'
+  const [mode, setMode] = useState(currentUser ? 'setup_profile' : 'signin'); // 'signin' | 'signup' | 'setup_profile'
 
   // Input states
   const [email, setEmail] = useState('');
@@ -28,108 +28,129 @@ export default function AuthView({ onLoginSuccess }) {
 
   // Status indicators
   const [errorMsg, setErrorMsg] = useState('');
-  const [signedUpUserEmail, setSignedUpUserEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [registeredUserId, setRegisteredUserId] = useState(null);
 
-  // Fetch local db of accounts
-  const getUsersDB = () => {
-    try {
-      const db = localStorage.getItem('cropex_users_db');
-      return db ? JSON.parse(db) : [];
-    } catch {
-      return [];
-    }
-  };
-
-  const saveUsersDB = (db) => {
-    localStorage.setItem('cropex_users_db', JSON.stringify(db));
-  };
-
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
     setErrorMsg('');
-
     if (!email || !password) return;
 
-    const db = getUsersDB();
-    const user = db.find(u => u.email.toLowerCase() === email.trim().toLowerCase() && u.password === password);
+    setLoading(true);
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password: password
+    });
+    setLoading(false);
 
-    if (!user) {
-      setErrorMsg(t('incorrectCredentials'));
+    if (error) {
+      setErrorMsg(error.message);
       return;
     }
 
-    if (!user.hasCompletedProfile) {
-      setSignedUpUserEmail(user.email);
-      setMode('setup_profile');
-    } else {
-      onLoginSuccess(user);
+    if (data?.user) {
+      // Check if profile exists
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', data.user.id)
+        .single();
+
+      if (!profile) {
+        setRegisteredUserId(data.user.id);
+        setMode('setup_profile');
+      } else {
+        onLoginSuccess({
+          id: data.user.id,
+          email: data.user.email,
+          fullName: profile.full_name,
+          profile: profile.field_profile
+        });
+      }
     }
   };
 
-  const handleSignUpSubmit = (e) => {
+  const handleSignUpSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
 
     if (!email || !password || !fullName || !phone) return;
 
-    const db = getUsersDB();
-    const exists = db.some(u => u.email.toLowerCase() === email.trim().toLowerCase());
+    setLoading(true);
+    const { data, error } = await supabase.auth.signUp({
+      email: email.trim(),
+      password: password
+    });
+    setLoading(false);
 
-    if (exists) {
-      setErrorMsg(t('emailExists'));
+    if (error) {
+      setErrorMsg(error.message);
       return;
     }
 
-    const newUser = {
-      fullName: fullName.trim(),
-      phone: phone.trim(),
-      email: email.trim().toLowerCase(),
-      password,
-      district,
-      hasCompletedProfile: false,
-      profile: null
-    };
-
-    saveUsersDB([...db, newUser]);
-    setSignedUpUserEmail(newUser.email);
-    setMode('setup_profile');
+    if (data?.user) {
+      setRegisteredUserId(data.user.id);
+      setMode('setup_profile');
+    }
   };
 
-  const handleProfileSetupSubmit = (e) => {
+  const handleProfileSetupSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
 
-    const db = getUsersDB();
-    const userIndex = db.findIndex(u => u.email === signedUpUserEmail);
+    const targetUserId = registeredUserId || currentUser?.id;
+    const targetEmail = email || currentUser?.email || '';
 
-    if (userIndex === -1) {
+    if (!targetUserId) {
       setErrorMsg('User session expired. Please sign up again.');
       setMode('signup');
       return;
     }
 
-    const user = db[userIndex];
-    const profile = {
+    const irrigationDate = new Date();
+    irrigationDate.setDate(irrigationDate.getDate() - parseInt(lastIrrigated));
+
+    const fieldProfile = {
       id: 'custom-farmer-' + Math.random().toString(36).substr(2, 9),
-      name: `👤 ${user.fullName}'s Farm`,
-      nameUr: `👤 ${user.fullName} کا فارم`,
-      namePa: `👤 ${user.fullName} دا فارم`,
+      name: `👤 ${fullName}'s Farm`,
+      nameUr: `👤 ${fullName} کا فارم`,
+      namePa: `👤 ${fullName} دا فارم`,
       cropType,
-      district: user.district,
+      district,
       sowingDate,
       soilType,
-      lastIrrigatedDaysAgo: lastIrrigated,
+      lastIrrigatedDaysAgo: parseInt(lastIrrigated), // Keep for backward compatibility during current session
+      last_irrigated_at: irrigationDate.toISOString(),
       description: 'Farmer custom field environment.',
       descriptionUr: 'کسان کی فراہم کردہ ترتیبات۔',
       descriptionPa: 'کسان دی فراہم کردہ ترتیبات۔'
     };
 
-    user.profile = profile;
-    user.hasCompletedProfile = true;
-    db[userIndex] = user;
+    setLoading(true);
+    const { error } = await supabase
+      .from('profiles')
+      .insert([
+        {
+          id: targetUserId,
+          email: targetEmail.trim(),
+          full_name: fullName.trim(),
+          phone: phone.trim(),
+          field_profile: fieldProfile
+        }
+      ]);
+    setLoading(false);
 
-    saveUsersDB(db);
-    onLoginSuccess(user);
+    if (error) {
+      setErrorMsg(error.message);
+      return;
+    }
+
+    onLoginSuccess({
+      id: targetUserId,
+      email: targetEmail.trim(),
+      fullName: fullName.trim(),
+      profile: fieldProfile
+    });
   };
 
   const getLanguageLabel = () => {
@@ -170,7 +191,7 @@ export default function AuthView({ onLoginSuccess }) {
         <div className="bg-white py-8 px-5 shadow-soft border border-earth-100 sm:rounded-2xl sm:px-8 dark:bg-earth-900 dark:border-earth-800">
           
           {errorMsg && (
-            <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs font-bold dark:bg-red-950/20 dark:border-red-900/30 dark:text-red-300">
+            <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs font-bold dark:bg-red-950/20 dark:border-red-900/30 dark:text-red-300 break-words">
               ⚠️ {errorMsg}
             </div>
           )}
@@ -208,9 +229,10 @@ export default function AuthView({ onLoginSuccess }) {
 
               <button
                 type="submit"
-                className="w-full h-10 mt-1 inline-flex items-center justify-center bg-crop-600 hover:bg-crop-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm shadow-crop-600/30 cursor-pointer transition-colors"
+                disabled={loading}
+                className="w-full h-10 mt-1 inline-flex items-center justify-center bg-crop-600 hover:bg-crop-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm shadow-crop-600/30 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {t('signIn')}
+                {loading ? '...' : t('signIn')}
               </button>
 
               <p className="mt-3 text-center text-xs text-earth-500 dark:text-earth-300 font-medium">
@@ -305,13 +327,14 @@ export default function AuthView({ onLoginSuccess }) {
 
               <button
                 type="submit"
-                className="w-full h-10 mt-1 inline-flex items-center justify-center bg-crop-600 hover:bg-crop-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm shadow-crop-600/30 cursor-pointer transition-colors"
+                disabled={loading}
+                className="w-full h-10 mt-1 inline-flex items-center justify-center bg-crop-600 hover:bg-crop-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm shadow-crop-600/30 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {t('nextSetup')} →
+                {loading ? '...' : t('nextSetup')} →
               </button>
 
               <p className="mt-3 text-center text-xs text-earth-500 dark:text-earth-300 font-medium">
-                {t('alreadyAccount')}{' '}
+                {t('haveAccount')}{' '}
                 <button
                   type="button"
                   onClick={() => {
@@ -330,8 +353,8 @@ export default function AuthView({ onLoginSuccess }) {
           {mode === 'setup_profile' && (
             <form onSubmit={handleProfileSetupSubmit} className="space-y-3.5">
               <div>
-                <h3 className="text-lg font-bold text-earth-900 dark:text-earth-50">{t('setupFarmTitle')}</h3>
-                <p className="text-xs text-earth-500 dark:text-earth-300 mt-0.5">{t('setupFarmDesc')}</p>
+                <h3 className="text-lg font-bold text-earth-900 dark:text-earth-50">{t('setupProfileTitle')}</h3>
+                <p className="text-xs text-earth-500 dark:text-earth-300 mt-0.5">{t('setupProfileSubtitle')}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -396,9 +419,10 @@ export default function AuthView({ onLoginSuccess }) {
 
               <button
                 type="submit"
-                className="w-full h-10 mt-1 inline-flex items-center justify-center bg-crop-600 hover:bg-crop-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm shadow-crop-600/30 cursor-pointer transition-colors"
+                disabled={loading}
+                className="w-full h-10 mt-1 inline-flex items-center justify-center bg-crop-600 hover:bg-crop-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm shadow-crop-600/30 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {t('finishSetup')}
+                {loading ? '...' : t('saveAndContinue')}
               </button>
             </form>
           )}

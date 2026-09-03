@@ -18,6 +18,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script>
+      // Applies the theme before first paint; React sets this class in an effect,
+      // which would otherwise flash light before switching to the dark default.
+      try {
+        var stored = localStorage.getItem('cropcare_dark_mode');
+        if (stored === null || stored === 'true') {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

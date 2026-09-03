@@ -1,48 +1,65 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
-  --color-crop-50: #f0fdf4;
-  --color-crop-100: #dcfce7;
-  --color-crop-200: #bbf7d0;
-  --color-crop-300: #86efac;
-  --color-crop-400: #4ade80;
-  --color-crop-500: #22c55e;
-  --color-crop-600: #16a34a;
-  --color-crop-700: #15803d;
+  --color-brand-primary: #1E7A4C;
+  --color-brand-secondary: #17603C;
+  --color-brand-surface: #EAF7EF;
+
+  --color-neutral-high: #14181A;
+  --color-neutral-medium: #5B6461;
+  --color-neutral-low: #8C948F;
+  --color-neutral-surface: #FFFFFF;
+  --color-neutral-border: #E4E7E4;
+  --color-neutral-fill: #F5F6F4;
+
+  --color-semantic-low: #1E7A4C;
+  --color-semantic-medium: #B8860B;
+  --color-semantic-high: #C4402A;
+  --color-semantic-hover: rgba(30, 122, 76, 0.08);
+
+  /* Crop green palette */
+  --color-crop-50: #F0FDF4;
+  --color-crop-100: #DCFCE7;
+  --color-crop-200: #BBF7D0;
+  --color-crop-300: #86EFAC;
+  --color-crop-350: #68E796;
+  --color-crop-400: #4ADE80;
+  --color-crop-500: #22C55E;
+  --color-crop-600: #16A34A;
+  --color-crop-700: #15803D;
   --color-crop-800: #166534;
-  --color-crop-900: #14532d;
-  --color-crop-950: #052e16;
+  --color-crop-900: #14532D;
+  --color-crop-950: #052E16;
 
-  --color-earth-50: #faf9f7;
-  --color-earth-55: #f6f4f0;
-  --color-earth-100: #f3f1ed;
-  --color-earth-150: #ebe7e0;
-  --color-earth-200: #e8e4dd;
-  --color-earth-205: #dedad0;
-  --color-earth-250: #d8d3c8;
-  --color-earth-300: #d4cfc5;
-  --color-earth-350: #c2bcb0;
-  --color-earth-400: #a8a093;
-  --color-earth-450: #9e978d;
-  --color-earth-500: #78716c;
-  --color-earth-550: #6e6762;
-  --color-earth-600: #57534e;
-  --color-earth-650: #67635e;
-  --color-earth-700: #44403c;
-  --color-earth-750: #363330;
+  /* Earth neutral palette */
+  --color-earth-50: #FAFAF9;
+  --color-earth-100: #F5F5F4;
+  --color-earth-150: #EEEDEC;
+  --color-earth-200: #E7E5E4;
+  --color-earth-250: #DEDCDA;
+  --color-earth-300: #D6D3D1;
+  --color-earth-350: #BBB7B4;
+  --color-earth-400: #A8A29E;
+  --color-earth-450: #9B9590;
+  --color-earth-500: #78716C;
+  --color-earth-550: #68625D;
+  --color-earth-600: #57534E;
+  --color-earth-650: #57534E;
+  --color-earth-700: #44403C;
+  --color-earth-750: #37332F;
   --color-earth-800: #292524;
-  --color-earth-850: #211e1d;
-  --color-earth-900: #1c1917;
-  --color-earth-950: #0f0d0c;
-
-  --color-amber-550: #d97706;
-  --color-amber-850: #78350f;
+  --color-earth-850: #1F1E1D;
+  --color-earth-900: #1C1917;
+  --color-earth-950: #0C0A09;
 
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --shadow-soft: 0 1px 3px 0 rgb(28 25 23 / 0.04), 0 1px 2px -1px rgb(28 25 23 / 0.04);
-  --shadow-card: 0 4px 6px -1px rgb(28 25 23 / 0.05), 0 2px 4px -2px rgb(28 25 23 / 0.05);
-  --shadow-elevated: 0 10px 25px -5px rgb(28 25 23 / 0.08), 0 8px 10px -6px rgb(28 25 23 / 0.04);
+  --shadow-soft: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-hover: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-hard: 0 2px 4px rgba(0,0,0,0.08), 0 6px 16px rgba(0,0,0,0.14);
+  --shadow-elevated: 0 4px 8px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.14);
 }
 
 @variant dark (&:where(.dark, .dark *));
@@ -53,6 +70,100 @@
   }
 
   body {
-    @apply bg-white text-earth-900 antialiased transition-colors duration-200 dark:bg-earth-950 dark:text-earth-100;
+    @apply bg-neutral-fill text-neutral-high antialiased transition-colors duration-200 dark:bg-neutral-fill dark:text-neutral-high;
+  }
+
+  .dark {
+    --color-brand-surface: rgba(30, 122, 76, 0.15);
+
+    --color-neutral-high: #F5F5F4;
+    --color-neutral-medium: #A8A29E;
+    --color-neutral-low: #78716C;
+    --color-neutral-surface: #1C1917;
+    --color-neutral-border: #292524;
+    --color-neutral-fill: #0C0A09;
+  }
+}
+
+@layer components {
+  /* Blurred crop-field backdrop. Sits above the body fill and below all app
+     content. Scale compensates for blur bleeding transparent edges inward. */
+  .field-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: url('/field-bg.jpg');
+    background-size: cover;
+    background-position: center 72%;
+    filter: blur(3px) brightness(1.1) saturate(1.05);
+    transform: scale(1.06);
+    opacity: 1;
+  }
+
+  /* Fades the photo toward the page fill so cards never sit on busy pixels. */
+  .field-backdrop::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(245, 246, 244, 0) 0%,
+      rgba(245, 246, 244, 0.10) 50%,
+      rgba(245, 246, 244, 0.28) 100%
+    );
+  }
+
+  .dark .field-backdrop {
+    filter: blur(3px) saturate(0.85) brightness(0.6);
+    opacity: 1;
+  }
+
+  .dark .field-backdrop::after {
+    background: linear-gradient(
+      to bottom,
+      rgba(12, 10, 9, 0.1) 0%,
+      rgba(12, 10, 9, 0.3) 50%,
+      rgba(12, 10, 9, 0.55) 100%
+    );
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0px); }
+  }
+
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
   }
 }

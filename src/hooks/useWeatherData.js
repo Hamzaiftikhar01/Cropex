@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-// Coordinates mapping for selected Pakistani districts
-export const DISTRICT_COORDINATES = {
+// Fallback coordinates in case DB hasn't loaded yet
+const FALLBACK_COORDINATES = {
   Faisalabad: { latitude: 31.4504, longitude: 73.1350 },
   Bahawalpur: { latitude: 29.3544, longitude: 71.6911 },
   Multan: { latitude: 30.1575, longitude: 71.5249 },
@@ -146,22 +146,24 @@ const getWeatherDescription = (code) => {
   return 'Overcast';
 };
 
-export function useWeatherData(district) {
+export function useWeatherData(district, dbCoordinates) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isFallback, setIsFallback] = useState(false);
+  const [isDegraded, setIsDegraded] = useState(false);
 
   useEffect(() => {
     let active = true;
-    const coords = DISTRICT_COORDINATES[district] || DISTRICT_COORDINATES['Faisalabad'];
+    const coordMap = dbCoordinates || FALLBACK_COORDINATES;
+    const coords = coordMap[district] || FALLBACK_COORDINATES['Faisalabad'];
     const mock = MOCK_WEATHER_DATA[district] || MOCK_WEATHER_DATA['Faisalabad'];
 
     const fetchLiveWeather = async () => {
       setLoading(true);
       setError(null);
       try {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,wind_speed_10m_max,weather_code&timezone=auto`;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation,weather_code,surface_pressure&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,wind_speed_10m_max,weather_code,et0_fao_evapotranspiration,uv_index_max&timezone=auto`;
         const res = await fetch(url);
         
         if (!res.ok) {
@@ -184,9 +186,11 @@ export function useWeatherData(district) {
           windSpeedMax: Math.round(json.daily.wind_speed_10m_max[idx]),
           description: getWeatherDescription(json.daily.weather_code[idx]),
           conditionCode: json.daily.weather_code[idx],
+          et0: json.daily.et0_fao_evapotranspiration ? json.daily.et0_fao_evapotranspiration[idx] : 0,
+          uvIndex: json.daily.uv_index_max ? json.daily.uv_index_max[idx] : 0,
         }));
 
-        setData({
+        const finalData = {
           current: {
             temp: Math.round(json.current.temperature_2m),
             humidity: Math.round(json.current.relative_humidity_2m),
@@ -194,15 +198,37 @@ export function useWeatherData(district) {
             precipitation: json.current.precipitation,
             description: getWeatherDescription(json.current.weather_code),
             conditionCode: json.current.weather_code,
+            surfacePressure: json.current.surface_pressure ? Math.round(json.current.surface_pressure) : 1013,
           },
           daily: dailyData,
-        });
+        };
+        
+        // Save to cache
+        try {
+          localStorage.setItem(`cropex_weather_${district}`, JSON.stringify(finalData));
+        } catch(e) {}
+
+        setData(finalData);
         setIsFallback(false);
+        setIsDegraded(false);
       } catch (err) {
-        console.warn('Weather API failed, using pre-seeded fallback:', err);
+        console.warn('Weather API failed, checking cache or using fallback:', err);
         if (active) {
+          // Check cache first
+          try {
+            const cached = localStorage.getItem(`cropex_weather_${district}`);
+            if (cached) {
+              setData(JSON.parse(cached));
+              setIsFallback(false);
+              setIsDegraded(true);
+              setLoading(false);
+              return;
+            }
+          } catch(e) {}
+          
           setData(mock);
           setIsFallback(true);
+          setIsDegraded(true);
         }
       } finally {
         if (active) {
@@ -218,5 +244,5 @@ export function useWeatherData(district) {
     };
   }, [district]);
 
-  return { weatherData: data, loading, error, isFallback };
+  return { weatherData: data, loading, error, isFallback, isDegraded };
 }
