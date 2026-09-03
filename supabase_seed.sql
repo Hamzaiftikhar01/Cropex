@@ -31,6 +31,7 @@ ON CONFLICT (id) DO NOTHING;
 CREATE TABLE IF NOT EXISTS public.districts (
   id text PRIMARY KEY,
   name text NOT NULL,
+  
   name_ur text,
   latitude numeric,
   longitude numeric,

@@ -8,6 +8,8 @@ import {
   Snowflake,
   Sun,
   ThermometerSun,
+  Wind,
+  Activity,
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getWeatherIcon } from '../lib/iconMaps';
@@ -48,7 +50,7 @@ export default function WeatherView({ weatherData, loading, error, isFallback, i
   if (maxTemp >= 40) {
     alerts.push({
       type: 'warning',
-      icon: ThermometerSun,
+      icon: Sun,
       title: isUrdu ? 'شدید گرمی کی لہر کا الرٹ' : isPunjabi ? 'شدید گرمی دی لہر دا الرٹ' : 'Extreme Heatwave Warning',
       desc: isUrdu 
         ? `درجہ حرارت ${maxTemp}°C تک پہنچنے کی پیش گوئی ہے۔ فصل کو مرجھانے سے بچانے کے لیے پانی بڑھائیں۔`
@@ -123,8 +125,6 @@ export default function WeatherView({ weatherData, loading, error, isFallback, i
     return descMap[desc] || desc;
   };
 
-  const CurrentWeatherIcon = getWeatherIcon(current.conditionCode);
-
   return (
     <div className="space-y-6 text-left">
       {/* Alert Section */}
@@ -166,7 +166,7 @@ export default function WeatherView({ weatherData, loading, error, isFallback, i
         </div>
         {isFallback && (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 shadow-xs">
-            <ChartColumn size={12} aria-hidden="true" />
+            <Activity size={12} aria-hidden="true" />
             {t('switchPreset')}
           </span>
         )}
@@ -181,7 +181,10 @@ export default function WeatherView({ weatherData, loading, error, isFallback, i
                 <span className="text-xs uppercase font-semibold text-crop-100 tracking-wider">{t('currentWeather')}</span>
                 <h4 className="text-lg font-bold mt-1 text-crop-50">{t('dist_' + fieldProfile.district.toLowerCase())}</h4>
               </div>
-              <CurrentWeatherIcon size={40} className="shrink-0 text-crop-50" aria-hidden="true" />
+              {(() => {
+                const CurrentWeatherIcon = getWeatherIcon(current.conditionCode);
+                return <CurrentWeatherIcon size={40} className="shrink-0 text-crop-50" aria-hidden="true" />;
+              })()}
             </div>
             
             <div className="my-6">
@@ -242,8 +245,8 @@ export default function WeatherView({ weatherData, loading, error, isFallback, i
                         <div className="text-xs font-bold text-earth-800 dark:text-earth-100">
                           {day.tempMax}° / <span className="opacity-75">{day.tempMin}°</span>
                         </div>
-                        <div className="inline-flex items-center gap-1 text-[9px] font-semibold text-blue-500 dark:text-blue-400 mt-1">
-                          <Droplet size={10} aria-hidden="true" />
+                        <div className="inline-flex items-center justify-center gap-1 text-[9px] font-semibold text-blue-500 dark:text-blue-400 mt-1">
+                          <Droplets size={10} aria-hidden="true" />
                           {day.precipitationProb}%
                         </div>
                       </div>

@@ -1,3 +1,5 @@
+import { Sprout } from 'lucide-react';
+
 function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -8,7 +10,7 @@ function Footer() {
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-2.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-crop-600 text-base">
-                🌱
+                <Sprout size={20} className="text-white" aria-hidden="true" />
               </span>
               <span className="text-lg font-bold text-white">
                 Crop<span className="font-semibold text-crop-400">ex</span>

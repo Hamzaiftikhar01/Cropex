@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Archive, CircleCheck, CircleAlert, CircleX, BarChart2 } from 'lucide-react';
 
 function HistoryList({ history, onSelectHistory, onClearHistory }) {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -6,7 +7,7 @@ function HistoryList({ history, onSelectHistory, onClearHistory }) {
   if (!history || history.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-earth-200 bg-white p-6 sm:p-8 text-center dark:border-earth-800 dark:bg-earth-900">
-        <span className="text-2xl" role="img" aria-label="Inbox">🗂️</span>
+        <div className="flex justify-center mb-2"><Archive size={32} className="text-earth-400" aria-hidden="true" /></div>
         <h4 className="mt-2 text-xs sm:text-sm font-bold text-earth-800 dark:text-earth-200">No Diagnosis History Found</h4>
         <p className="mt-1 text-xs text-earth-500 dark:text-earth-400 max-w-xs mx-auto">
           Scanned leaves and diagnostic reports will automatically appear here.
@@ -25,22 +26,22 @@ function HistoryList({ history, onSelectHistory, onClearHistory }) {
     }
 
     if (val >= 95) {
-      return <span className="text-green-600 dark:text-green-400 font-bold text-xs">🟢 {val}%</span>;
+      return <span className="text-green-600 dark:text-green-400 font-bold text-xs flex items-center gap-1"><CircleCheck size={12} aria-hidden="true" /> {val}%</span>;
     } else if (val >= 75) {
-      return <span className="text-amber-600 dark:text-amber-400 font-bold text-xs">🟡 {val}%</span>;
+      return <span className="text-amber-600 dark:text-amber-400 font-bold text-xs flex items-center gap-1"><CircleAlert size={12} aria-hidden="true" /> {val}%</span>;
     } else {
-      return <span className="text-red-500 dark:text-red-400 font-bold text-xs">🔴 {val}%</span>;
+      return <span className="text-red-500 dark:text-red-400 font-bold text-xs flex items-center gap-1"><CircleX size={12} aria-hidden="true" /> {val}%</span>;
     }
   };
 
   const getSeverityBadge = (severity) => {
     const sev = (severity || 'Low').trim().toLowerCase();
     if (sev === 'high') {
-      return <span className="text-red-500 dark:text-red-400 font-bold text-xs">🔴 High</span>;
+      return <span className="text-red-500 dark:text-red-400 font-bold text-xs flex items-center gap-1"><CircleX size={12} aria-hidden="true" /> High</span>;
     } else if (sev === 'moderate' || sev === 'medium') {
-      return <span className="text-amber-600 dark:text-amber-400 font-bold text-xs">🟡 Mod</span>;
+      return <span className="text-amber-600 dark:text-amber-400 font-bold text-xs flex items-center gap-1"><CircleAlert size={12} aria-hidden="true" /> Mod</span>;
     } else {
-      return <span className="text-green-600 dark:text-green-400 font-bold text-xs">🟢 Low</span>;
+      return <span className="text-green-600 dark:text-green-400 font-bold text-xs flex items-center gap-1"><CircleCheck size={12} aria-hidden="true" /> Low</span>;
     }
   };
 
@@ -49,7 +50,7 @@ function HistoryList({ history, onSelectHistory, onClearHistory }) {
       <div className="flex items-center justify-between pb-3 border-b border-earth-100 dark:border-earth-800">
         <div>
           <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-earth-900 dark:text-earth-50 flex items-center gap-1.5">
-            <span>📊</span> Recent Analyses
+            <BarChart2 size={16} aria-hidden="true" /> Recent Analyses
           </h3>
           <p className="text-[10px] text-earth-450 dark:text-earth-400 mt-0.5">Stored locally on device</p>
         </div>

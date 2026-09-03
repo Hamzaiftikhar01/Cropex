@@ -3,6 +3,8 @@ import { useLanguage } from '../context/LanguageContext';
 import AdvisorCard from '../components/AdvisorCard';
 import { calculateDiseaseRisk, calculateIrrigation, calculateYieldForecast } from '../utils/agriRules';
 import IrrigationSchedulerWidget from '../components/dashboard/IrrigationSchedulerWidget';
+import CropIcon from '../components/icons/CropIcon';
+import { Shield, AlertTriangle, Droplets, CheckCircle, CloudSun, Bug, Activity } from 'lucide-react';
 
 export default function DashboardView({ fieldProfile, weatherData, loading, onNavigate, advice, adviceLoading, onProfileChange }) {
   const { t, language } = useLanguage();
@@ -54,19 +56,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
     return descMap[desc] || desc;
   };
 
-  // Crop icons
-  const getCropIcon = (crop) => {
-    switch (crop.toLowerCase()) {
-      case 'wheat': return '🌾';
-      case 'rice': return '🌾';
-      case 'cotton': return '🌿';
-      case 'sugarcane': return '🎋';
-      case 'maize': return '🌽';
-      case 'potato': return '🥔';
-      case 'tomato': return '🍅';
-      default: return '🌱';
-    }
-  };
+  // Removed getCropIcon, we use CropIcon directly
 
   // Overall Farm Health Score calculation
   const calculateHealthScore = () => {
@@ -159,7 +149,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
           <div className="bg-neutral-surface border border-neutral-border rounded-2xl p-5 sm:p-6 shadow-soft space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-neutral-border">
               <div className="flex items-center gap-2">
-                <span className="text-lg">🛡️</span>
+                <Shield size={20} className="text-earth-500" aria-hidden="true" />
                 <h3 className="text-xs sm:text-sm font-bold text-neutral-high uppercase tracking-wider">
                   {language === 'ur' ? 'ایکٹو رسک سنٹر (Explainable AI)' : language === 'pa' ? 'ایکٹو رسک سنٹر (Explainable AI)' : 'Active Risks (Explainable AI)'}
                 </h3>
@@ -173,8 +163,8 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                 {riskInfo.percentage >= 40 && (
                   <div className="p-4 rounded-xl bg-semantic-high/10 border border-semantic-high/30 text-left space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-semantic-high">
-                        ⚠️ Outbreak Risk • {riskInfo.percentage}%
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-semantic-high flex items-center gap-1">
+                        <AlertTriangle size={12} aria-hidden="true" /> Outbreak Risk • {riskInfo.percentage}%
                       </span>
                       <span className="text-xs font-bold text-neutral-high">
                         {t('crop_' + fieldProfile.cropType.toLowerCase())}: {riskInfo.diseaseName}
@@ -193,8 +183,8 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                 {irrInfo.recommendation === 'Irrigate Now' && (
                   <div className="p-4 rounded-xl bg-[#EFF6FF] border border-[#BFDBFE] dark:bg-[#1E3A8A]/30 dark:border-[#1E3A8A] text-left space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#1D4ED8] dark:text-[#93C5FD]">
-                        💧 Water Depletion Alert
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#1D4ED8] dark:text-[#93C5FD] flex items-center gap-1">
+                        <Droplets size={12} aria-hidden="true" /> Water Depletion Alert
                       </span>
                       <span className="text-xs font-bold text-neutral-high">
                         {t('soil_' + fieldProfile.soilType.toLowerCase())} Profile
@@ -211,7 +201,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
               </div>
             ) : (
               <div className="py-6 text-center space-y-2">
-                <span className="text-3xl">✅</span>
+                <CheckCircle size={36} className="text-brand-primary mx-auto mb-2" aria-hidden="true" />
                 <p className="text-xs font-bold text-brand-primary">No Imminent Critical Pathogen or Soil Drought Alerts</p>
                 <p className="text-[11px] text-neutral-medium max-w-sm mx-auto">
                   Local climate conditions for {fieldProfile.district} are currently hostile to major foliar pathogen germination.
@@ -246,7 +236,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                   {/* Current Active Crop */}
                   <tr className="bg-brand-surface">
                     <td className="py-3 flex items-center gap-2 font-bold px-2">
-                      <span className="text-base">{getCropIcon(fieldProfile.cropType)}</span>
+                      <span className="text-base flex items-center"><CropIcon crop={fieldProfile.cropType} size={20} aria-hidden="true" /></span>
                       <span>{t('crop_' + fieldProfile.cropType.toLowerCase())} (Active)</span>
                     </td>
                     <td className="py-3 font-extrabold px-2">{100 - Math.round(riskInfo.percentage / 2.5)}%</td>
@@ -270,7 +260,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                   {fieldProfile.cropType !== 'Wheat' && (
                     <tr>
                       <td className="py-3 flex items-center gap-2 font-semibold px-2">
-                        <span className="text-base">🌾</span>
+                        <span className="text-base flex items-center"><CropIcon crop="Wheat" size={16} aria-hidden="true" /></span>
                         <span>{t('crop_wheat')}</span>
                       </td>
                       <td className="py-3 px-2">91%</td>
@@ -287,7 +277,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                   {fieldProfile.cropType !== 'Rice' && (
                     <tr>
                       <td className="py-3 flex items-center gap-2 font-semibold px-2">
-                        <span className="text-base">🌾</span>
+                        <span className="text-base flex items-center"><CropIcon crop="Rice" size={16} aria-hidden="true" /></span>
                         <span>{t('crop_rice')}</span>
                       </td>
                       <td className="py-3 px-2">82%</td>
@@ -304,7 +294,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                   {fieldProfile.cropType !== 'Tomato' && (
                     <tr>
                       <td className="py-3 flex items-center gap-2 font-semibold px-2">
-                        <span className="text-base">🍅</span>
+                        <span className="text-base flex items-center"><CropIcon crop="Tomato" size={16} aria-hidden="true" /></span>
                         <span>{t('crop_tomato')}</span>
                       </td>
                       <td className="py-3 px-2">88%</td>
@@ -357,7 +347,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                   </span>
                 </div>
               </div>
-              <span className="text-2xl">⛅</span>
+              <CloudSun size={24} className="text-earth-600 dark:text-earth-400" aria-hidden="true" />
             </div>
             <button
               onClick={() => onNavigate('weather')}
@@ -392,7 +382,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                   {riskInfo.diseaseName}
                 </span>
               </div>
-              <span className="text-2xl">🦠</span>
+              <Bug size={24} className="text-red-500 dark:text-red-400" aria-hidden="true" />
             </div>
             <button
               onClick={() => onNavigate('disease')}
@@ -425,7 +415,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                   {irrInfo.litersPerAcre > 0 ? `${irrInfo.litersPerAcre.toLocaleString()} ${t('litersAcre')}` : t('soilAdequate')}
                 </span>
               </div>
-              <span className="text-2xl">💦</span>
+              <Droplets size={24} className="text-blue-500 dark:text-blue-400" aria-hidden="true" />
             </div>
             <button
               onClick={() => {
@@ -453,7 +443,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                   </span>
                 </div>
               </div>
-              <span className="text-2xl">🌾</span>
+              <Activity size={24} className="text-crop-600 dark:text-crop-400" aria-hidden="true" />
             </div>
             <button
               onClick={() => onNavigate('yield')}

@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import LoadingSpinner from './LoadingSpinner';
+import { AlertTriangle } from 'lucide-react';
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
@@ -55,7 +56,7 @@ function UploadCard({
     <div className="rounded-2xl border border-earth-100 dark:border-earth-800 bg-white dark:bg-earth-900 p-5 sm:p-6 shadow-soft transition-colors duration-200">
       {error && (
         <div className="mb-5 rounded-xl bg-red-50 p-3.5 text-xs text-red-800 ring-1 ring-red-100 flex items-start gap-3 text-left dark:bg-red-950/20 dark:text-red-300 dark:ring-red-900/30">
-          <span className="text-sm">⚠️</span>
+          <AlertTriangle size={18} className="text-red-600 dark:text-red-400 mt-0.5" aria-hidden="true" />
           <div className="flex-1">
             <p className="font-bold text-red-900 dark:text-red-400">Analysis Failed</p>
             <p className="mt-0.5 text-red-700 dark:text-red-300">{error}</p>

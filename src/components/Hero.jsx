@@ -1,5 +1,6 @@
 import cropImages from '../assets/cropImages';
 import { useLanguage } from '../context/LanguageContext';
+import { Leaf } from 'lucide-react';
 
 const stats = [
   { value: '7+', label: 'Strategic crop models' },
@@ -29,7 +30,7 @@ function Hero() {
           <div className="max-w-xl lg:max-w-none text-left">
             {/* Subtle leaf icon ornament */}
             <div className="mb-6 flex items-center gap-1.5 text-crop-600 dark:text-crop-400">
-              <span className="text-xl">🍃</span>
+              <Leaf size={20} aria-hidden="true" />
               <span className="text-[10px] font-bold uppercase tracking-wider text-crop-600/90 dark:text-crop-400/90">
                 Your AI Companion for Smarter Farming
               </span>

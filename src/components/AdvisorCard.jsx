@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { Bot } from 'lucide-react';
 
 export default function AdvisorCard({ advice, loading, fieldProfile, weatherData }) {
   const { t, language } = useLanguage();
@@ -106,7 +107,7 @@ export default function AdvisorCard({ advice, loading, fieldProfile, weatherData
             </span>
             {advice.source === 'llm' && (
               <span className="text-[9px] bg-brand-surface text-brand-primary px-2 py-0.5 rounded-full font-bold shadow-xs">
-                🤖 AI
+                <Bot size={16} className="inline mr-1" aria-hidden="true" /> AI
               </span>
             )}
           </div>

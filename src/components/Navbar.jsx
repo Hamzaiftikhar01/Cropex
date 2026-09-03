@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { Languages, Sun, Moon, User, Settings, LogOut, Sprout } from 'lucide-react';
 
 function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout, darkMode, onToggleDarkMode }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -31,9 +32,9 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
   };
 
   const getLanguageLabel = () => {
-    if (language === 'en') return '🇺🇸 EN';
-    if (language === 'ur') return '🇵🇰 اردو';
-    return '🇵🇰 پنجابی';
+    if (language === 'en') return 'EN';
+    if (language === 'ur') return 'اردو';
+    return 'پنجابی';
   };
 
   // Close dropdown when clicking outside
@@ -58,7 +59,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
           className="flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-brand-primary rounded-xl p-1"
         >
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-primary text-base text-neutral-surface shadow-sm">
-            🌱
+            <Sprout size={20} aria-hidden="true" />
           </span>
           <span className="text-lg font-bold tracking-tight text-neutral-high font-sans">
             Crop<span className="font-semibold text-brand-primary">ex</span>
@@ -104,6 +105,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
             className="h-9 inline-flex items-center justify-center rounded-xl bg-neutral-fill border border-neutral-border px-3 text-xs font-bold text-neutral-high shadow-sm hover:bg-neutral-border focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors cursor-pointer"
             title="Toggle Language (English / Urdu / Punjabi)"
           >
+            <Languages size={16} className="mr-1" aria-hidden="true" />
             {getLanguageLabel()}
           </button>
 
@@ -113,7 +115,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
             className="h-9 w-9 inline-flex items-center justify-center rounded-xl bg-neutral-fill border border-neutral-border text-neutral-high shadow-sm hover:bg-neutral-border focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors cursor-pointer"
             title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
-            {darkMode ? '☀️' : '🌙'}
+            {darkMode ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
           </button>
 
           {/* Profile Menu Dropdown */}
@@ -122,7 +124,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
               onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
               className="h-9 w-9 inline-flex items-center justify-center rounded-full bg-neutral-fill border border-neutral-border text-neutral-high shadow-sm hover:bg-neutral-border focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors cursor-pointer"
             >
-              👤
+              <User size={18} aria-hidden="true" />
             </button>
 
             {profileDropdownOpen && (
@@ -139,7 +141,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
                   onClick={() => { onOpenSettings(); setProfileDropdownOpen(false); }}
                   className="w-full text-left px-4 py-2 text-xs font-semibold text-neutral-medium hover:bg-neutral-fill hover:text-neutral-high transition-colors"
                 >
-                  ⚙️ {t('settings')}
+                  <Settings size={14} className="inline mr-2" aria-hidden="true" /> {t('settings')}
                 </button>
 
                 {currentUser && (
@@ -147,7 +149,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
                     onClick={() => { onLogout(); setProfileDropdownOpen(false); }}
                     className="w-full text-left px-4 py-2 text-xs font-bold text-semantic-high hover:bg-neutral-fill transition-colors"
                   >
-                    🚪 {t('signOut')}
+                    <LogOut size={14} className="inline mr-2" aria-hidden="true" /> {t('signOut')}
                   </button>
                 )}
               </div>
@@ -162,13 +164,13 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
             className="h-9 w-9 inline-flex items-center justify-center rounded-xl bg-neutral-fill border border-neutral-border text-neutral-high shadow-sm hover:bg-neutral-border focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors cursor-pointer"
             title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
-            {darkMode ? '☀️' : '🌙'}
+            {darkMode ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
           </button>
           <button
             onClick={() => toggleLanguage()}
             className="h-9 inline-flex items-center justify-center rounded-xl bg-neutral-fill border border-neutral-border px-2.5 text-xs font-bold text-neutral-high shadow-sm hover:bg-neutral-border focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors cursor-pointer"
           >
-            {getLanguageLabel().split(' ')[0]} {/* Just show flag on mobile */}
+            <Languages size={16} aria-hidden="true" />
           </button>
           <a
             href="#upload"
@@ -230,13 +232,13 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
               onClick={() => { toggleLanguage(); setMenuOpen(false); }}
               className="text-left rounded-xl px-3.5 py-2.5 text-xs font-semibold text-neutral-medium hover:bg-neutral-fill"
             >
-              🌐 {getLanguageLabel()}
+              <Languages size={14} className="inline mr-2" aria-hidden="true" /> {getLanguageLabel()}
             </button>
             <button
               onClick={() => { onOpenSettings(); setMenuOpen(false); }}
               className="text-left rounded-xl px-3.5 py-2.5 text-xs font-semibold text-neutral-medium hover:bg-neutral-fill"
             >
-              ⚙️ {t('settings')}
+              <Settings size={14} className="inline mr-2" aria-hidden="true" /> {t('settings')}
             </button>
             {currentUser && (
               <button
@@ -246,7 +248,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
                 }}
                 className="text-left rounded-xl px-3.5 py-2.5 text-xs font-bold text-semantic-high hover:bg-neutral-fill"
               >
-                🚪 {t('signOut')}
+                <LogOut size={14} className="inline mr-2" aria-hidden="true" /> {t('signOut')}
               </button>
             )}
           </div>

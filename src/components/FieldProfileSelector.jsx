@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { Edit2 } from 'lucide-react';
 
 export default function FieldProfileSelector({ activeProfile, onProfileChange, refData }) {
   const { t, language } = useLanguage();
@@ -26,9 +27,9 @@ export default function FieldProfileSelector({ activeProfile, onProfileChange, r
     onProfileChange({
       ...editForm,
       id: 'custom',
-      name: `👤 Custom: ${editForm.district} ${editForm.cropType}`,
-      nameUr: `👤 کسٹم: ${t('dist_' + editForm.district.toLowerCase())} ${t('crop_' + editForm.cropType.toLowerCase())}`,
-      namePa: `👤 کسٹم: ${t('dist_' + editForm.district.toLowerCase())} ${t('crop_' + editForm.cropType.toLowerCase())}`,
+      name: `Custom: ${editForm.district} ${editForm.cropType}`,
+      nameUr: `کسٹم: ${t('dist_' + editForm.district.toLowerCase())} ${t('crop_' + editForm.cropType.toLowerCase())}`,
+      namePa: `کسٹم: ${t('dist_' + editForm.district.toLowerCase())} ${t('crop_' + editForm.cropType.toLowerCase())}`,
       description: 'Custom farmer-defined environment configuration.',
       descriptionUr: 'کسان کی فراہم کردہ ترتیبات۔',
       descriptionPa: 'کسان دی فراہم کردہ ترتیبات۔'
@@ -82,7 +83,7 @@ export default function FieldProfileSelector({ activeProfile, onProfileChange, r
                 : 'border-neutral-border text-neutral-high hover:bg-neutral-fill'
             }`}
           >
-            {isEditing ? t('cancel') : `✏️ ${t('modifyProfile')}`}
+            {isEditing ? t('cancel') : <><Edit2 size={12} className="inline mr-1" aria-hidden="true" /> {t('modifyProfile')}</>}
           </button>
         </div>
       </div>

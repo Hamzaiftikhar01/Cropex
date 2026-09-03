@@ -1,4 +1,4 @@
-# 🌾 Cropex — Your AI Farming Companion & Smart Agriculture Ecosystem
+# Cropex — Your AI Farming Companion & Smart Agriculture Ecosystem
 
 > **Predict Early. Protect Crops. Empower Farmers.**
 
@@ -6,7 +6,7 @@ Cropex is a complete **AI-powered smart farming platform** designed to help farm
 
 ---
 
-## 🚀 Key Modules & System Features
+## Key Modules & System Features
 
 ### 1. Explainable AI Active Risks (Outbreak Warnings)
 * Calculates crop-specific disease outbreak risks (e.g., Late Blight for tomato/potato, Rust for wheat, Blast for rice) before visible symptoms damage foliage.
@@ -39,7 +39,7 @@ Cropex is a complete **AI-powered smart farming platform** designed to help farm
 
 ---
 
-## 🛠️ Unified System Flow
+## Unified System Flow
 
 ```text
                   REAL-WORLD ENVIRONMENT DATA
@@ -68,7 +68,7 @@ Cropex is a complete **AI-powered smart farming platform** designed to help farm
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 ├── src/
@@ -104,7 +104,7 @@ Cropex is a complete **AI-powered smart farming platform** designed to help farm
 
 ---
 
-## ⚙️ Installation & Setup
+## Installation & Setup
 
 ### Prerequisites
 * **Node.js**: v18.0.0 or higher
@@ -116,8 +116,8 @@ Clone the repository, install packages, and boot the hot-reloading development s
 
 ```bash
 # Clone the repository
-git clone https://github.com/Hamzaiftikhar01/Crop-Medic-Ai.git
-cd Crop-Medic-Ai
+git clone https://github.com/Hamzaiftikhar01/Cropex.git
+cd Cropex
 
 # Install dependencies
 npm install
@@ -135,13 +135,14 @@ npm run dev
 
 ---
 
-## 🎨 Design System
+## Design System
 Cropex employs a sleek, modern UI utilizing **Tailwind CSS v4**. 
 - **Dark Mode Support**: Fully integrated dark mode utilizing CSS variables defined in `@layer base` for instant, lag-free theme switching.
 - **Glassmorphism & Micro-animations**: Soft shadows, rounded interfaces, and hover effects make the platform feel alive and responsive.
 - **Aesthetic Data Visualization**: Clean, dependency-free CSS-based progress bars and timelines for maximum performance.
+- **Iconography**: Complete integration of `lucide-react` for a consistent, theme-aware SVG icon system, replacing all generic emojis.
 
 ---
 
-## ⚖️ Legal Disclaimer
+## Legal Disclaimer
 Cropex is an AI-powered prototype demonstrating smart decision-support concepts using simplified agronomic models. Recommendations are illustrative and do not replace professional agricultural extension services or on-site agronomist inspections.

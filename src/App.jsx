@@ -19,11 +19,12 @@ import { useLanguage } from './context/LanguageContext';
 import { getDeterministicAdvice, getRephrasedAdvice } from './services/farmAdvisor';
 import { supabase } from './lib/supabase';
 import { loadReferenceData } from './lib/referenceData';
+import { Sprout } from 'lucide-react';
 
 // Fallback default profile in case DB is empty
 const FALLBACK_PROFILE = {
   id: 'wheat-faisalabad',
-  name: '🌾 Profile A: Faisalabad Wheat',
+  name: 'Profile A: Faisalabad Wheat',
   cropType: 'Wheat',
   district: 'Faisalabad',
   sowingDate: (() => { const d = new Date(); d.setDate(d.getDate() - 75); return d.toISOString().split('T')[0]; })(),
@@ -310,7 +311,7 @@ function App() {
 
   // Auth Routing Gate
   if (sessionLoading || !refData) {
-    return <div className="min-h-screen bg-earth-50 dark:bg-earth-950 flex items-center justify-center"><div className="animate-spin text-4xl">🌱</div></div>;
+    return <div className="min-h-screen bg-earth-50 dark:bg-earth-950 flex items-center justify-center"><Sprout size={48} className="text-crop-600 dark:text-crop-400 animate-spin" aria-hidden="true" /></div>;
   }
 
   if (!currentUser || needsProfileSetup) {

@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { supabase } from '../lib/supabase';
+import { Languages, Sprout, AlertTriangle } from 'lucide-react';
 
 export default function AuthView({ onLoginSuccess, refData, currentUser }) {
   const CROPS = refData?.cropNames || ['Wheat', 'Rice', 'Cotton', 'Sugarcane', 'Maize', 'Potato', 'Tomato'];
@@ -112,9 +113,9 @@ export default function AuthView({ onLoginSuccess, refData, currentUser }) {
 
     const fieldProfile = {
       id: 'custom-farmer-' + Math.random().toString(36).substr(2, 9),
-      name: `👤 ${fullName}'s Farm`,
-      nameUr: `👤 ${fullName} کا فارم`,
-      namePa: `👤 ${fullName} دا فارم`,
+      name: `${fullName}'s Farm`,
+      nameUr: `${fullName} کا فارم`,
+      namePa: `${fullName} دا فارم`,
       cropType,
       district,
       sowingDate,
@@ -154,9 +155,9 @@ export default function AuthView({ onLoginSuccess, refData, currentUser }) {
   };
 
   const getLanguageLabel = () => {
-    if (language === 'en') return '🇺🇸 EN';
-    if (language === 'ur') return '🇵🇰 اردو';
-    return '🇵🇰 پنجابی';
+    if (language === 'en') return 'EN';
+    if (language === 'ur') return 'اردو';
+    return 'پنجابی';
   };
 
   return (
@@ -169,14 +170,14 @@ export default function AuthView({ onLoginSuccess, refData, currentUser }) {
           onClick={toggleLanguage}
           className="h-9 px-3 inline-flex items-center justify-center rounded-xl border border-earth-200 bg-white text-xs font-bold text-earth-700 shadow-soft hover:bg-earth-50 hover:text-earth-950 dark:border-earth-800 dark:bg-earth-900 dark:text-earth-300 dark:hover:bg-earth-850 cursor-pointer transition-colors"
         >
-          {getLanguageLabel()}
+          <Languages size={14} className="mr-1 inline" aria-hidden="true" /> {getLanguageLabel()}
         </button>
       </div>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-crop-600 text-2xl text-white shadow-sm shadow-crop-600/30">
-            🌱
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-crop-600 text-white shadow-sm shadow-crop-600/30">
+            <Sprout size={28} aria-hidden="true" />
           </span>
         </div>
         <h2 className="mt-3 text-center text-3xl font-black tracking-tight text-earth-900 dark:text-earth-50">
@@ -192,7 +193,7 @@ export default function AuthView({ onLoginSuccess, refData, currentUser }) {
           
           {errorMsg && (
             <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs font-bold dark:bg-red-950/20 dark:border-red-900/30 dark:text-red-300 break-words">
-              ⚠️ {errorMsg}
+              <AlertTriangle size={14} className="inline mr-1" aria-hidden="true" /> {errorMsg}
             </div>
           )}
 

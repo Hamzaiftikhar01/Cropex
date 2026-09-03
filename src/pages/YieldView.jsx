@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { calculateYieldForecast, calculateDiseaseRisk } from '../utils/agriRules';
+import { Target, Calendar, Sun, Sprout, Bug, Lightbulb } from 'lucide-react';
 
 export default function YieldView({ fieldProfile, weatherData }) {
   const { t, language } = useLanguage();
@@ -57,7 +58,7 @@ export default function YieldView({ fieldProfile, weatherData }) {
             <span className="text-lg sm:text-xl text-earth-100 font-bold ml-2">{t('maundsPerAcre')}</span>
           </div>
           <span className="text-xs text-earth-300 bg-earth-800/80 border border-earth-700 px-3.5 py-1.5 rounded-full font-semibold self-start sm:self-auto">
-            🎯 {t('yieldAverage')}: {yieldData.expectedYield} {t('maunds')}
+            <Target size={16} className="inline mr-1" aria-hidden="true" /> {t('yieldAverage')}: {yieldData.expectedYield} {t('maunds')}
           </span>
         </div>
 
@@ -77,7 +78,7 @@ export default function YieldView({ fieldProfile, weatherData }) {
             {/* Sowing Factor */}
             <div>
               <div className="flex justify-between text-xs font-semibold text-earth-650 dark:text-earth-350">
-                <span>📅 {t('sowingAlign')}</span>
+                <span className="flex items-center gap-1"><Calendar size={14} aria-hidden="true" /> {t('sowingAlign')}</span>
                 <span className={yieldData.sowingFactor < 1.0 ? 'text-red-500 font-bold' : 'text-green-600 font-bold'}>
                   {yieldData.sowingFactor.toFixed(2)}x
                 </span>
@@ -93,7 +94,7 @@ export default function YieldView({ fieldProfile, weatherData }) {
             {/* Weather Factor */}
             <div>
               <div className="flex justify-between text-xs font-semibold text-earth-650 dark:text-earth-350">
-                <span>☀️ {t('tempStress')}</span>
+                <span className="flex items-center gap-1"><Sun size={14} aria-hidden="true" /> {t('tempStress')}</span>
                 <span className={yieldData.weatherFactor < 1.0 ? 'text-red-500 font-bold' : 'text-green-600 font-bold'}>
                   {yieldData.weatherFactor.toFixed(2)}x
                 </span>
@@ -109,7 +110,7 @@ export default function YieldView({ fieldProfile, weatherData }) {
             {/* Soil Factor */}
             <div>
               <div className="flex justify-between text-xs font-semibold text-earth-650 dark:text-earth-350">
-                <span>🌱 {t('soilEfficiency')}</span>
+                <span className="flex items-center gap-1"><Sprout size={14} aria-hidden="true" /> {t('soilEfficiency')}</span>
                 <span className={yieldData.soilFactor < 1.0 ? 'text-red-500 font-bold' : 'text-green-600 font-bold'}>
                   {yieldData.soilFactor.toFixed(2)}x
                 </span>
@@ -125,7 +126,7 @@ export default function YieldView({ fieldProfile, weatherData }) {
             {/* Disease Risk Factor */}
             <div>
               <div className="flex justify-between text-xs font-semibold text-earth-650 dark:text-earth-350">
-                <span>🦠 {t('diseaseInfect')}</span>
+                <span className="flex items-center gap-1"><Bug size={14} aria-hidden="true" /> {t('diseaseInfect')}</span>
                 <span className={yieldData.diseaseFactor < 1.0 ? 'text-red-500 font-bold' : 'text-green-600 font-bold'}>
                   {yieldData.diseaseFactor.toFixed(2)}x
                 </span>
@@ -187,7 +188,7 @@ export default function YieldView({ fieldProfile, weatherData }) {
           </div>
 
           <div className="p-3 bg-earth-50 dark:bg-earth-950/60 rounded-xl border border-earth-100 dark:border-earth-800 text-[10px] text-earth-500 dark:text-earth-400 font-medium leading-relaxed">
-            💡 Slider adjustments immediately simulate stress factors on harvest output.
+            <Lightbulb size={16} className="inline mr-1" aria-hidden="true" /> Slider adjustments immediately simulate stress factors on harvest output.
           </div>
         </div>
       </div>

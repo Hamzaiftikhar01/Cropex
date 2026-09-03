@@ -1,3 +1,4 @@
+import { Sprout, Target, Rocket, Package, AlertTriangle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 function About() {
@@ -10,7 +11,7 @@ function About() {
         {/* Title */}
         <div className="text-center mb-12">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-crop-50 px-3 py-1 text-xs font-semibold text-crop-800 ring-1 ring-crop-100 dark:bg-crop-950/30 dark:text-crop-300 dark:ring-crop-900/30">
-            🌱 About Cropex
+            <Sprout size={18} className="inline mr-2" aria-hidden="true" /> About Cropex
           </span>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-earth-900 sm:text-4xl dark:text-earth-50">
             Your AI Companion for Smarter Farming
@@ -24,7 +25,7 @@ function About() {
           {/* Card 1: Main Mission */}
           <div className="rounded-2xl border border-earth-100 bg-white p-6 sm:p-8 shadow-soft transition-all hover:shadow-card dark:border-earth-800 dark:bg-earth-850">
             <h3 className="text-lg font-bold text-earth-900 dark:text-earth-100 flex items-center gap-2">
-              <span>🎯</span> Our Core Mission
+              <Target size={20} className="inline mr-2 text-brand-primary" aria-hidden="true" /> Our Core Mission
             </h3>
             <p className="mt-3 text-sm leading-relaxed text-earth-650 dark:text-earth-350 font-medium">
               Traditional disease detection tools only alert farmers after visible leaf damage has already ruined the crop. Cropex stands for <strong>Prevention &gt; Detection</strong>. By analyzing micro-climate weather trends, soil types, and crop growth stages, the platform predicts outbreak probabilities beforehand, giving farmers an actionable window to protect their crop yield.
@@ -34,7 +35,7 @@ function About() {
           {/* Card 2: 5 Integrated Smart Modules */}
           <div className="rounded-2xl border border-earth-100 bg-white p-6 sm:p-8 shadow-soft transition-all hover:shadow-card dark:border-earth-800 dark:bg-earth-850">
             <h3 className="text-lg font-bold text-earth-900 dark:text-earth-100 flex items-center gap-2">
-              <span>🚀</span> 5 Genuinely Working Core Modules
+              <Rocket size={20} className="inline mr-2 text-crop-600 dark:text-crop-400" aria-hidden="true" /> 5 Genuinely Working Core Modules
             </h3>
             <div className="mt-4 space-y-4">
               <div className="border-l-2 border-crop-500 pl-4">
@@ -77,7 +78,7 @@ function About() {
           {/* Card 3: Manufacturer Registration Index */}
           <div className="rounded-2xl border border-earth-100 bg-white p-6 sm:p-8 shadow-soft transition-all hover:shadow-card dark:border-earth-800 dark:bg-earth-850">
             <h3 className="text-lg font-bold text-earth-900 dark:text-earth-100 flex items-center gap-2">
-              <span>📦</span> Offline registered database
+              <Package size={20} className="inline mr-2 text-earth-600 dark:text-earth-400" aria-hidden="true" /> Offline registered database
             </h3>
             <p className="mt-3 text-sm leading-relaxed text-earth-650 dark:text-earth-350 font-medium">
               To guarantee immediate support in rural fields with weak cell connectivity, Cropex bundles a local index of officially registered chemical crop treatments. Scrapers gather these indices from leading manufacturers in Pakistan:
@@ -93,7 +94,7 @@ function About() {
           {/* Professional Disclaimer */}
           <div className="rounded-2xl border border-amber-200/80 bg-amber-50/50 p-6 sm:p-8 shadow-soft dark:border-amber-900/40 dark:bg-amber-950/20">
             <h3 className="text-lg font-bold text-amber-950 dark:text-amber-400 flex items-center gap-2">
-              <span>⚠️</span> Professional Disclaimer
+              <AlertTriangle size={20} className="inline mr-2 text-amber-500" aria-hidden="true" /> Professional Disclaimer
             </h3>
             <p className="mt-3 text-sm leading-relaxed text-amber-900 dark:text-amber-300 font-semibold italic">
               All diagnosis reports, chemical product listings, and smart predictions provided by Cropex are for educational and informational purposes only. Farmers should consult qualified local agronomists and read official manufacturer product labels before applying crop chemicals.

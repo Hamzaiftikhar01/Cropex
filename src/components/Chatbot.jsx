@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { Bot, Sprout } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { generateChatResponse } from '../services/aiService';
@@ -51,7 +52,7 @@ export default function Chatbot({ fieldProfile, weatherData }) {
           {/* Header */}
           <div className="bg-brand-primary text-neutral-surface p-4 flex justify-between items-center shadow-xs">
             <div className="flex items-center gap-2">
-              <span className="text-xl">🤖</span>
+              <Bot size={24} className="text-white" aria-hidden="true" />
               <h3 className="font-bold text-sm tracking-wide">AI Farm Advisor</h3>
             </div>
             <button 
@@ -121,14 +122,14 @@ export default function Chatbot({ fieldProfile, weatherData }) {
             onClick={() => setIsOpen(true)}
             className="animate-fade-in bg-neutral-surface border border-neutral-border text-neutral-high text-[13px] font-semibold rounded-full shadow-soft px-3.5 py-2 cursor-pointer hover:bg-neutral-fill transition-colors whitespace-nowrap"
           >
-            Ask me anything 🌾
+            Ask me anything <Sprout size={16} className="inline ml-1" aria-hidden="true" />
           </button>
           <button
             onClick={() => setIsOpen(true)}
             aria-label="Open AI Farm Advisor chat"
             className="bg-brand-primary hover:bg-brand-secondary text-white w-14 h-14 rounded-full shadow-hard flex items-center justify-center transition-transform hover:scale-105 cursor-pointer relative shrink-0"
           >
-            <span className="text-2xl">🤖</span>
+            <Bot size={32} className="text-crop-600 dark:text-crop-400" aria-hidden="true" />
             <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-semantic-high border-2 border-white rounded-full"></span>
           </button>
         </div>

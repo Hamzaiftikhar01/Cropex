@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { Settings } from 'lucide-react';
+
 function SettingsModal({ isOpen, onClose, darkMode, onToggleDarkMode, onClearHistory, historyCount }) {
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -12,7 +14,7 @@ function SettingsModal({ isOpen, onClose, darkMode, onToggleDarkMode, onClearHis
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-earth-100 dark:border-earth-800">
           <h3 className="text-lg font-bold text-earth-900 dark:text-earth-50 flex items-center gap-2">
-            <span>⚙️</span> System Settings
+            <Settings size={20} aria-hidden="true" /> System Settings
           </h3>
           <button
             type="button"

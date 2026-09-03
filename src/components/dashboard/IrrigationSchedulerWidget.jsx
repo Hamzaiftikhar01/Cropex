@@ -1,4 +1,5 @@
 import { useLanguage } from '../../context/LanguageContext';
+import { Droplets, Check } from 'lucide-react';
 
 export default function IrrigationSchedulerWidget({ irrInfo, fieldProfile, onProfileChange }) {
   const { t, language } = useLanguage();
@@ -58,7 +59,7 @@ export default function IrrigationSchedulerWidget({ irrInfo, fieldProfile, onPro
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-3">
         <div>
           <h3 className="text-base sm:text-lg font-bold text-neutral-high dark:text-earth-50 flex items-center gap-2">
-            <span className="text-xl">💦</span> {isUrdu ? 'اسمارٹ ایریگیشن شیڈولر' : isPunjabi ? 'اسمارٹ ایریگیشن شیڈولر' : 'Smart Irrigation Scheduler'}
+            <Droplets size={24} className="text-blue-500" aria-hidden="true" /> {isUrdu ? 'اسمارٹ ایریگیشن شیڈولر' : isPunjabi ? 'اسمارٹ ایریگیشن شیڈولر' : 'Smart Irrigation Scheduler'}
           </h3>
           <p className="text-xs sm:text-sm text-neutral-medium dark:text-earth-300 mt-1">
             {isUrdu ? 'پانی کی ضرورت اور موجودہ حالت' : isPunjabi ? 'پانی دی ضرورت تے حالت' : 'Track your crop water requirements in real-time'}
@@ -122,7 +123,7 @@ export default function IrrigationSchedulerWidget({ irrInfo, fieldProfile, onPro
             : 'bg-brand-primary hover:bg-brand-secondary text-white cursor-pointer shadow-soft hover:shadow-card hover:-translate-y-0.5'
         }`}
       >
-        <span className="text-lg">✔️</span> 
+        <Check size={20} className="mr-1 inline" aria-hidden="true" /> 
         {daysAgo === 0 
           ? (isUrdu ? 'آج پانی دیا جا چکا ہے' : isPunjabi ? 'اج پانی دتا گیا اے' : 'Already Irrigated Today') 
           : (isUrdu ? 'کھیت کو آج پانی دے دیا گیا' : isPunjabi ? 'اج پانی لا دتا گیا اے' : 'Mark as Irrigated Today')}
