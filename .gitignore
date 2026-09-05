@@ -37,10 +37,6 @@ __pycache__/
 venv/
 ENV/
 env/
-Lib/
-Include/
-Scripts/
-!scripts/
 pyvenv.cfg
 share/
 .pytest_cache/
