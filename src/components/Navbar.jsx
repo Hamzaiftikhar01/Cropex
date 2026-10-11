@@ -131,7 +131,14 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
               <div className="absolute right-0 mt-2 w-48 bg-neutral-surface border border-neutral-border rounded-xl shadow-card py-1 z-50">
                 {currentUser && (
                   <div className="px-4 py-2 border-b border-neutral-border">
-                    <p className="text-xs font-bold text-neutral-high truncate">{currentUser.fullName}</p>
+                    <div className="flex items-center justify-between gap-1">
+                      <p className="text-xs font-bold text-neutral-high truncate">{currentUser.fullName}</p>
+                      {currentUser.isGuest && (
+                        <span className="text-[9px] bg-brand-surface text-brand-primary px-1.5 py-0.5 rounded-full font-bold">
+                          Guest
+                        </span>
+                      )}
+                    </div>
                     <p className="text-[10px] text-neutral-medium truncate">{currentUser.email}</p>
                   </div>
                 )}
@@ -149,7 +156,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
                     onClick={() => { onLogout(); setProfileDropdownOpen(false); }}
                     className="w-full text-left px-4 py-2 text-xs font-bold text-semantic-high hover:bg-neutral-fill transition-colors"
                   >
-                    <LogOut size={14} className="inline mr-2" aria-hidden="true" /> {t('signOut')}
+                    <LogOut size={14} className="inline mr-2" aria-hidden="true" /> {currentUser.isGuest ? 'Exit Guest Mode' : t('signOut')}
                   </button>
                 )}
               </div>
@@ -248,7 +255,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
                 }}
                 className="text-left rounded-xl px-3.5 py-2.5 text-xs font-bold text-semantic-high hover:bg-neutral-fill"
               >
-                <LogOut size={14} className="inline mr-2" aria-hidden="true" /> {t('signOut')}
+                <LogOut size={14} className="inline mr-2" aria-hidden="true" /> {currentUser.isGuest ? 'Exit Guest Mode' : t('signOut')}
               </button>
             )}
           </div>

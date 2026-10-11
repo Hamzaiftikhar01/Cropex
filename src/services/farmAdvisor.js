@@ -1,5 +1,6 @@
 import { calculateDiseaseRisk, calculateIrrigation, calculateYieldForecast, getGrowthStage } from '../utils/agriRules';
 import { translations } from '../locales/translations';
+import { getGroqApiKey } from './aiService';
 
 /**
  * Executes Layer 1 (Deterministic Priority Ladder) of the Farm Advisor.
@@ -191,6 +192,71 @@ export async function getRephrasedAdvice(deterministicAdvice, language = 'en') {
     // Use pre-resolved translated text for LLM to rephrase
     const rawHeadline = deterministicAdvice.headline;
     const rawReasoning = deterministicAdvice.reasoning;
+
+    const apiKey = getGroqApiKey();
+    if (apiKey) {
+      try {
+        let targetLang = 'English';
+        let scriptInstructions = '';
+        if (language === 'ur') {
+          targetLang = 'Urdu';
+          scriptInstructions = 'Write in standard Urdu Script (Arabic/Persian Nastaliq script).';
+        } else if (language === 'pa') {
+          targetLang = 'Punjabi (Shahmukhi)';
+          scriptInstructions = 'Write in Shahmukhi Script (Perso-Arabic script used in Pakistani Punjab, NOT Gurmukhi). E.g. using standard Urdu/Arabic alphabets like "فصل نوں بچان لئی...". Do not use Gurmukhi/Indian characters.';
+        }
+
+        const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: 'openai/gpt-oss-120b',
+            messages: [
+              {
+                role: 'system',
+                content: `You are the Cropex AI Farm Advisor, a warm agricultural expert in Pakistan. Rephrase raw farm alerts into encouraging, natural, warm messages. Keep actionable and clear. Write in ${targetLang}. ${scriptInstructions} Keep digits (temperatures, %, days) in Western digits. Respond ONLY with raw JSON: {"headline":"max 12 words","reasoning":"max 25 words"}`
+              },
+              {
+                role: 'user',
+                content: `Headline: ${rawHeadline}\nReasoning: ${rawReasoning}`
+              }
+            ],
+            temperature: 0.3,
+            max_tokens: 128,
+            response_format: { type: 'json_object' }
+          }),
+          signal: controller.signal
+        });
+
+        if (groqResponse.ok) {
+          const groqData = await groqResponse.json();
+          const parsed = JSON.parse(groqData?.choices?.[0]?.message?.content || '{}');
+          if (parsed.headline && parsed.reasoning) {
+            clearTimeout(timeoutId);
+            let headline = parsed.headline;
+            let reasoning = parsed.reasoning;
+            if (deterministicAdvice.reasoningData) {
+              Object.keys(deterministicAdvice.reasoningData).forEach((key) => {
+                const replacement = deterministicAdvice.reasoningData[key];
+                headline = headline.replace(new RegExp(`{${key}}`, 'g'), replacement);
+                reasoning = reasoning.replace(new RegExp(`{${key}}`, 'g'), replacement);
+              });
+            }
+            return {
+              ...deterministicAdvice,
+              headline,
+              reasoning,
+              source: 'llm'
+            };
+          }
+        }
+      } catch (clientErr) {
+        // Fall through to /api/rephrase
+      }
+    }
 
     const response = await fetch('/api/rephrase', {
       method: 'POST',

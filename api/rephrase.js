@@ -50,7 +50,7 @@ export default async function handler(req, res) {
       scriptInstructions = 'Write in Shahmukhi Script (Perso-Arabic script used in Pakistani Punjab, NOT Gurmukhi). E.g. using standard Urdu/Arabic alphabets like "فصل نوں بچان لئی...". Do not use Gurmukhi/Indian characters.';
     }
 
-    const GROQ_MODEL = 'llama-3.1-8b-instant';
+    const GROQ_MODEL = 'openai/gpt-oss-120b';
 
     const systemMessage = {
       role: 'system',

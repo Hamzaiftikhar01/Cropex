@@ -135,59 +135,87 @@ function App() {
   // Supabase Auth Listener & Initial Data Fetch
   useEffect(() => {
     const fetchUserData = async (userId) => {
-      // Fetch profile
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-      
-      if (profileData && profileData.field_profile) {
-        const fp = { ...profileData.field_profile };
-        if (fp.last_irrigated_at) {
-          const diff = Date.now() - new Date(fp.last_irrigated_at).getTime();
-          fp.lastIrrigatedDaysAgo = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
+      try {
+        // Fetch profile
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', userId)
+          .single();
+        
+        if (profileData && profileData.field_profile) {
+          const fp = { ...profileData.field_profile };
+          if (fp.last_irrigated_at) {
+            const diff = Date.now() - new Date(fp.last_irrigated_at).getTime();
+            fp.lastIrrigatedDaysAgo = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
+          }
+          setFieldProfile(fp);
+          setNeedsProfileSetup(false);
+          setCurrentUser(prev => prev ? { ...prev, fullName: profileData.full_name || '' } : prev);
+        } else if (profileData) {
+          setCurrentUser(prev => prev ? { ...prev, fullName: profileData.full_name || '' } : prev);
+          setNeedsProfileSetup(true);
+        } else {
+          setNeedsProfileSetup(true);
         }
-        setFieldProfile(fp);
-        setNeedsProfileSetup(false);
-        setCurrentUser(prev => prev ? { ...prev, fullName: profileData.full_name || '' } : prev);
-      } else if (profileData) {
-        setCurrentUser(prev => prev ? { ...prev, fullName: profileData.full_name || '' } : prev);
-        setNeedsProfileSetup(true);
-      } else {
-        setNeedsProfileSetup(true);
-      }
 
-      // Fetch history
-      const { data: historyData } = await supabase
-        .from('analysis_history')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false })
-        .limit(15);
-      
-      if (historyData) {
-        const formattedHistory = historyData.map(h => ({
-          id: h.id,
-          date: new Date(h.created_at).toLocaleString(),
-          crop: h.crop_name,
-          disease: h.disease,
-          confidence: h.confidence,
-          severity: h.severity,
-          fullResult: h.full_result
-        }));
-        setHistory(formattedHistory);
+        // Fetch history
+        const { data: historyData } = await supabase
+          .from('analysis_history')
+          .select('*')
+          .eq('user_id', userId)
+          .order('created_at', { ascending: false })
+          .limit(15);
+        
+        if (historyData) {
+          const formattedHistory = historyData.map(h => ({
+            id: h.id,
+            date: new Date(h.created_at).toLocaleString(),
+            crop: h.crop_name,
+            disease: h.disease,
+            confidence: h.confidence,
+            severity: h.severity,
+            fullResult: h.full_result
+          }));
+          setHistory(formattedHistory);
+        }
+      } catch (err) {
+        console.warn('Could not fetch user data from Supabase:', err);
       }
+    };
+
+    const restoreGuestIfPresent = () => {
+      try {
+        const savedGuest = localStorage.getItem('cropex_guest_user');
+        if (savedGuest) {
+          const parsed = JSON.parse(savedGuest);
+          if (parsed?.isGuest) {
+            setCurrentUser(parsed);
+            setNeedsProfileSetup(false);
+            const savedProfile = localStorage.getItem('cropex_guest_profile');
+            if (savedProfile) {
+              setFieldProfile(JSON.parse(savedProfile));
+            }
+            const savedHistory = localStorage.getItem('cropex_guest_history');
+            if (savedHistory) {
+              setHistory(JSON.parse(savedHistory));
+            }
+          }
+        }
+      } catch(e) {}
     };
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         setCurrentUser(session.user);
         fetchUserData(session.user.id);
+      } else {
+        restoreGuestIfPresent();
       }
       setSessionLoading(false);
     }).catch((err) => {
-      console.error('Session fetch failed:', err);
+      console.warn('Session fetch notice:', err);
+      restoreGuestIfPresent();
       setSessionLoading(false);
     });
 
@@ -196,6 +224,10 @@ function App() {
         setCurrentUser(session.user);
         fetchUserData(session.user.id);
       } else {
+        try {
+          const savedGuest = localStorage.getItem('cropex_guest_user');
+          if (savedGuest) return; // Keep guest session active
+        } catch(e) {}
         setCurrentUser(null);
         if (refData?.demoProfiles?.length > 0) {
           setFieldProfile(refData.demoProfiles[0]);
@@ -221,26 +253,59 @@ function App() {
     }
     setFieldProfile(newProfile);
 
+    if (currentUser?.isGuest) {
+      try {
+        localStorage.setItem('cropex_guest_profile', JSON.stringify(newProfile));
+      } catch(e) {}
+      return;
+    }
+
     // Sync changes to active User profile in Supabase
     if (currentUser) {
-      await supabase
-        .from('profiles')
-        .update({ field_profile: newProfile })
-        .eq('id', currentUser.id);
+      try {
+        await supabase
+          .from('profiles')
+          .update({ field_profile: newProfile })
+          .eq('id', currentUser.id);
+      } catch(err) {
+        console.warn('Could not sync profile to Supabase:', err);
+      }
     }
   };
 
-  const handleLoginSuccess = () => {
-    // Session login is inherently handled by onAuthStateChange listener
+  const handleLoginSuccess = (userData) => {
+    if (userData?.isGuest) {
+      setCurrentUser(userData);
+      setNeedsProfileSetup(false);
+      if (userData.profile) {
+        setFieldProfile(userData.profile);
+      }
+      return;
+    }
+    if (userData) {
+      setCurrentUser(userData);
+      if (userData.profile) {
+        setFieldProfile(userData.profile);
+      }
+    }
     setNeedsProfileSetup(false);
   };
 
   const handleLogout = async () => {
     try {
+      localStorage.removeItem('cropex_guest_user');
+      localStorage.removeItem('cropex_guest_profile');
       await supabase.auth.signOut();
     } catch (err) {
-      console.error('Logout failed:', err);
+      console.warn('Logout notice:', err);
     }
+    setCurrentUser(null);
+    if (refData?.demoProfiles?.length > 0) {
+      setFieldProfile(refData.demoProfiles[0]);
+    } else {
+      setFieldProfile(FALLBACK_PROFILE);
+    }
+    setHistory([]);
   };
 
   const handleAddToHistory = async (result) => {
@@ -254,47 +319,74 @@ function App() {
       recommendedProducts: result.recommendedProducts || []
     };
 
-    if (currentUser) {
-      const { data, error } = await supabase
-        .from('analysis_history')
-        .insert([{
-          user_id: currentUser.id,
-          crop_name: cropName,
-          disease: diseaseName,
-          confidence: conf,
-          severity: sev,
-          full_result: fullRes
-        }])
-        .select();
-        
-      if (data && data[0]) {
-        const newItem = {
-          id: data[0].id,
-          date: new Date(data[0].created_at).toLocaleString(),
-          crop: data[0].crop_name,
-          disease: data[0].disease,
-          confidence: data[0].confidence,
-          severity: data[0].severity,
-          fullResult: data[0].full_result
-        };
-        setHistory((prev) => [newItem, ...prev].slice(0, 15));
-      } else if (error) {
-        console.error('Failed to add to history:', error);
+    const localItem = {
+      id: 'scan-' + Date.now(),
+      date: new Date().toLocaleString(),
+      crop: cropName,
+      disease: diseaseName,
+      confidence: conf,
+      severity: sev,
+      fullResult: fullRes
+    };
+
+    if (currentUser && !currentUser.isGuest) {
+      try {
+        const { data, error } = await supabase
+          .from('analysis_history')
+          .insert([{
+            user_id: currentUser.id,
+            crop_name: cropName,
+            disease: diseaseName,
+            confidence: conf,
+            severity: sev,
+            full_result: fullRes
+          }])
+          .select();
+          
+        if (data && data[0]) {
+          const newItem = {
+            id: data[0].id,
+            date: new Date(data[0].created_at).toLocaleString(),
+            crop: data[0].crop_name,
+            disease: data[0].disease,
+            confidence: data[0].confidence,
+            severity: data[0].severity,
+            fullResult: data[0].full_result
+          };
+          setHistory((prev) => [newItem, ...prev].slice(0, 15));
+          return;
+        } else if (error) {
+          console.warn('Failed to add to remote history, saving locally:', error);
+        }
+      } catch (err) {
+        console.warn('Network error saving history to Supabase:', err);
       }
     }
+
+    // Fallback: save to local state and localStorage for guest or offline use
+    setHistory((prev) => {
+      const updated = [localItem, ...prev].slice(0, 15);
+      try {
+        localStorage.setItem('cropex_guest_history', JSON.stringify(updated));
+      } catch(e) {}
+      return updated;
+    });
   };
 
   const handleClearHistory = async () => {
-    if (currentUser) {
-      const { error } = await supabase
-        .from('analysis_history')
-        .delete()
-        .eq('user_id', currentUser.id);
-      
-      if (!error) {
-        setHistory([]);
-      } else {
-        console.error('Failed to clear history:', error);
+    try {
+      localStorage.removeItem('cropex_guest_history');
+    } catch(e) {}
+    setHistory([]);
+
+    if (currentUser && !currentUser.isGuest) {
+      try {
+        await supabase
+          .from('analysis_history')
+          .delete()
+          .eq('user_id', currentUser.id);
+      } catch (err) {
+        console.warn('Could not delete history in Supabase:', err);
       }
     }
   };

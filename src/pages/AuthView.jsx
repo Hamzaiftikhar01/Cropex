@@ -127,6 +127,17 @@ export default function AuthView({ onLoginSuccess, refData, currentUser }) {
       descriptionPa: 'کسان دی فراہم کردہ ترتیبات۔'
     };
 
+    if (currentUser?.isGuest) {
+      try {
+        localStorage.setItem('cropex_guest_profile', JSON.stringify(fieldProfile));
+      } catch(e) {}
+      onLoginSuccess({
+        ...currentUser,
+        profile: fieldProfile
+      });
+      return;
+    }
+
     setLoading(true);
     const { error } = await supabase
       .from('profiles')
@@ -142,6 +153,17 @@ export default function AuthView({ onLoginSuccess, refData, currentUser }) {
     setLoading(false);
 
     if (error) {
+      if (error.message && error.message.toLowerCase().includes('fetch')) {
+        // Fallback: allow local profile setup even if Supabase is unreachable
+        onLoginSuccess({
+          id: targetUserId,
+          email: targetEmail.trim(),
+          fullName: fullName.trim() || 'Custom Farmer',
+          isGuest: true,
+          profile: fieldProfile
+        });
+        return;
+      }
       setErrorMsg(error.message);
       return;
     }
@@ -151,6 +173,42 @@ export default function AuthView({ onLoginSuccess, refData, currentUser }) {
       email: targetEmail.trim(),
       fullName: fullName.trim(),
       profile: fieldProfile
+    });
+  };
+
+  const handleContinueAsGuest = () => {
+    const defaultProfile = refData?.demoProfiles?.[0] || {
+      id: 'demo-wheat',
+      name: 'Faisalabad Wheat Field',
+      nameUr: 'فیصل آباد گندم کا کھیت',
+      namePa: 'فیصل آباد کݨک دا کھیت',
+      cropType: 'Wheat',
+      district: 'Faisalabad',
+      soilType: 'Loamy',
+      daysSinceSowing: 60,
+      sowingDate: new Date(Date.now() - 60 * 86400000).toISOString().split('T')[0],
+      lastIrrigatedDaysAgo: 3,
+      description: 'Standard wheat field in Faisalabad.'
+    };
+
+    const guestUser = {
+      id: 'guest-farmer',
+      email: 'guest@cropex.local',
+      fullName: 'Guest Farmer',
+      isGuest: true
+    };
+
+    try {
+      localStorage.setItem('cropex_guest_user', JSON.stringify(guestUser));
+      localStorage.setItem('cropex_guest_profile', JSON.stringify(defaultProfile));
+    } catch(e) {}
+
+    onLoginSuccess({
+      id: guestUser.id,
+      email: guestUser.email,
+      fullName: guestUser.fullName,
+      isGuest: true,
+      profile: defaultProfile
     });
   };
 
@@ -192,8 +250,32 @@ export default function AuthView({ onLoginSuccess, refData, currentUser }) {
         <div className="bg-white py-8 px-5 shadow-soft border border-earth-100 sm:rounded-2xl sm:px-8 dark:bg-earth-900 dark:border-earth-800">
           
           {errorMsg && (
-            <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs font-bold dark:bg-red-950/20 dark:border-red-900/30 dark:text-red-300 break-words">
-              <AlertTriangle size={14} className="inline mr-1" aria-hidden="true" /> {errorMsg}
+            <div className="mb-4 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs dark:bg-amber-950/40 dark:border-amber-900/50 dark:text-amber-200 break-words space-y-2">
+              <div className="flex items-start gap-2">
+                <AlertTriangle size={16} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" aria-hidden="true" />
+                <div>
+                  <p className="font-bold">
+                    {errorMsg.toLowerCase().includes('fetch') 
+                      ? 'Supabase Backend Unreachable / Paused' 
+                      : errorMsg}
+                  </p>
+                  {errorMsg.toLowerCase().includes('fetch') && (
+                    <p className="mt-1 text-[11px] leading-relaxed opacity-90">
+                      Free-tier Supabase projects automatically pause after 7 days of inactivity. You can unpause it in the Supabase Dashboard, or click below to enter directly in Guest Mode with full local features!
+                    </p>
+                  )}
+                </div>
+              </div>
+              {errorMsg.toLowerCase().includes('fetch') && (
+                <button
+                  type="button"
+                  onClick={handleContinueAsGuest}
+                  className="w-full py-2 px-3 bg-crop-600 hover:bg-crop-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer text-center flex items-center justify-center gap-1.5 shadow-xs"
+                >
+                  <Sprout size={14} />
+                  {t('continueAsGuest') || 'Explore as Guest (Instant Access)'}
+                </button>
+              )}
             </div>
           )}
 
@@ -234,6 +316,26 @@ export default function AuthView({ onLoginSuccess, refData, currentUser }) {
                 className="w-full h-10 mt-1 inline-flex items-center justify-center bg-crop-600 hover:bg-crop-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm shadow-crop-600/30 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? '...' : t('signIn')}
+              </button>
+
+              <div className="relative my-3">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-earth-200 dark:border-earth-800" />
+                </div>
+                <div className="relative flex justify-center text-[10px] uppercase">
+                  <span className="bg-white dark:bg-earth-900 px-2 text-earth-400 font-bold tracking-wider">
+                    {t('or') || 'OR'}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleContinueAsGuest}
+                className="w-full h-10 inline-flex items-center justify-center bg-earth-100 hover:bg-earth-200 text-earth-800 dark:bg-earth-800 dark:hover:bg-earth-750 dark:text-earth-100 rounded-xl text-xs sm:text-sm font-bold border border-earth-200 dark:border-earth-700 cursor-pointer transition-colors"
+              >
+                <Sprout size={16} className="mr-2 text-crop-600 dark:text-crop-400" />
+                {t('continueAsGuest') || 'Explore as Guest (Instant Access)'}
               </button>
 
               <p className="mt-3 text-center text-xs text-earth-500 dark:text-earth-300 font-medium">
@@ -332,6 +434,26 @@ export default function AuthView({ onLoginSuccess, refData, currentUser }) {
                 className="w-full h-10 mt-1 inline-flex items-center justify-center bg-crop-600 hover:bg-crop-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm shadow-crop-600/30 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? '...' : t('nextSetup')} →
+              </button>
+
+              <div className="relative my-3">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-earth-200 dark:border-earth-800" />
+                </div>
+                <div className="relative flex justify-center text-[10px] uppercase">
+                  <span className="bg-white dark:bg-earth-900 px-2 text-earth-400 font-bold tracking-wider">
+                    {t('or') || 'OR'}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleContinueAsGuest}
+                className="w-full h-10 inline-flex items-center justify-center bg-earth-100 hover:bg-earth-200 text-earth-800 dark:bg-earth-800 dark:hover:bg-earth-750 dark:text-earth-100 rounded-xl text-xs sm:text-sm font-bold border border-earth-200 dark:border-earth-700 cursor-pointer transition-colors"
+              >
+                <Sprout size={16} className="mr-2 text-crop-600 dark:text-crop-400" />
+                {t('continueAsGuest') || 'Explore as Guest (Instant Access)'}
               </button>
 
               <p className="mt-3 text-center text-xs text-earth-500 dark:text-earth-300 font-medium">

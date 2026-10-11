@@ -156,7 +156,10 @@ export const translations = {
     riskLevel: "Risk Level",
     noLeafPhoto: "No leaf photo on hand?",
     guides: "Crop Guides",
-    irrTip4: "Consider drip irrigation for high-value crops. It saves 40-60% water compared to flood irrigation and increases yield by 20-30%."
+    irrTip4: "Consider drip irrigation for high-value crops. It saves 40-60% water compared to flood irrigation and increases yield by 20-30%.",
+    continueAsGuest: "Explore as Guest (Instant Access)",
+    guestMode: "Guest Mode",
+    or: "or"
   },
   ur: {
     appName: "کراپیکس (Cropex)",
@@ -314,7 +317,10 @@ export const translations = {
     riskLevel: "خطرے کی سطح",
     noLeafPhoto: "پتے کی تصویر نہیں ہے؟",
     guides: "فصل کی رہنمائی",
-    irrTip4: "اعلیٰ قیمت والی فصلوں کے لیے ڈرپ ایریگیشن پر غور کریں۔ یہ سیلابی آبپاشی کے مقابلے میں 40-60% پانی بچاتا ہے اور پیداوار میں 20-30% اضافہ کرتا ہے۔"
+    irrTip4: "اعلیٰ قیمت والی فصلوں کے لیے ڈرپ ایریگیشن پر غور کریں۔ یہ سیلابی آبپاشی کے مقابلے میں 40-60% پانی بچاتا ہے اور پیداوار میں 20-30% اضافہ کرتا ہے۔",
+    continueAsGuest: "بطور مہمان شروع کریں (براہِ راست رسائی)",
+    guestMode: "مہمان موڈ",
+    or: "یا"
   },
   pa: {
     appName: "کراپیکس (Cropex)",
@@ -472,6 +478,9 @@ export const translations = {
     riskLevel: "خطرے دی سطح",
     noLeafPhoto: "پتے دی تصویر نہیں اے؟",
     guides: "فصل دی رہنمائی",
-    irrTip4: "اعلیٰ قیمت والیاں فصلاں لئی ڈرپ ایریگیشن تے غور کرو۔ ایہہ سیلابی آبپاشی نالوں 40-60% پانی بچاندا اے تے پیداوار وچ 20-30% وادھا کردا اے۔"
+    irrTip4: "اعلیٰ قیمت والیاں فصلاں لئی ڈرپ ایریگیشن تے غور کرو۔ ایہہ سیلابی آبپاشی نالوں 40-60% پانی بچاندا اے تے پیداوار وچ 20-30% وادھا کردا اے۔",
+    continueAsGuest: "بطور مہمان شروع کرو (فوری رسائی)",
+    guestMode: "مہمان موڈ",
+    or: "یا"
   }
 };

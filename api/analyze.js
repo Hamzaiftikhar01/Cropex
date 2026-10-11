@@ -38,7 +38,7 @@ export default async function handler(req, res) {
       });
     }
 
-    const GROQ_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct';
+    const GROQ_MODEL = 'qwen/qwen3.8-27b';
 
     const systemMessage = {
       role: 'system',

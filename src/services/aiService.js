@@ -15,7 +15,7 @@
 export const GROQ_BASE_URL = 'https://api.groq.com/openai/v1';
 
 /** Vision-capable model used for all crop analysis requests */
-export const GROQ_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct';
+export const GROQ_MODEL = 'qwen/qwen3.8-27b';
 
 /** Default request timeout in milliseconds */
 const REQUEST_TIMEOUT_MS = 60_000;
