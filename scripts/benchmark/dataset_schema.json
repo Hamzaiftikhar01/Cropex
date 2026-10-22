@@ -1,0 +1,44 @@
+{
+  "_comment": "Cropex Phase 2 Benchmark Dataset Schema",
+  "version": "1.0",
+  "description": "Label format for held-out test set to measure VLM accuracy before fine-tuning.",
+  "crops_in_scope": [
+    "wheat",
+    "rice",
+    "cotton",
+    "sugarcane",
+    "maize",
+    "tomato"
+  ],
+  "target_size": "300-500 images",
+  "split": {
+    "test": 1.0,
+    "note": "Do NOT use for training. Held-out only."
+  },
+  "required_fields": {
+    "image_id": "string - unique slug e.g. wheat_yellow_rust_001",
+    "image_path": "string - relative path e.g. images/wheat_yellow_rust_001.jpg",
+    "crop_id": "string - one of: wheat, rice, cotton, sugarcane, maize, tomato",
+    "disease_id": "string - taxonomy disease_id or healthy or unknown",
+    "severity": "string - Low or Moderate or High or N-A for healthy",
+    "label_confidence": "string - high (agronomist-reviewed) or medium or low (field worker)",
+    "labeled_by": "string - e.g. NARC agronomist, field_extension_faisalabad",
+    "label_date": "string - ISO date YYYY-MM-DD",
+    "image_quality": "string - good or fair or poor",
+    "notes": "string - optional free-text field conditions or anomalies"
+  },
+  "example": {
+    "image_id": "wheat_yellow_rust_001",
+    "image_path": "images/wheat_yellow_rust_001.jpg",
+    "crop_id": "wheat",
+    "disease_id": "wheat_yellow_rust",
+    "severity": "High",
+    "label_confidence": "high",
+    "labeled_by": "NARC agronomist",
+    "label_date": "2026-03-15",
+    "image_quality": "good",
+    "notes": "Classic stripe pattern, mid-canopy leaf, Faisalabad field."
+  },
+  "label_file": "labels.json",
+  "evaluation_script": "evaluate_baseline.py"
+}

@@ -41,9 +41,11 @@ export default function DiseaseView({
     setAnalysisResult(null);
 
     const fallbackReport = getMockDiagnosis(refData, fieldProfile.cropType);
+    // Phase 2: pass crop hint so VLM uses scoped prompt
+    const cropHint = fieldProfile.cropType?.toLowerCase();
 
     try {
-      const result = await analyzeCropImage(file, fieldProfile.cropType);
+      const result = await analyzeCropImage(file, cropHint);
       
       const kbDetails = searchDiseaseByName(refData, result.cropName || result.crop, result.disease);
       const enrichedResult = {
@@ -62,6 +64,10 @@ export default function DiseaseView({
         bestPractices: kbDetails?.bestPractices || fallbackReport?.bestPractices || [],
         recommendedProducts: (kbDetails?.recommendedProducts && kbDetails.recommendedProducts.length > 0) ? kbDetails.recommendedProducts : (fallbackReport?.recommendedProducts || []),
         isUnindexed: !kbDetails,
+        // Phase 2: preserve escalation fields from aiService
+        needsEscalation: result.needsEscalation || false,
+        escalationActions: result.escalationActions || [],
+        disease_id: result.disease_id || null,
       };
 
       setAnalysisResult(enrichedResult);
@@ -224,6 +230,34 @@ export default function DiseaseView({
         error={error}
         uploadedImage={preview}
       />
+
+      {/* Phase 2: Low-confidence escalation banner */}
+      {analysisResult?.needsEscalation && (
+        <div
+          id="escalation-banner"
+          className="rounded-2xl border border-amber-300 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-700/50 p-5 space-y-3"
+        >
+          <div className="flex items-start gap-3">
+            <span className="text-2xl mt-0.5" aria-hidden="true">⚠️</span>
+            <div>
+              <h3 className="font-bold text-amber-900 dark:text-amber-200 text-sm">
+                Low Confidence — Verification Recommended
+              </h3>
+              <p className="text-xs text-amber-800 dark:text-amber-300 mt-0.5">
+                The AI returned a confidence of {analysisResult.confidence}% — below the 70% threshold for a reliable diagnosis.
+              </p>
+            </div>
+          </div>
+          <ul className="space-y-1 pl-2">
+            {(analysisResult.escalationActions || []).map((action, i) => (
+              <li key={i} className="flex items-start gap-2 text-xs text-amber-800 dark:text-amber-300">
+                <span className="mt-0.5 text-amber-500">→</span>
+                <span>{action}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

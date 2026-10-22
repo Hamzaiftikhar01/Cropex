@@ -199,13 +199,18 @@ async function callApi(path, body, timeoutMs = 60_000) {
 // Public API — crop disease analysis
 // =============================================================================
 
+/** Confidence below this threshold triggers escalation guidance in the UI */
+export const LOW_CONFIDENCE_THRESHOLD = 70;
+
 /**
  * Compresses the image and sends it to the secure backend for disease analysis.
+ * Phase 2: passes cropHint for scoped VLM prompting, adds escalation flag.
  *
  * @param {File|string} imageInput - File object or pre-made base64 data URL
+ * @param {string} [cropHint] - Optional crop ID from fieldProfile (e.g. 'wheat')
  * @returns {Promise<object>} Structured diagnosis result
  */
-export async function analyzeCropImage(imageInput) {
+export async function analyzeCropImage(imageInput, cropHint) {
   if (!imageInput) {
     throw new CropexServiceError('A crop image is required for analysis.', {
       code: ServiceErrorCode.INVALID_INPUT,
@@ -224,7 +229,25 @@ export async function analyzeCropImage(imageInput) {
     throw new CropexServiceError('Invalid image input.', { code: ServiceErrorCode.INVALID_INPUT });
   }
 
-  return callApi('/api/analyze', { image: imageDataUrl }, 60_000);
+  const payload = { image: imageDataUrl };
+  if (cropHint) payload.cropHint = cropHint.toLowerCase().trim();
+
+  const result = await callApi('/api/analyze', payload, 60_000);
+
+  // Phase 2: attach escalation flag so UI can prompt farmer to retake / contact expert
+  const confidence = typeof result.confidence === 'number' ? result.confidence : 100;
+  result.needsEscalation = result.isCrop === true && confidence < LOW_CONFIDENCE_THRESHOLD;
+
+  if (result.needsEscalation) {
+    result.escalationActions = [
+      'Retake the photo: use a close-up of the affected leaf in clear natural light.',
+      'Include both the upper and lower leaf surfaces if possible.',
+      'Contact your nearest Zila Agriculture Office or extension officer.',
+      'Call the NARC helpline: 051-9255000.',
+    ];
+  }
+
+  return result;
 }
 
 // =============================================================================

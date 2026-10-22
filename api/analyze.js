@@ -1,21 +1,26 @@
 /**
- * Vercel Serverless Function: Secure Groq Vision Proxy
- * -----------------------------------------------------
+ * Vercel Serverless Function: Secure Groq Vision Proxy — Phase 2
+ * ---------------------------------------------------------------
  * - Accepts a base64 image from the frontend
  * - Validates file type, size, and content
  * - Enforces per-IP rate limiting (20 req / min)
  * - Calls Groq using the secure GROQ_API_KEY server env var (never VITE_*)
- * - Returns structured crop disease diagnosis JSON
+ * - Scoped VLM prompt: model selects from the 6-crop taxonomy only
+ * - Returns structured JSON including disease_id for downstream linking
  */
 
 import { checkRateLimit, getClientIp } from './_rateLimit.js';
+import { buildTaxonomyPromptBlock, DISEASE_TAXONOMY } from '../src/lib/diseaseTaxonomy.js';
 
-// Constants
-const GROQ_MODEL = 'qwen/qwen3.8-27b';
+// Constants — Phase 2: upgraded to a stronger vision model
+const GROQ_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct';
 const MAX_IMAGE_BYTES = 4 * 1024 * 1024; // 4 MB after compression
 const ALLOWED_MIME_PREFIXES = ['data:image/jpeg', 'data:image/png', 'data:image/webp'];
 const RATE_LIMIT_MAX = 20;
 const RATE_LIMIT_WINDOW_MS = 60_000;
+
+// Pre-build once at cold-start, not per-request
+const TAXONOMY_BLOCK = buildTaxonomyPromptBlock();
 
 // CORS helper – restrict in prod to your actual domain
 function setCors(res) {
@@ -78,35 +83,44 @@ export default async function handler(req, res) {
   }
 
   // ── Groq request ────────────────────────────────────────────────────────────
+  // Pull the hinted crop from the request body (optional, sent by DiseaseView)
+  const { cropHint } = req.body || {};
+  const cropHintStr = typeof cropHint === 'string' ? cropHint.trim().toLowerCase() : null;
+  const hintedCrop = cropHintStr && DISEASE_TAXONOMY[cropHintStr]
+    ? DISEASE_TAXONOMY[cropHintStr].name
+    : null;
+
   try {
     const systemMessage = {
       role: 'system',
-      content: `You are Cropex AI, an expert agricultural vision assistant for Pakistani farmers.
+      content: `You are Cropex AI, a precision agricultural vision assistant for Pakistani farmers.
 
-IMPORTANT DISCLAIMER: This is an AI-assisted tool. Diagnoses are indicative only and must be verified by a qualified agronomist before any treatment is applied.
+DISCLAIMER: AI diagnosis only. Results are indicative and must be verified by a qualified agronomist before any treatment.
 
-Your task is to analyze the provided image of a crop, plant, or leaf.
+${hintedCrop ? `The farmer has indicated this is a ${hintedCrop} field. Prioritise ${hintedCrop} in your analysis.` : ''}
 
-First, determine if the image actually contains a crop, plant, or leaf.
-If the image does NOT contain a crop, plant, or leaf, return:
-{ "isCrop": false, "message": "Please upload a clear image of a crop or plant leaf." }
+You have been trained on the following SUPPORTED crops and diseases for Pakistan:
 
-If the image DOES contain a crop or leaf, analyze it and identify:
-1. Crop name (e.g. Wheat, Rice, Cotton, Sugarcane, Maize, Tomato, Potato, Onion, Chili)
-2. Disease or condition (or "None" if healthy)
-3. Confidence score as integer 0–100
-4. Severity: "Low", "Moderate", or "High" (healthy = "Low")
-5. Brief description
-6. Visible symptoms (list)
-7. Likely causes (list)
-8. Recommended actions — ONLY suggest treatments registered in Pakistan. Do NOT invent dosages; say "consult label or extension officer" for specific amounts.
-9. Short analysis summary
+${TAXONOMY_BLOCK}
 
-Respond ONLY with a valid JSON object:
+INSTRUCTIONS:
+1. First determine: does the image contain a crop, plant leaf, or stem?
+   - If NO: return { "isCrop": false, "message": "Please upload a clear image of a crop or plant leaf." }
+2. Identify the crop. If it matches one of the supported crops above, use that crop's exact name.
+3. Identify the disease. You MUST pick from the taxonomy list above when possible (use the [disease_id] in brackets).
+   - If the plant is healthy, set disease to "Healthy" and disease_id to "healthy".
+   - If you see a condition not in the list, still describe it but set disease_id to "unknown".
+4. Set confidence (0–100). Be honest — low quality images should get lower scores.
+   - Confidence < 70 means the farmer should retake the photo or consult an expert.
+5. Recommended actions: ONLY suggest treatments registered in Pakistan. Never invent dosages.
+   Say "consult label or local extension officer" for specific amounts.
+
+Return ONLY valid JSON, no markdown, no code fences:
 {
   "isCrop": true,
   "crop": "Crop name",
-  "disease": "Disease name or 'None'",
+  "disease": "Disease name or 'Healthy'",
+  "disease_id": "taxonomy_id_or_unknown_or_healthy",
   "confidence": 85,
   "severity": "Low | Moderate | High",
   "description": "...",
@@ -115,9 +129,8 @@ Respond ONLY with a valid JSON object:
   "recommendedActions": ["..."],
   "analysisSummary": "...",
   "disclaimer": "AI diagnosis only. Verify with a certified agronomist before applying any treatment."
-}
+}`,
 
-No markdown, no code blocks, raw JSON only.`,
     };
 
     const userMessage = {
