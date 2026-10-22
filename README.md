@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="public/favicon.svg" alt="CropMedic AI Logo" width="80" height="80" />
+<img src="public/favicon.svg" alt="Cropex Logo" width="80" height="80" />
 
-# 🌿 CropMedic AI
+# 🌿 Cropex
 
 **Smart Crop Disease Diagnosis & Agricultural Intelligence Platform**
 
@@ -22,9 +22,9 @@
 
 ## 📖 Overview
 
-**CropMedic AI** is an AI-powered agricultural intelligence platform tailored for farmers and agronomists in Pakistan and beyond. It combines cutting-edge vision AI with real-time weather data and rule-based agronomic logic to deliver actionable, context-aware crop health decisions — right from your phone or browser.
+**Cropex** is an AI-powered agricultural intelligence platform tailored for farmers and agronomists in Pakistan and beyond. It combines cutting-edge vision AI with real-time weather data and rule-based agronomic logic to deliver actionable, context-aware crop health decisions — right from your phone or browser.
 
-Upload a photo of a diseased leaf, and CropMedic will:
+Upload a photo of a diseased leaf, and Cropex will:
 - **Identify** the disease and crop type using a Groq-hosted LLM vision model
 - **Prescribe** specific chemical treatments, preventive measures, and field actions
 - **Advise** on irrigation, disease risk, and yield forecast based on your field profile and live weather
