@@ -10,9 +10,10 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+dev-dist
 *.local
 
-# Environment variables
+# Environment variables — NEVER commit these
 .env
 .env.local
 .env.*.local
@@ -29,6 +30,15 @@ Thumbs.db
 *.sln
 *.sw?
 
+# Stray dev/test artefacts
+__preview.html
+__preview.jsx
+*.test.json
+groq_test.json
+meteo_test.json
+meteo2.json
+vibe_images/
+
 # Python
 __pycache__/
 *.py[cod]
@@ -42,3 +52,10 @@ share/
 .pytest_cache/
 .ipynb_checkpoints/
 *.exe
+
+# ML / data artefacts (Phase 2+)
+models/
+*.onnx
+*.tflite
+data/raw/
+data/processed/

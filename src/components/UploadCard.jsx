@@ -1,8 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 import { AlertTriangle } from 'lucide-react';
-
-const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+import { validateImageFile, compressImage, ACCEPTED_IMAGE_TYPES } from '../services/aiService';
 
 function UploadCard({
   file,
@@ -14,52 +13,63 @@ function UploadCard({
   onAnalyze,
 }) {
   const [isDragging, setIsDragging] = useState(false);
+  const [localError, setLocalError] = useState(null);
+  const [isCompressing, setIsCompressing] = useState(false);
   const inputRef = useRef(null);
 
-  const handleFile = useCallback((selectedFile) => {
-    if (!selectedFile || !ACCEPTED_TYPES.includes(selectedFile.type)) return;
+  const handleFile = useCallback(async (selectedFile) => {
+    setLocalError(null);
 
-    const reader = new FileReader();
-    reader.onload = (e) => onFileChange(selectedFile, e.target.result);
-    reader.readAsDataURL(selectedFile);
+    // Validate type & raw size
+    try {
+      validateImageFile(selectedFile);
+    } catch (err) {
+      setLocalError(err.message);
+      return;
+    }
+
+    // Compress client-side (resize to max 1024px, JPEG 0.82)
+    setIsCompressing(true);
+    try {
+      const compressedDataUrl = await compressImage(selectedFile);
+      onFileChange(selectedFile, compressedDataUrl);
+    } catch (err) {
+      setLocalError('Failed to process image. Please try a different file.');
+    } finally {
+      setIsCompressing(false);
+    }
   }, [onFileChange]);
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    setIsDragging(false);
-  };
-
+  const handleDragOver = (e) => { e.preventDefault(); setIsDragging(true); };
+  const handleDragLeave = (e) => { e.preventDefault(); setIsDragging(false); };
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
     const droppedFile = e.dataTransfer.files[0];
-    handleFile(droppedFile);
+    if (droppedFile) handleFile(droppedFile);
   };
-
   const handleInputChange = (e) => {
-    if (e.target.files?.[0]) {
-      handleFile(e.target.files[0]);
-    }
+    if (e.target.files?.[0]) handleFile(e.target.files[0]);
   };
-
   const handleClearClick = () => {
+    setLocalError(null);
     onClear();
     if (inputRef.current) inputRef.current.value = '';
   };
 
+  const displayError = error || localError;
+  const busy = isAnalyzing || isCompressing;
+
   return (
     <div className="rounded-2xl border border-earth-100 dark:border-earth-800 bg-white dark:bg-earth-900 p-5 sm:p-6 shadow-soft transition-colors duration-200">
-      {error && (
+      {displayError && (
         <div className="mb-5 rounded-xl bg-red-50 p-3.5 text-xs text-red-800 ring-1 ring-red-100 flex items-start gap-3 text-left dark:bg-red-950/20 dark:text-red-300 dark:ring-red-900/30">
           <AlertTriangle size={18} className="text-red-600 dark:text-red-400 mt-0.5" aria-hidden="true" />
           <div className="flex-1">
-            <p className="font-bold text-red-900 dark:text-red-400">Analysis Failed</p>
-            <p className="mt-0.5 text-red-700 dark:text-red-300">{error}</p>
+            <p className="font-bold text-red-900 dark:text-red-400">
+              {error ? 'Analysis Failed' : 'Invalid File'}
+            </p>
+            <p className="mt-0.5 text-red-700 dark:text-red-300">{displayError}</p>
           </div>
         </div>
       )}
@@ -83,13 +93,18 @@ function UploadCard({
         <input
           ref={inputRef}
           type="file"
-          accept={ACCEPTED_TYPES.join(',')}
+          accept={ACCEPTED_IMAGE_TYPES.join(',')}
           onChange={handleInputChange}
           className="hidden"
           aria-label="Upload crop image"
         />
 
-        {preview ? (
+        {isCompressing ? (
+          <div className="flex flex-col items-center px-6 py-10 gap-3">
+            <LoadingSpinner size="sm" />
+            <p className="text-xs text-earth-500 dark:text-earth-300">Optimising image…</p>
+          </div>
+        ) : preview ? (
           <div className="flex flex-col items-center p-5">
             <img
               src={preview}
@@ -99,10 +114,7 @@ function UploadCard({
             <p className="mt-3 text-xs font-semibold text-earth-700 dark:text-earth-300">{file?.name}</p>
             <button
               type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleClearClick();
-              }}
+              onClick={(e) => { e.stopPropagation(); handleClearClick(); }}
               className="mt-1.5 text-xs text-red-600 hover:text-red-700 dark:text-red-400 font-semibold cursor-pointer"
             >
               Remove image
@@ -119,7 +131,7 @@ function UploadCard({
               {isDragging ? 'Drop your image here' : 'Drag & drop your crop leaf image'}
             </p>
             <p className="mt-1 text-xs text-earth-500 dark:text-earth-300">or click to browse files from device</p>
-            <p className="mt-2 text-[10px] text-earth-400 dark:text-earth-350 font-medium">Supports JPG, PNG, WEBP up to 10MB</p>
+            <p className="mt-2 text-[10px] text-earth-400 dark:text-earth-350 font-medium">JPG, PNG, WebP · Auto-compressed · Max 20MB</p>
           </div>
         )}
       </div>
@@ -128,13 +140,13 @@ function UploadCard({
         <button
           type="button"
           onClick={onAnalyze}
-          disabled={!file || isAnalyzing}
+          disabled={!file || busy}
           className="h-10 inline-flex items-center justify-center gap-2 rounded-xl bg-crop-600 px-7 text-xs sm:text-sm font-bold text-white shadow-sm shadow-crop-600/30 transition-all hover:bg-crop-700 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
         >
           {isAnalyzing ? (
             <>
               <LoadingSpinner size="sm" className="border-white/30 border-t-white" />
-              Analyzing Leaf...
+              Analyzing Leaf…
             </>
           ) : (
             <>
@@ -146,6 +158,11 @@ function UploadCard({
           )}
         </button>
       </div>
+
+      {/* Safety disclaimer */}
+      <p className="mt-4 text-center text-[10px] text-earth-400 dark:text-earth-500 leading-relaxed">
+        ⚠️ AI diagnosis is indicative only. Always verify with a certified agronomist before applying any treatment.
+      </p>
     </div>
   );
 }
