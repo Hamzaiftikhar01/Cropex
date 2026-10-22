@@ -280,6 +280,101 @@ Please ensure your code passes `npm run lint` before submitting.
 
 ---
 
+## 🗺️ Roadmap — Cropex to a Usable AI Product
+
+> *Principle: build an evaluation set first, fix security, and only then train. Don't fine-tune anything until you've measured how far the current VLM falls short.*
+
+---
+
+### ✅ Phase 1 — Make It Safe & Shippable *(Week 1)*
+
+- [ ] Move all Groq calls to `api/` serverless routes, use a non-`VITE_` env var, rotate the key, and add rate limiting + per-user quotas
+- [ ] Compress images client-side before upload; validate file type and size
+- [ ] Clean the repo (stray JSON, preview, and `dev-dist` files), add CI (lint + build), and deploy a live demo
+- [ ] Add a clear disclaimer in the UI and the README
+
+---
+
+### 🔬 Phase 2 — Diagnosis Quality *(Weeks 2–4)*
+
+| Step | Action |
+|------|--------|
+| **Scope** | Pick 5–6 crops that matter locally (wheat, rice, cotton, sugarcane, maize, tomato) and ~5 diseases each |
+| **Benchmark** | Collect 300–500 real field photos, labeled/reviewed by an agronomist, kept as a held-out test set |
+| **Baseline** | Score the current VLM zero-shot on this set |
+| **Classifier** | Fine-tune a lightweight model (EfficientNet, MobileNet, or ConvNeXt-tiny) on PlantVillage + PlantDoc + field images |
+| **Hybrid pipeline** | Classifier returns top-k + calibrated confidence → VLM explains and cross-checks → low confidence triggers "retake photo" or expert escalation |
+| **Export** | ONNX or TFLite for faster inference and possible offline use. Training fits on free Colab / Kaggle GPUs |
+
+> ⚠️ PlantVillage is lab-style — models that score 99% on it often fail in real fields. **Your own field data is the key ingredient.**
+
+---
+
+### 📚 Phase 3 — RAG Knowledge Base *(Weeks 3–5)*
+
+- **Sources:** PARC/NARC bulletins, provincial agriculture department advisories, university extension material, and the Department of Plant Protection's registered pesticide lists
+- **Pipeline:** Chunk by crop → disease → section · Embed with a multilingual model (`bge-m3` or `multilingual-e5`) · Store in **Supabase pgvector** (already in use) · Hybrid search (BM25 + vectors) · Handle Urdu queries
+- **Safety rules:** Answers must cite sources and come only from retrieved text. If nothing is retrieved → *"consult an extension officer"*
+- **Evaluation:** Golden set of ~100 Q&A pairs, checking retrieval hit rate and faithfulness
+
+---
+
+### 🌾 Phase 4 — Stronger Advisor Engine *(Weeks 4–6)*
+
+- Keep the deterministic layer, but back thresholds with literature (e.g. humidity/temperature windows for late blight and rust) and test against past outbreak seasons
+- **Yield model:** Train gradient boosting on district crop statistics + historical weather (Open-Meteo / ERA5) · Show a **range**, not a single number · Keep rules as fallback
+
+---
+
+### 🧪 Phase 5 — Treatment Safety
+
+- Recommend only chemicals from the **registered pesticide list**
+- Quote doses from the label or retrieved source — **never let the LLM invent doses**
+- Show confidence and severity with every recommendation
+- Add a *"talk to an expert"* escalation path for serious or uncertain cases
+
+---
+
+### 📱 Phase 6 — Farmer Usability *(Weeks 6–8)*
+
+- **Urdu voice input and output** — many users have low literacy
+- **WhatsApp bot front end** (photo in → diagnosis out) — likely more reachable than a web app
+- **Low-bandwidth mode** with offline queue
+- **SMS / push alerts** for district-level outbreak risk
+
+---
+
+### 🔄 Phase 7 — Feedback Loop & MLOps *(Ongoing)*
+
+- Log scans with user consent; let users confirm or correct the diagnosis; add an agronomist review queue
+- Use confirmed labels for **periodic retraining**
+- Track accuracy per crop and per disease
+- Monitor cost, latency, and failure rates
+
+---
+
+### 🎯 Success Targets
+
+| Metric | Target |
+|--------|--------|
+| Top-1 accuracy on field test set | ≥ 85% |
+| Top-3 accuracy on field test set | ≥ 95% |
+| Median response time | < 5 seconds |
+| Unsourced dosage advice | Zero |
+| Pilot users | 10–20 real farmers or extension workers |
+
+---
+
+### ⚠️ Biggest Risks
+
+| Risk | Mitigation |
+|------|-----------|
+| Insufficient field data | Partner with local agronomists; use data augmentation |
+| Hallucinated treatments | RAG + registered pesticide list guard |
+| API cost at scale | Move to self-hosted / ONNX model; add quotas |
+
+---
+
 ## 📜 License
 
 Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more information.
