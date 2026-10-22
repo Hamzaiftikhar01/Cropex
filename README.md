@@ -1,148 +1,305 @@
-# Cropex — Your AI Farming Companion & Smart Agriculture Ecosystem
+<div align="center">
 
-> **Predict Early. Protect Crops. Empower Farmers.**
+<img src="public/favicon.svg" alt="CropMedic AI Logo" width="80" height="80" />
 
-Cropex is a complete **AI-powered smart farming platform** designed to help farmers predict crop diseases, reduce losses, improve yields, and make better farming decisions. Built specifically with local contexts in mind, Cropex provides early warnings by combining disease risk prediction, agricultural weather intelligence, smart irrigation scheduling, yield forecasting, localized crop guides, and an interactive multi-lingual AI chatbot.
+# 🌿 CropMedic AI
 
----
+**Smart Crop Disease Diagnosis & Agricultural Intelligence Platform**
 
-## Key Modules & System Features
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-4-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+[![Groq](https://img.shields.io/badge/Groq_AI-F55036?style=for-the-badge&logo=groq&logoColor=white)](https://groq.com/)
+[![PWA](https://img.shields.io/badge/PWA-Ready-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white)](https://web.dev/progressive-web-apps/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
-### 1. Explainable AI Active Risks (Outbreak Warnings)
-* Calculates crop-specific disease outbreak risks (e.g., Late Blight for tomato/potato, Rust for wheat, Blast for rice) before visible symptoms damage foliage.
-* Computes risk thresholds dynamically based on real-time Open-Meteo weather APIs (7-day average temperatures, precipitation, and relative humidity).
+[Report a Bug](https://github.com/Hamzaiftikhar01/Cropex/issues) · [Request a Feature](https://github.com/Hamzaiftikhar01/Cropex/issues)
 
-### 2. Interactive Smart Irrigation Scheduler
-* Tracks exactly how many days have passed since the last irrigation and forecasts future water needs based on the exact growth stage of the crop.
-* A visual status timeline that shifts from "Fresh" to "Drying" to "Critical".
-* An interactive "Mark as Irrigated Today" button that instantly updates the field profile and resets the agricultural models across the entire dashboard.
-
-### 3. Intelligent Agricultural Weather Advisor
-* Integrates coordinate-calibrated weather forecasts using real-time Open-Meteo API data.
-* Highlights maximum temperatures, UV index, soil moisture, and Evapotranspiration (ET0).
-
-### 4. Yield Forecasting
-* Models expected harvest yields (maunds/acre) using a robust calculation engine.
-* Applies weights for sowing window alignments, temperature stresses, soil texture parameters, and current disease risk factors.
-
-### 5. Localized Crop Guides & AI Chatbot
-* Features an extensive encyclopedia of localized crop cycles and practical farming tips.
-* Includes a floating AI Chatbot (powered by Groq / Llama / GPT-OSS models) capable of answering real-time agricultural questions based on the farmer's specific field context.
-
-### 6. Fully Multi-Lingual Interface
-* Supports deep localization in **English, Urdu, and Punjabi (Shahmukhi script)**.
-* Translates UI elements, crop names, disease states, and AI reasoning dynamically.
-
-### 7. Supabase Authentication & History
-* Secure user authentication and cloud-synced profiles via **Supabase**.
-* Maintains a continuous history of disease scans and diagnostic results tied to the user's account.
+</div>
 
 ---
 
-## Unified System Flow
+## 📖 Overview
 
-```text
-                  REAL-WORLD ENVIRONMENT DATA
-                               │
-            ┌──────────────────┼──────────────────┐
-            │                  │                  │
-         Weather             Soil &            Farming
-         Forecasts           Profiles          Actions (e.g. Irrigation)
-            │                  │                  │
-            └──────────────────┼──────────────────┘
-                               │
-                       CROPEX AGRI RULES
-                               │
-             ┌─────────────────┴─────────────────┐
-             │                                   │
-         Outbreaks                             Yields
-             │                                   │
-             └──────────────────┬─────────────────┘
-                                │
-                          ADVISOR ENGINE
-                                │
-             ┌─────────────────┴─────────────────┐
-             │                                   │
-      Dashboard UI                          AI Chatbot
-```
+**CropMedic AI** is an AI-powered agricultural intelligence platform tailored for farmers and agronomists in Pakistan and beyond. It combines cutting-edge vision AI with real-time weather data and rule-based agronomic logic to deliver actionable, context-aware crop health decisions — right from your phone or browser.
+
+Upload a photo of a diseased leaf, and CropMedic will:
+- **Identify** the disease and crop type using a Groq-hosted LLM vision model
+- **Prescribe** specific chemical treatments, preventive measures, and field actions
+- **Advise** on irrigation, disease risk, and yield forecast based on your field profile and live weather
+- **Guide** you through crop calendars and best practices in your language
 
 ---
 
-## Project Structure
+## ✨ Features
 
-```text
-├── src/
-│   ├── components/
-│   │   ├── AdvisorCard.jsx            # AI priority action card with urgency flags
-│   │   ├── Chatbot.jsx                # Floating AI Chatbot interface (Groq LLM)
-│   │   ├── Navbar.jsx                 # Main navigation and language switcher
-│   │   ├── dashboard/
-│   │   │   └── IrrigationSchedulerWidget.jsx # Interactive irrigation visualizer
-│   │   └── guides/                    # UI components for detailed crop guides
-│   ├── context/
-│   │   └── LanguageContext.jsx        # Custom i18n hook supporting EN, UR, PA
-│   ├── locales/
-│   │   └── translations.js            # Comprehensive vocabulary dictionaries
-│   ├── pages/
-│   │   ├── AuthView.jsx               # Supabase login/signup and profile onboarding
-│   │   ├── DashboardView.jsx          # Primary dashboard with 4 core intelligence modules
-│   │   ├── DiseaseView.jsx            # Diagnostic scanner and result history
-│   │   ├── WeatherView.jsx            # Extended 7-day meteorological data
-│   │   ├── CropGuideView.jsx          # Localized crop tips and timelines
-│   │   └── YieldView.jsx              # Harvest prediction statistics
-│   ├── services/
-│   │   └── aiService.js               # Groq LLM integration and localized advice generation
-│   ├── utils/
-│   │   ├── agriRules.js               # Outbreak risk formulas, ETc tracking, yield math
-│   │   └── cropGuidesData.js          # Hardcoded encyclopedic crop cycle data
-│   ├── App.jsx                        # Global router, Supabase auth sync, state management
-│   ├── index.css                      # Tailwind v4 configuration and dark mode variables
-│   └── main.jsx                       # React entry script
-├── supabase_seed.sql                  # Database schema for profiles and history
-├── package.json                       # Dependencies (React, Tailwind v4, Supabase JS, etc)
-```
+### 🔬 AI Disease Diagnosis
+- Upload a leaf image for **instant AI-powered crop disease identification**
+- Powered by **Qwen/Qwen3.8-27b** via [Groq's ultra-fast inference API](https://groq.com/)
+- Returns: crop type, disease name, confidence score, severity level, visible symptoms, likely causes, and recommended treatment actions
+- Supports **PDF report export** via jsPDF + html2canvas
+
+### 🌦️ Real-Time Weather Intelligence
+- Integrates with the [Open-Meteo API](https://open-meteo.com/) for live forecasts
+- Displays temperature, rainfall, humidity, wind speed, and 7-day outlook
+- Weather data is **district-aware** — coordinates fetched per user's field district
+
+### 🧑‍🌾 AI Farm Advisor (Two-Layer Architecture)
+- **Layer 1 — Deterministic Priority Ladder**: Rule-based engine calculates disease risk, irrigation urgency, and yield forecast from field profile + weather data
+- **Layer 2 — LLM Rephraser**: Groq LLM reformulates the deterministic verdict into natural, friendly farm advice in the user's selected language
+- Graceful fallback: if Layer 2 times out, Layer 1's verdict is rendered directly via local translations — **advice is never dropped**
+
+### 📊 Yield Forecasting
+- Predictive yield estimates based on crop type, soil type, sowing date, and weather trends
+- Visual indicators for growth stage and expected harvest window
+
+### 🗺️ Crop Guides
+- Comprehensive crop-specific planting calendars, care schedules, and best practice guides
+- Field profile-aware recommendations
+
+### 🤖 AI Chatbot
+- Floating conversational assistant powered by Groq
+- Context-aware: passes active field profile and weather data for personalized answers
+
+### 📁 Field Profile Management
+- Save multiple field profiles (crop type, district, soil type, sowing date, irrigation history)
+- Profiles synced to **Supabase** for authenticated users; stored in `localStorage` for guests
+
+### 🕘 Scan History
+- Last 15 diagnosis scans saved per user
+- Authenticated users: history synced to Supabase cloud
+- Guest users: history persisted in `localStorage`
+
+### 🌐 Multilingual Support
+- Full i18n support via a central translations file
+- Supports **English (en)**, **Urdu (ur)**, and **Punjabi (pa)** with automatic RTL layout switching
+
+### 🌙 Dark / Light Mode
+- Persistent theme preference via `localStorage`
+- Applied before first paint — **zero FOUC** (Flash of Unstyled Content)
+
+### 📱 Progressive Web App (PWA)
+- Installable on mobile and desktop via `vite-plugin-pwa`
+- Offline-capable app shell
 
 ---
 
-## Installation & Setup
+## 🏗️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Frontend Framework** | [React 19](https://react.dev/) + [Vite 8](https://vitejs.dev/) |
+| **Styling** | [Tailwind CSS 4](https://tailwindcss.com/) + `@tailwindcss/typography` |
+| **Icons** | [Lucide React](https://lucide.dev/) |
+| **AI / LLM** | [Groq API](https://groq.com/) — Qwen3.8-27b (vision + chat) |
+| **Database & Auth** | [Supabase](https://supabase.com/) (PostgreSQL + Auth) |
+| **Weather** | [Open-Meteo](https://open-meteo.com/) (free, no-key API) |
+| **PDF Export** | [jsPDF](https://github.com/parallax/jsPDF) + [html2canvas](https://html2canvas.hertzen.com/) |
+| **Markdown Rendering** | [react-markdown](https://github.com/remarkjs/react-markdown) + [remark-gfm](https://github.com/remarkjs/remark-gfm) |
+| **PWA** | [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) |
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
-* **Node.js**: v18.0.0 or higher
-* **Groq API Key**: Obtain a key from the [Groq Console](https://console.groq.com/keys).
-* **Supabase Project**: Obtain your URL and Anon Key.
 
-### Setup Web Client
-Clone the repository, install packages, and boot the hot-reloading development server:
+- **Node.js** ≥ 18
+- A free **Groq API key** → [console.groq.com/keys](https://console.groq.com/keys)
+- A free **Supabase** project → [supabase.com](https://supabase.com) *(optional — guest mode works without it)*
+
+### 1. Clone the Repository
 
 ```bash
-# Clone the repository
 git clone https://github.com/Hamzaiftikhar01/Cropex.git
 cd Cropex
+```
 
-# Install dependencies
+### 2. Install Dependencies
+
+```bash
 npm install
+```
 
-# Setup environment variables
+### 3. Configure Environment Variables
+
+```bash
 cp .env.example .env
-# Edit .env and add:
-# VITE_GROQ_API_KEY=your_key_here
-# VITE_SUPABASE_URL=your_url_here
-# VITE_SUPABASE_ANON_KEY=your_anon_key_here
+```
 
-# Run the development environment
+Open `.env` and fill in your values:
+
+```env
+# Required — get your key at https://console.groq.com/keys
+VITE_GROQ_API_KEY=your_groq_api_key_here
+
+# Optional — only needed for account-based features (auth + cloud history)
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+> **Note:** The app works in **guest mode** without Supabase. All data is stored locally in your browser.
+
+### 4. Run the Development Server
+
+```bash
 npm run dev
 ```
 
----
-
-## Design System
-Cropex employs a sleek, modern UI utilizing **Tailwind CSS v4**. 
-- **Dark Mode Support**: Fully integrated dark mode utilizing CSS variables defined in `@layer base` for instant, lag-free theme switching.
-- **Glassmorphism & Micro-animations**: Soft shadows, rounded interfaces, and hover effects make the platform feel alive and responsive.
-- **Aesthetic Data Visualization**: Clean, dependency-free CSS-based progress bars and timelines for maximum performance.
-- **Iconography**: Complete integration of `lucide-react` for a consistent, theme-aware SVG icon system, replacing all generic emojis.
+Open **[http://localhost:5173](http://localhost:5173)** in your browser.
 
 ---
 
-## Legal Disclaimer
-Cropex is an AI-powered prototype demonstrating smart decision-support concepts using simplified agronomic models. Recommendations are illustrative and do not replace professional agricultural extension services or on-site agronomist inspections.
+## 🗄️ Database Setup (Optional)
+
+To enable authenticated accounts and cloud-synced scan history, seed your Supabase project:
+
+1. Go to your Supabase project → **SQL Editor**
+2. Paste and run the contents of [`supabase_seed.sql`](supabase_seed.sql)
+
+This creates the `profiles` and `analysis_history` tables with the correct schema and Row Level Security (RLS) policies.
+
+---
+
+## 📁 Project Structure
+
+```
+Cropex/
+├── public/                  # Static assets (favicon, icons, PWA manifest)
+├── api/                     # Serverless API routes (Vercel)
+├── src/
+│   ├── components/          # Reusable UI components
+│   │   ├── Navbar.jsx
+│   │   ├── Hero.jsx
+│   │   ├── UploadCard.jsx
+│   │   ├── AnalysisResult.jsx
+│   │   ├── Chatbot.jsx
+│   │   ├── FieldProfileSelector.jsx
+│   │   ├── HistoryList.jsx
+│   │   ├── SettingsModal.jsx
+│   │   ├── AdvisorCard.jsx
+│   │   ├── dashboard/       # Dashboard sub-components
+│   │   ├── guides/          # Crop guide sub-components
+│   │   └── icons/
+│   ├── pages/               # Top-level view components (routed by App.jsx)
+│   │   ├── DashboardView.jsx
+│   │   ├── DiseaseView.jsx
+│   │   ├── WeatherView.jsx
+│   │   ├── YieldView.jsx
+│   │   ├── CropGuideView.jsx
+│   │   └── AuthView.jsx
+│   ├── services/
+│   │   ├── aiService.js     # Groq API client + disease identification logic
+│   │   └── farmAdvisor.js   # Two-layer AI Farm Advisor engine
+│   ├── hooks/
+│   │   └── useWeatherData.js
+│   ├── context/
+│   │   └── LanguageContext.jsx
+│   ├── lib/
+│   │   ├── supabase.js
+│   │   └── referenceData.js
+│   ├── utils/
+│   │   └── agriRules.js     # Deterministic agronomic rule engine
+│   ├── locales/
+│   │   └── translations.js  # i18n strings (en / ur / pa)
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+├── scripts/                 # Utility/build scripts
+├── reports/                 # Generated analysis reports
+├── .env.example             # Environment variable template
+├── vite.config.js
+├── vercel.json
+└── supabase_seed.sql        # Database schema & seed
+```
+
+---
+
+## 🛠️ Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start the Vite development server |
+| `npm run build` | Build the production bundle |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run ESLint |
+
+---
+
+## 🔑 Environment Variables Reference
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VITE_GROQ_API_KEY` | ✅ Yes | Groq API key for LLM inference |
+| `VITE_SUPABASE_URL` | ⚠️ Optional | Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | ⚠️ Optional | Supabase anonymous public key |
+
+> **Security:** Never commit your `.env` file. It is already listed in `.gitignore`.
+
+---
+
+## 🌍 Deployment
+
+### Deploy to Vercel (Recommended)
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Hamzaiftikhar01/Cropex)
+
+1. Click the button above or import the repo at [vercel.com/new](https://vercel.com/new)
+2. Add your environment variables (`VITE_GROQ_API_KEY`, etc.) in the Vercel dashboard
+3. Deploy — Vercel auto-detects Vite and configures the build
+
+### Deploy to Netlify
+
+```bash
+npm run build
+# Drag and drop the `dist/` folder to netlify.com/drop
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are warmly welcomed!
+
+1. **Fork** the repository
+2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
+3. **Commit** your changes: `git commit -m 'Add amazing feature'`
+4. **Push** to your branch: `git push origin feature/amazing-feature`
+5. **Open** a Pull Request
+
+Please ensure your code passes `npm run lint` before submitting.
+
+---
+
+## 🐛 Known Issues & Limitations
+
+- Camera capture on mobile is browser-permission-dependent
+- Weather data falls back to cached/degraded mode if Open-Meteo is unreachable
+- Supabase RLS must be configured correctly for multi-user deployments (see `supabase_seed.sql`)
+
+---
+
+## 📜 License
+
+Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more information.
+
+---
+
+## 🙏 Acknowledgements
+
+- [Groq](https://groq.com/) for blazing-fast LLM inference
+- [Supabase](https://supabase.com/) for the open-source Firebase alternative
+- [Open-Meteo](https://open-meteo.com/) for free, no-key weather APIs
+- [Lucide](https://lucide.dev/) for the beautiful icon set
+- [Vite](https://vitejs.dev/) for the lightning-fast build tooling
+
+---
+
+<div align="center">
+
+Made with ❤️ for Pakistan's farmers
+
+**[⭐ Star this repo](https://github.com/Hamzaiftikhar01/Cropex)** if you find it useful!
+
+</div>
