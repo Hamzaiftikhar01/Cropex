@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import Hero from '../components/Hero';
 import UploadCard from '../components/UploadCard';

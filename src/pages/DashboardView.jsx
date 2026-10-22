@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import AdvisorCard from '../components/AdvisorCard';
 import { calculateDiseaseRisk, calculateIrrigation, calculateYieldForecast } from '../utils/agriRules';
