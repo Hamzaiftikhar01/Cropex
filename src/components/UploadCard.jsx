@@ -68,7 +68,7 @@ function UploadCard({
   const busy = isAnalyzing || isCompressing;
 
   return (
-    <div className="rounded-2xl border border-earth-100 dark:border-earth-800 bg-white dark:bg-earth-900 p-5 sm:p-6 shadow-soft transition-colors duration-200">
+    <div id="upload" className="rounded-2xl border border-earth-100 dark:border-earth-800 bg-white dark:bg-earth-900 p-5 sm:p-6 shadow-soft transition-colors duration-200">
       {lowBandwidthActive && (
         <div className="mb-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20">
           <Zap size={13} className="shrink-0" />

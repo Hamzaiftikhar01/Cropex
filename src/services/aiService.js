@@ -234,6 +234,19 @@ export async function analyzeCropImage(imageInput, cropHint) {
 
   const result = await callApi('/api/analyze', payload, 60_000);
 
+  // Agricultural Guardrail Check: Handle non-crop / non-agricultural images
+  if (result.isCrop === false || result.isAgriculturalCrop === false || result.disease_id === 'invalid_image') {
+    result.isCrop = false;
+    result.isAgriculturalCrop = false;
+    result.needsEscalation = false;
+    result.escalationActions = [
+      'The uploaded picture does not appear to be an agricultural crop or plant.',
+      'Please upload a clear close-up photo of a crop leaf, stem, or plant.',
+      'Avoid uploading people, animals, vehicles, electronics, or household items.'
+    ];
+    return result;
+  }
+
   // Phase 2: attach escalation flag so UI can prompt farmer to retake / contact expert
   const confidence = typeof result.confidence === 'number' ? result.confidence : 100;
   result.needsEscalation = result.isCrop === true && confidence < LOW_CONFIDENCE_THRESHOLD;
@@ -271,6 +284,67 @@ export async function queryRagKnowledgeBase(query, options = {}) {
 }
 
 /**
+ * Detects whether a user message is a simple conversational greeting or pleasantry
+ * rather than a specific agronomic/crop disease technical inquiry.
+ *
+ * @param {string} text
+ * @returns {boolean}
+ */
+export function isConversationalGreeting(text) {
+  if (!text || typeof text !== 'string') return true;
+  // Remove Arabic/Urdu diacritics (tashkeel, shadda, etc.)
+  const strippedDiacritics = text.replace(/[\u064B-\u065F\u0670]/g, '');
+  const cleaned = strippedDiacritics.trim().toLowerCase().replace(/[^\w\s\u0600-\u06FF]/gi, ' ');
+  const words = cleaned.split(/\s+/).filter(Boolean);
+  if (words.length === 0) return true;
+
+  const greetings = new Set([
+    'hi', 'hello', 'hey', 'heya', 'heyy', 'howdy', 'sup', 'yo',
+    'salam', 'asalam', 'assalam', 'slam', 'aoa',
+    'thanks', 'thank', 'thx', 'ty', 'shukriya', 'meherbani', 'jazakallah',
+    'bye', 'goodbye', 'cya',
+    'ok', 'okay', 'k', 'cool', 'great', 'fine', 'alright', 'nice', 'yes', 'no', 'yep', 'nope',
+    'test', 'testing',
+    'سلام', 'ہیلو', 'ہائے', 'شکریہ', 'مہربانی', 'ٹھیک', 'اچھا', 'حافظ', 'اللہ', 'الله', 'خدا'
+  ]);
+
+  if (words.length <= 2 && words.every((w) => greetings.has(w))) {
+    return true;
+  }
+
+  const normalized = cleaned.replace(/\s+/g, ' ');
+  const phrases = [
+    'good morning', 'good afternoon', 'good evening', 'good day', 'good night',
+    'how are you', 'how r u', 'how are u', 'how is it going', 'whats up', 'what is up',
+    'who are you', 'what is your name', 'what can you do', 'who made you',
+    'assalam o alaikum', 'assalam o alaykum', 'asalam o alaikum', 'assalamu alaikum',
+    'kya hal hai', 'kya haal hai', 'kia hal hai', 'kaise ho', 'kese ho', 'kaisy ho',
+    'tum kon ho', 'aap kon hain', 'ap kon ho',
+    'allah hafiz', 'khuda hafiz', 'rab rakha',
+    'theek hai', 'thik hai', 'sahi hai',
+    'السلام علیکم', 'وعلیکم السلام', 'کیا حال ہے', 'کیسے ہو', 'آپ کون ہیں', 'اللہ حافظ', 'الله حافظ', 'خدا حافظ'
+  ];
+
+  if (phrases.some((p) => normalized === p || normalized.startsWith(p + ' '))) {
+    return true;
+  }
+
+  // If 3 words or fewer and contains no agricultural/crop terms
+  if (words.length <= 3) {
+    const agriTerms = [
+      'crop', 'wheat', 'rice', 'cotton', 'sugarcane', 'maize', 'corn', 'tomato', 'potato', 'chili', 'onion',
+      'rust', 'blight', 'blast', 'rot', 'smut', 'mildew', 'curl', 'spray', 'pesticide', 'fungicide',
+      'insecticide', 'fertilizer', 'urea', 'dap', 'disease', 'pest', 'leaf', 'seed', 'yield', 'water', 'irrigation',
+      'گندم', 'چاول', 'کپاس', 'گنا', 'مکئی', 'ٹماٹر', 'آلو', 'مرچ', 'پیاز', 'بیماری', 'سپرے', 'کھاد', 'پانی'
+    ];
+    const hasAgriTerm = words.some((w) => agriTerms.some((t) => w.includes(t)));
+    if (!hasAgriTerm && words.some((w) => greetings.has(w))) return true;
+  }
+
+  return false;
+}
+
+/**
  * Sends conversation history to the secure chat proxy with RAG knowledge grounding.
  *
  * @param {Array<{role: string, content: string}>} messageHistory
@@ -282,40 +356,46 @@ export async function generateChatResponse(messageHistory, contextData) {
 
   // Extract latest user inquiry for RAG retrieval
   const lastUserMsg = [...messageHistory].reverse().find((m) => m.role === 'user')?.content || '';
+  const isGreeting = isConversationalGreeting(lastUserMsg);
 
   let ragContext = '';
   let sources = [];
 
-  try {
-    const cropId = fieldProfile?.cropType ? fieldProfile.cropType.toLowerCase() : null;
-    const searchRes = searchKnowledgeBase(lastUserMsg, {
-      cropId,
-      limit: 4,
-      minScore: 0.5,
-    });
+  // Guardrail: Only perform knowledge base retrieval for substantive agricultural queries
+  if (!isGreeting) {
+    try {
+      const cropId = fieldProfile?.cropType ? fieldProfile.cropType.toLowerCase() : null;
+      const searchRes = searchKnowledgeBase(lastUserMsg, {
+        cropId,
+        limit: 4,
+        minScore: 0.5,
+      });
 
-    if (searchRes.results && searchRes.results.length > 0) {
-      sources = searchRes.results.map((r) => ({
-        id: r.chunk.id,
-        title: r.chunk.title,
-        source: r.chunk.source,
-        category: r.chunk.category,
-        cropId: r.chunk.crop_id,
-        diseaseId: r.chunk.disease_id,
-        content: r.chunk.content,
-        content_ur: r.chunk.content_ur || null,
-        score: r.score,
-      }));
-      ragContext = formatRagContextForPrompt(searchRes.results);
+      if (searchRes.results && searchRes.results.length > 0) {
+        sources = searchRes.results.map((r) => ({
+          id: r.chunk.id,
+          title: r.chunk.title,
+          source: r.chunk.source,
+          category: r.chunk.category,
+          cropId: r.chunk.crop_id,
+          diseaseId: r.chunk.disease_id,
+          content: r.chunk.content,
+          content_ur: r.chunk.content_ur || null,
+          score: r.score,
+        }));
+        ragContext = formatRagContextForPrompt(searchRes.results);
+      }
+    } catch (ragErr) {
+      console.warn('[aiService] RAG retrieval skipped:', ragErr);
     }
-  } catch (ragErr) {
-    console.warn('[aiService] RAG retrieval skipped:', ragErr);
   }
 
   const systemContent = `You are a highly intelligent, empathetic agricultural expert assistant for Cropex — an AI farming platform for Pakistan.
 Prioritize local context: District: ${fieldProfile?.district || 'Unknown'}, Crop: ${fieldProfile?.cropType || 'Unknown'}.
 Weather: ${weatherData ? `Temp ${weatherData.current?.temperature_2m ?? '?'}°C, Humidity ${weatherData.current?.relative_humidity_2m ?? '?'}%` : 'unavailable'}.
-Only recommend treatments registered with the Pakistan Department of Plant Protection (DPP). Never invent chemical dosages — always state official label dosages or direct farmers to consult local extension officers.
+${isGreeting 
+  ? 'The user has sent a greeting or pleasantry. Respond warmly, politely, and concisely in Urdu or English, welcome them to Cropex, and offer to help with their crops, diseases, or weather. DO NOT invent citations or cite academic sources for greetings.' 
+  : 'Only recommend treatments registered with the Pakistan Department of Plant Protection (DPP). Never invent chemical dosages — always state official label dosages or direct farmers to consult local extension officers.'}
 BANNED SUBSTANCES: NEVER recommend banned or cancelled chemicals in Pakistan (Endosulfan, Monocrotophos, DDT, Dieldrin, Aldrin, Heptachlor, Methyl Parathion, Methamidophos, Phosphamidon, Chlordane).
 Always advise respecting Pre-Harvest Intervals (PHI) for crop safety.
 DISCLAIMER: Advice is AI-generated. Always verify with a certified agronomist.`;
@@ -327,9 +407,15 @@ DISCLAIMER: Advice is AI-generated. Always verify with a certified agronomist.`;
 
   let data;
   try {
-    data = await callApi('/api/chat', { messages, ragContext, sources }, 35_000);
+    data = await callApi('/api/chat', { messages, ragContext, sources, isGreeting }, 35_000);
   } catch (apiErr) {
     console.warn('[aiService] Chat API error, using grounded knowledge base response:', apiErr);
+    if (isGreeting) {
+      return {
+        reply: "Assalam-o-Alaikum! Hello! I am your Cropex AI Farm Advisor. How can I assist you with your crops, weather, or pest management today?\n\n(السلام علیکم! میں آپ کا کراپیکس فارم مشیر ہوں۔ میں آج آپ کی فصل، موسم یا کیڑوں کے تدارک کے بارے میں کیا مدد کر سکتا ہوں؟)",
+        sources: [],
+      };
+    }
     if (sources && sources.length > 0) {
       const topChunk = sources[0];
       const otherCitations = sources.slice(1).map((s) => s.title).join(', ');

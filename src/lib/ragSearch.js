@@ -20,13 +20,16 @@ const STOPWORDS_EN = new Set([
   'in', 'is', 'it', 'its', 'of', 'on', 'that', 'the', 'to', 'was', 'were',
   'will', 'with', 'what', 'how', 'when', 'where', 'why', 'can', 'should',
   'my', 'i', 'we', 'our', 'do', 'does', 'did', 'this', 'these', 'those',
-  'field', 'fields', 'crop', 'crops', 'plant', 'plants'
+  'field', 'fields', 'crop', 'crops', 'plant', 'plants',
+  'hi', 'hello', 'hey', 'heya', 'heyy', 'howdy', 'thanks', 'thank', 'thx',
+  'bye', 'goodbye', 'ok', 'okay', 'yes', 'no', 'yep', 'nope'
 ]);
 
 // Common Urdu / Roman Urdu stopwords
 const STOPWORDS_UR = new Set([
   'کا', 'کی', 'کے', 'کو', 'پر', 'سے', 'میں', 'ہے', 'ہیں', 'تھا', 'تھی', 'تھے',
-  'اور', 'یا', 'کیا', 'کیسے', 'کیوں', 'کب', 'والا', 'والی', 'والے', 'کریں', 'ہو'
+  'اور', 'یا', 'کیا', 'کیسے', 'کیوں', 'کب', 'والا', 'والی', 'والے', 'کریں', 'ہو',
+  'سلام', 'ہیلو', 'ہائے', 'شکریہ', 'مہربانی', 'ٹھیک', 'اچھا'
 ]);
 
 /**
@@ -145,6 +148,15 @@ export function searchKnowledgeBase(query, options = {}) {
     };
   }
 
+  // If query consists only of stopwords/greetings and no specific diseaseId is targeted, return empty
+  if (normalizedQuery.length > 0 && queryTokens.length === 0 && !normalizedDisease) {
+    return {
+      results: [],
+      totalFound: 0,
+      fallbackAdvice: null,
+    };
+  }
+
   const index = getCorpusIndex();
   const scoredChunks = [];
 
@@ -200,8 +212,8 @@ export function searchKnowledgeBase(query, options = {}) {
         termScore += tfWeight * 1.5;
       }
 
-      // Substring fuzzy matching for Urdu/compound names
-      if (chunk.content && chunk.content.toLowerCase().includes(qToken)) {
+      // Substring fuzzy matching for Urdu/compound names (minimum 4 characters to prevent accidental substrings)
+      if (qToken.length >= 4 && chunk.content && chunk.content.toLowerCase().includes(qToken)) {
         termScore += 0.5;
       }
 
@@ -214,13 +226,16 @@ export function searchKnowledgeBase(query, options = {}) {
       score += 8.0;
     }
 
-    // 5. Metadata contextual boosts
-    if (normalizedDisease && chunk.disease_id === normalizedDisease) {
-      score += 10.0; // Major boost for disease direct match
-    }
+    // 5. Metadata contextual boosts (only apply if query terms matched or browsing with empty query)
+    const hasQueryMatch = normalizedQuery.length === 0 ? true : score > 0;
+    if (hasQueryMatch) {
+      if (normalizedDisease && chunk.disease_id === normalizedDisease) {
+        score += 10.0; // Major boost for disease direct match
+      }
 
-    if (normalizedCrop && chunk.crop_id === normalizedCrop) {
-      score += 3.0; // Boost for targeted crop match
+      if (normalizedCrop && chunk.crop_id === normalizedCrop) {
+        score += 3.0; // Boost for targeted crop match
+      }
     }
 
     // 6. Filter by minScore threshold

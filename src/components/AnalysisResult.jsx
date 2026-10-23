@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { AlertTriangle, Camera, CheckCircle2, ShieldAlert, RefreshCw } from 'lucide-react';
 import { downloadPdfReport } from '../utils/pdfGenerator';
 import { downloadWordReport } from '../utils/docGenerator';
 import ExpertEscalationModal from './ExpertEscalationModal';
@@ -345,6 +346,91 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
       onError: () => setIsPlayingAudio(false),
     });
   };
+
+  const isInvalidImage = activeResult && (activeResult.isCrop === false || activeResult.isAgriculturalCrop === false || activeResult.disease_id === 'invalid_image');
+
+  if (isInvalidImage) {
+    return (
+      <section id="results" className="border-t border-amber-200/60 bg-amber-50/40 py-12 sm:py-16 dark:border-amber-900/40 dark:bg-amber-950/20 transition-colors">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-3xl border border-amber-200 bg-white p-6 sm:p-8 shadow-xl shadow-amber-900/5 dark:border-amber-800/60 dark:bg-earth-900 transition-colors">
+            <div className="flex flex-col sm:flex-row items-start gap-5">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-amber-700 dark:bg-amber-900/60 dark:text-amber-300">
+                <AlertTriangle className="h-7 w-7" />
+              </div>
+              <div className="flex-1">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-900 dark:bg-amber-900/60 dark:text-amber-200">
+                  <ShieldAlert className="h-3.5 w-3.5" />
+                  Agricultural Guardrail Alert • غیر زرعی تصویر کی نشاندہی
+                </div>
+                <h3 className="mt-3 text-xl sm:text-2xl font-bold tracking-tight text-earth-900 dark:text-earth-50">
+                  Non-Agricultural Image Detected
+                </h3>
+                <p className="mt-2 text-sm sm:text-base text-earth-700 dark:text-earth-300 leading-relaxed">
+                  {activeResult.error || activeResult.rejectionReason || 'The uploaded photo was not recognized as an agricultural crop, leaf, stem, or plant tissue. CropMedic AI only diagnoses crop health and plant pathologies.'}
+                </p>
+                <p className="mt-2 text-sm sm:text-base font-medium text-earth-800 dark:text-earth-200 font-urdu leading-relaxed" dir="rtl">
+                  {activeResult.error_ur || activeResult.rejectionReasonUr || 'براہ کرم فصل کی پتی، تنے، یا پھل کی واضح تصویر اپ لوڈ کریں۔ یہ تصویر زراعت یا فصل سے متعلق نہیں ہے۔'}
+                </p>
+
+                {/* Helpful Guidelines Card */}
+                <div className="mt-6 rounded-2xl border border-earth-200/80 bg-earth-50/80 p-5 dark:border-earth-800 dark:bg-earth-850">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-earth-800 dark:text-earth-200">
+                    Photo Guidelines for Agricultural Diagnostics / فوٹو گائیڈ لائنز
+                  </h4>
+                  <ul className="mt-3 space-y-2.5 text-xs sm:text-sm text-earth-700 dark:text-earth-300">
+                    <li className="flex items-start gap-2.5">
+                      <CheckCircle2 className="h-4 w-4 text-crop-600 dark:text-crop-400 shrink-0 mt-0.5" />
+                      <span><strong>Agricultural Plants Only:</strong> Upload visible leaves, stems, or fruits of field crops (wheat, cotton, rice, sugarcane, maize, potato, mango, citrus).</span>
+                    </li>
+                    <li className="flex items-start gap-2.5">
+                      <CheckCircle2 className="h-4 w-4 text-crop-600 dark:text-crop-400 shrink-0 mt-0.5" />
+                      <span><strong>Close-up & Focused:</strong> Capture symptomatic lesions, pustules, or insect damage in natural daylight without heavy shadows or blur.</span>
+                    </li>
+                    <li className="flex items-start gap-2.5">
+                      <CheckCircle2 className="h-4 w-4 text-crop-600 dark:text-crop-400 shrink-0 mt-0.5" />
+                      <span><strong>Avoid Non-Agricultural Objects:</strong> Do not upload photos of humans, animals, furniture, vehicles, indoor objects, or documents.</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Actions */}
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  <a
+                    href="#upload"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const uploadCard = document.getElementById('upload');
+                      if (uploadCard) {
+                        uploadCard.scrollIntoView({ behavior: 'smooth' });
+                      }
+                      const fileInput = document.querySelector('input[type="file"]');
+                      if (fileInput) fileInput.click();
+                    }}
+                    className="inline-flex items-center gap-2 rounded-xl bg-crop-600 px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-crop-600/20 hover:bg-crop-500 transition-all cursor-pointer"
+                  >
+                    <Camera className="h-4 w-4" />
+                    Upload Valid Crop Photo (تصویر تبدیل کریں)
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const uploadCard = document.getElementById('upload');
+                      if (uploadCard) uploadCard.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center gap-2 rounded-xl border border-earth-300 bg-white px-4 py-2.5 text-xs sm:text-sm font-semibold text-earth-700 hover:bg-earth-50 dark:border-earth-700 dark:bg-earth-800 dark:text-earth-200 dark:hover:bg-earth-750 transition-all cursor-pointer"
+                  >
+                    <RefreshCw className="h-3.5 w-3.5" />
+                    Back to Upload Area
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="results" className="border-t border-earth-100 bg-earth-50/40 py-12 sm:py-16 dark:border-earth-850 dark:bg-earth-900/40 transition-colors">

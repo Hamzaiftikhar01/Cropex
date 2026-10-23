@@ -21,6 +21,59 @@ function setCors(res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With');
 }
 
+function isConversationalGreeting(text) {
+  if (!text || typeof text !== 'string') return true;
+  // Remove Arabic/Urdu diacritics (tashkeel, shadda, etc.)
+  const strippedDiacritics = text.replace(/[\u064B-\u065F\u0670]/g, '');
+  const cleaned = strippedDiacritics.trim().toLowerCase().replace(/[^\w\s\u0600-\u06FF]/gi, ' ');
+  const words = cleaned.split(/\s+/).filter(Boolean);
+  if (words.length === 0) return true;
+
+  const greetings = new Set([
+    'hi', 'hello', 'hey', 'heya', 'heyy', 'howdy', 'sup', 'yo',
+    'salam', 'asalam', 'assalam', 'slam', 'aoa',
+    'thanks', 'thank', 'thx', 'ty', 'shukriya', 'meherbani', 'jazakallah',
+    'bye', 'goodbye', 'cya',
+    'ok', 'okay', 'k', 'cool', 'great', 'fine', 'alright', 'nice', 'yes', 'no', 'yep', 'nope',
+    'test', 'testing',
+    'سلام', 'ہیلو', 'ہائے', 'شکریہ', 'مہربانی', 'ٹھیک', 'اچھا', 'حافظ', 'اللہ', 'الله', 'خدا'
+  ]);
+
+  if (words.length <= 2 && words.every((w) => greetings.has(w))) {
+    return true;
+  }
+
+  const normalized = cleaned.replace(/\s+/g, ' ');
+  const phrases = [
+    'good morning', 'good afternoon', 'good evening', 'good day', 'good night',
+    'how are you', 'how r u', 'how are u', 'how is it going', 'whats up', 'what is up',
+    'who are you', 'what is your name', 'what can you do', 'who made you',
+    'assalam o alaikum', 'assalam o alaykum', 'asalam o alaikum', 'assalamu alaikum',
+    'kya hal hai', 'kya haal hai', 'kia hal hai', 'kaise ho', 'kese ho', 'kaisy ho',
+    'tum kon ho', 'aap kon hain', 'ap kon ho',
+    'allah hafiz', 'khuda hafiz', 'rab rakha',
+    'theek hai', 'thik hai', 'sahi hai',
+    'السلام علیکم', 'وعلیکم السلام', 'کیا حال ہے', 'کیسے ہو', 'آپ کون ہیں', 'اللہ حافظ', 'الله حافظ', 'خدا حافظ'
+  ];
+
+  if (phrases.some((p) => normalized === p || normalized.startsWith(p + ' '))) {
+    return true;
+  }
+
+  if (words.length <= 3) {
+    const agriTerms = [
+      'crop', 'wheat', 'rice', 'cotton', 'sugarcane', 'maize', 'corn', 'tomato', 'potato', 'chili', 'onion',
+      'rust', 'blight', 'blast', 'rot', 'smut', 'mildew', 'curl', 'spray', 'pesticide', 'fungicide',
+      'insecticide', 'fertilizer', 'urea', 'dap', 'disease', 'pest', 'leaf', 'seed', 'yield', 'water', 'irrigation',
+      'گندم', 'چاول', 'کپاس', 'گنا', 'مکئی', 'ٹماٹر', 'آلو', 'مرچ', 'پیاز', 'بیماری', 'سپرے', 'کھاد', 'پانی'
+    ];
+    const hasAgriTerm = words.some((w) => agriTerms.some((t) => w.includes(t)));
+    if (!hasAgriTerm && words.some((w) => greetings.has(w))) return true;
+  }
+
+  return false;
+}
+
 export default async function handler(req, res) {
   setCors(res);
   if (req.method === 'OPTIONS') return res.status(200).end();
@@ -37,7 +90,7 @@ export default async function handler(req, res) {
   }
 
   // ── Input validation ─────────────────────────────────────────────────────────
-  const { messages, ragContext, sources } = req.body || {};
+  const { messages, ragContext, sources, isGreeting: isGreetingFlag } = req.body || {};
 
   if (!Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'Missing messages array.' });
@@ -62,8 +115,12 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'No valid messages provided.' });
   }
 
-  // Inject RAG grounding instructions and sources into system prompt
-  if (ragContext && typeof ragContext === 'string') {
+  // Detect if the latest inquiry is a greeting/casual pleasantry
+  const lastUserMsg = [...sanitizedMessages].reverse().find((m) => m.role === 'user')?.content || '';
+  const isGreeting = Boolean(isGreetingFlag) || isConversationalGreeting(lastUserMsg);
+
+  // Inject RAG grounding instructions and sources into system prompt ONLY for substantive queries
+  if (!isGreeting && ragContext && typeof ragContext === 'string' && Array.isArray(sources) && sources.length > 0) {
     const ragSystemPrompt = `\n\n=== VERIFIED LOCAL RESEARCH SOURCES (PAKISTAN) ===\n${ragContext}\n==================================================\n\nSTRICT INSTRUCTIONS FOR RAG FAITHFULNESS:\n1. Base disease treatments, product recommendations, and crop advice ONLY on the verified sources above.\n2. Cite your sources clearly in your response (e.g. "[Source: NARC Wheat Program]" or "[Source: DPP Pakistan]").\n3. NEVER invent or extrapolate chemical dosages. Only quote dosages present in the sources; otherwise advise consulting the product label.\n4. If the sources above do not contain the answer, explicitly inform the farmer and advise contacting their district agricultural extension officer or calling the NARC helpline (051-9255000).\n5. Keep advice concise, practical, and farmer-friendly. Respond in Urdu or English according to the farmer's language.`;
 
     const systemIdx = sanitizedMessages.findIndex((m) => m.role === 'system');
@@ -74,6 +131,12 @@ export default async function handler(req, res) {
         role: 'system',
         content: `You are Cropex AI, an expert precision farming advisor for Pakistan.${ragSystemPrompt}`,
       });
+    }
+  } else if (isGreeting) {
+    const greetingSystemPrompt = `\n\nCONVERSATIONAL GREETING INSTRUCTIONS:\nThe user has sent a friendly greeting, pleasantry, or casual hello. Respond warmly, politely, and helpfully in their language (Urdu or English), welcome them to Cropex AI Farm Advisor, and ask how you can help with their crops, diseases, irrigation, or weather today. DO NOT attach or invent scientific citations or sources for simple greetings.`;
+    const systemIdx = sanitizedMessages.findIndex((m) => m.role === 'system');
+    if (systemIdx >= 0) {
+      sanitizedMessages[systemIdx].content += greetingSystemPrompt;
     }
   }
 
@@ -121,7 +184,10 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Unexpected AI response.' });
     }
 
-    return res.status(200).json({ reply, sources: Array.isArray(sources) ? sources : [] });
+    return res.status(200).json({
+      reply,
+      sources: isGreeting ? [] : (Array.isArray(sources) ? sources : []),
+    });
 
   } catch (err) {
     if (err.name === 'AbortError') {

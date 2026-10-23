@@ -116,6 +116,23 @@ export default function DiseaseView({
     try {
       const result = await analyzeCropImage(file, cropHint);
       
+      // Agricultural Guardrail Check: Reject non-crop / non-agricultural images
+      if (result.isCrop === false || result.isAgriculturalCrop === false || result.disease_id === 'invalid_image') {
+        const rejectionMsg = result.error || result.rejectionReason || 'The uploaded picture does not appear to be an agricultural crop or plant. Please upload a clear photo of an agricultural plant, leaf, or stem.';
+        setError(rejectionMsg);
+        setAnalysisResult({
+          ...result,
+          isCrop: false,
+          isAgriculturalCrop: false,
+          error: rejectionMsg,
+          error_ur: result.error_ur || result.rejectionReasonUr,
+        });
+        setTimeout(() => {
+          document.getElementById('results')?.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
+        return;
+      }
+
       const kbDetails = searchDiseaseByName(refData, result.cropName || result.crop, result.disease);
       const enrichedResult = {
         ...(fallbackReport || {}),
@@ -152,8 +169,20 @@ export default function DiseaseView({
         document.getElementById('results')?.scrollIntoView({ behavior: 'smooth' });
       }, 150);
     } catch (err) {
-      console.warn('API error encountered, using calibrated knowledge fallback:', err);
+      console.warn('API error encountered, evaluating fallback:', err);
       
+      // Guardrail: if error indicates invalid image / non-agricultural input, display it directly without mock fallback
+      if (err.message && (
+        err.message.includes('not related to agriculture') ||
+        err.message.includes('crop image is required') ||
+        err.message.includes('Non-agricultural') ||
+        err.code === 'INVALID_INPUT'
+      )) {
+        setError(err.message);
+        setAnalysisResult(null);
+        return;
+      }
+
       const kbDetails = searchDiseaseByName(refData, fallbackReport?.crop, fallbackReport?.disease);
       const fallbackDpp = getRegisteredProductsForDiagnosis(fieldProfile.cropType, fallbackReport?.disease);
       const fallbackResult = {

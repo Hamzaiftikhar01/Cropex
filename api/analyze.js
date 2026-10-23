@@ -102,22 +102,40 @@ export default async function handler(req, res) {
 
 DISCLAIMER: AI diagnosis only. Results are indicative and must be verified by a qualified agronomist before any treatment.
 
-${hintedCrop ? `The farmer has indicated this is a ${hintedCrop} field. Prioritise ${hintedCrop} in your analysis.` : ''}
+${hintedCrop ? `The farmer has indicated this is a ${hintedCrop} field. If the image is indeed a plant or crop, consider this context.` : ''}
 
+CRITICAL STEP 1 — MANDATORY AGRICULTURAL RELEVANCE GUARDRAIL:
+Before doing ANY crop disease diagnosis, inspect the image to determine if it is genuinely agricultural plant material:
+- Is this image an agricultural crop, farm plant, crop leaf, plant stem, crop fruit/flower, farm field, or plant pathogen?
+- If the image shows a human, person, face, animal, pet, car, vehicle, room interior, building, furniture, electronic device (phone/laptop/screen), paper document, book, footwear, apparel/clothing, toy, meme, cartoon, or any non-plant/non-agricultural object:
+  YOU MUST IMMEDIATELY REJECT THE IMAGE. DO NOT GUESS OR INVENT A CROP OR DISEASE.
+  Return STRICTLY this JSON and nothing else:
+  {
+    "isCrop": false,
+    "isAgriculturalCrop": false,
+    "crop": "Non-Agricultural",
+    "disease": "Non-Agricultural Image Detected",
+    "disease_id": "invalid_image",
+    "confidence": 0,
+    "severity": "None",
+    "description": "The uploaded picture does not show an agricultural crop or plant.",
+    "rejectionReason": "The uploaded picture does not appear to be an agricultural crop or plant. Please upload a clear photo of an agricultural plant, leaf, or stem.",
+    "rejectionReasonUr": "اپ لوڈ کردہ تصویر میں زرعی فصل یا پودا موجود نہیں ہے۔ براہ کرم کسی فصل، پتے یا تنے کی واضح تصویر اپ لوڈ کریں۔"
+  }
+
+Only if the image is genuine plant or agricultural material, proceed to diagnosis.
 You have been trained on the following SUPPORTED crops and diseases for Pakistan:
 
 ${TAXONOMY_BLOCK}
 
-INSTRUCTIONS:
-1. First determine: does the image contain a crop, plant leaf, or stem?
-   - If NO: return { "isCrop": false, "message": "Please upload a clear image of a crop or plant leaf." }
-2. Identify the crop. If it matches one of the supported crops above, use that crop's exact name.
-3. Identify the disease. You MUST pick from the taxonomy list above when possible (use the [disease_id] in brackets).
+INSTRUCTIONS FOR VALID AGRICULTURAL CROPS:
+1. Identify the crop. If it matches one of the supported crops above, use that crop's exact name.
+2. Identify the disease. You MUST pick from the taxonomy list above when possible (use the [disease_id] in brackets).
    - If the plant is healthy, set disease to "Healthy" and disease_id to "healthy".
    - If you see a condition not in the list, still describe it but set disease_id to "unknown".
-4. Set confidence (0–100). Be honest — low quality images should get lower scores.
+3. Set confidence (0–100). Be honest — low quality images should get lower scores.
    - Confidence < 70 means the farmer should retake the photo or consult an expert.
-5. Recommended actions & Treatment Safety (DPP Pakistan Compliance):
+4. Recommended actions & Treatment Safety (DPP Pakistan Compliance):
    - ONLY suggest chemicals registered with the Pakistan Department of Plant Protection (DPP).
    - NEVER invent or guess dosages. Refer strictly to the registered label dose or extension officer advice.
    - BANNED SUBSTANCES: NEVER mention or recommend banned/cancelled chemicals in Pakistan (Endosulfan, Monocrotophos, DDT, Dieldrin, Aldrin, Heptachlor, Methyl Parathion, Methamidophos, Phosphamidon, Chlordane).
@@ -126,6 +144,7 @@ INSTRUCTIONS:
 Return ONLY valid JSON, no markdown, no code fences:
 {
   "isCrop": true,
+  "isAgriculturalCrop": true,
   "crop": "Crop name",
   "disease": "Disease name or 'Healthy'",
   "disease_id": "taxonomy_id_or_unknown_or_healthy",
@@ -144,7 +163,7 @@ Return ONLY valid JSON, no markdown, no code fences:
     const userMessage = {
       role: 'user',
       content: [
-        { type: 'text', text: 'Identify the crop and any disease in this image. Output results as JSON.' },
+        { type: 'text', text: 'Step 1: Verify whether this is an agricultural crop or plant. If non-agricultural, reject immediately per Step 1. Step 2: If agricultural, diagnose the crop and disease. Output valid JSON only.' },
         { type: 'image_url', image_url: { url: image } },
       ],
     };
@@ -195,6 +214,32 @@ Return ONLY valid JSON, no markdown, no code fences:
     }
 
     const parsed = JSON.parse(rawContent);
+
+    // ── Agricultural Guardrail Verification ───────────────────────────────────
+    const isNonCrop = parsed.isCrop === false ||
+                      parsed.isAgriculturalCrop === false ||
+                      parsed.disease_id === 'invalid_image' ||
+                      parsed.crop === 'Non-Agricultural' ||
+                      parsed.crop === 'Unknown Non-Plant' ||
+                      (typeof parsed.confidence === 'number' && parsed.confidence === 0 && !parsed.isCrop);
+
+    if (isNonCrop) {
+      return res.status(200).json({
+        isCrop: false,
+        isAgriculturalCrop: false,
+        crop: 'Non-Agricultural',
+        disease: 'Non-Agricultural Image Detected',
+        disease_id: 'invalid_image',
+        confidence: 0,
+        severity: 'None',
+        description: parsed.description || 'The uploaded picture does not appear to be an agricultural crop or plant.',
+        error: parsed.rejectionReason || 'The uploaded picture does not appear to be an agricultural crop or plant. Please upload a clear photo of an agricultural plant, leaf, or stem.',
+        error_ur: parsed.rejectionReasonUr || 'اپ لوڈ کردہ تصویر میں زرعی فصل یا پودا موجود نہیں ہے۔ براہ کرم کسی فصل، پتے یا تنے کی واضح تصویر اپ لوڈ کریں۔',
+        message: parsed.rejectionReason || 'The uploaded picture is not related to agriculture or crops.',
+        rejectionReason: parsed.rejectionReason || 'The uploaded picture does not appear to be an agricultural crop or plant.',
+        rejectionReasonUr: parsed.rejectionReasonUr || 'اپ لوڈ کردہ تصویر میں زرعی فصل یا پودا موجود نہیں ہے۔ براہ کرم کسی فصل، پتے یا تنے کی واضح تصویر اپ لوڈ کریں۔',
+      });
+    }
 
     // Phase 3: RAG Knowledge Base enrichment for grounded diagnosis treatment
     if (parsed.isCrop && parsed.disease_id && parsed.disease_id !== 'healthy') {
