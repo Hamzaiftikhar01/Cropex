@@ -43,36 +43,40 @@ const sampleResult = {
   ],
   recommendedProducts: [
     {
-      id: 'suncrop_sun_cop',
-      name: 'Sun-Cop 50% WP',
-      companyName: 'Suncrop Group Pakistan',
-      company: 'Suncrop Group Pakistan',
-      productType: 'Contact Bactericide / Fungicide',
-      activeIngredient: 'Copper Oxychloride 50% WP',
-      dosage: '250g - 300g per 100 liters of water / acre',
-      labelDosageAcre: '250g - 300g in 100 liters of water per acre',
-      dppRegistrationNo: 'DPP-PK/F-0431/2016',
-      phiDays: 14,
+      id: 'syngenta_amistar_top',
+      name: 'Amistar Top',
+      companyName: 'Syngenta Pakistan Ltd',
+      company: 'Syngenta Pakistan Ltd',
+      productType: 'Systemic Fungicide',
+      activeIngredient: 'Azoxystrobin 200 g/L + Difenoconazole 125 g/L SC',
+      dosage: '200 ml in 100–120 liters of water / acre',
+      labelDosageAcre: '200 ml in 100–120 liters of water per acre',
+      dppRegistrationNo: 'DPP-PK/F-1042/2018',
+      phiDays: 30,
       whoToxicityClass: 'Class III (Slightly Hazardous)',
-      protectiveEquipment: ['Nitrile gloves', 'Dust/mist mask', 'Eye goggles', 'Rubber boots'],
-      officialProductUrl: 'https://www.suncropgroup.com/',
-      description: 'Contact protective broad-spectrum bactericide and fungicide registered with DPP Pakistan. Releases copper ions upon moisture contact, denaturing bacterial enzymes and forming a protective barrier that arrests Xanthomonas spread across leaf and boll surfaces.'
+      protectiveEquipment: ['Nitrile chemical gloves', 'Face mask (N95/FFP2)', 'Eye goggles', 'Rubber boots'],
+      officialUrl: 'https://www.syngenta.com.pk/product/amistar-top',
+      officialProductUrl: 'https://www.syngenta.com.pk/product/amistar-top',
+      url: 'https://www.syngenta.com.pk/product/amistar-top',
+      description: 'Systemic dual-action fungicide registered with DPP Pakistan for preventative and curative control of foliar pathogens.'
     },
     {
-      id: 'bayer_confidor',
-      name: 'Confidor 200 SL',
-      companyName: 'Bayer Crop Science Pakistan',
-      company: 'Bayer Crop Science Pakistan',
-      productType: 'Systemic Insecticide',
-      activeIngredient: 'Imidacloprid 200 g/L SL',
-      dosage: '250 ml in 100L water / acre',
-      labelDosageAcre: '250 ml in 100 liters of water per acre',
-      dppRegistrationNo: 'DPP-PK/I-0198/2014',
-      phiDays: 21,
-      whoToxicityClass: 'Class II (Moderately Hazardous)',
-      protectiveEquipment: ['Chemical resistant gloves', 'Face shield', 'Protective overalls', 'Rubber boots'],
-      officialProductUrl: 'https://www.cropscience.bayer.com.pk/en-pk/products/insecticides/confidor-200-sl.html',
-      description: 'Systemic neonicotinoid targeting sucking pests (whiteflies, thrips, and aphids) that create foliar puncture wounds through which bacterial blight enters, while suppressing the vector of Cotton Leaf Curl Virus (CLCuV).'
+      id: 'fmc_cabrio_top',
+      name: 'Cabrio Top 60 WG',
+      companyName: 'FMC United (Pvt) Ltd Pakistan',
+      company: 'FMC United (Pvt) Ltd Pakistan',
+      productType: 'Broad-Spectrum Fungicide',
+      activeIngredient: 'Pyraclostrobin 5% + Metiram 55% WG',
+      dosage: '300 g in 100 liters of water / acre',
+      labelDosageAcre: '300 g in 100 liters of water per acre',
+      dppRegistrationNo: 'DPP-PK/F-0912/2017',
+      phiDays: 5,
+      whoToxicityClass: 'Class III (Slightly Hazardous)',
+      protectiveEquipment: ['Nitrile gloves', 'Particulate mask', 'Safety goggles', 'Rubber boots'],
+      officialUrl: 'https://ag.fmc.com/pk/en/products/fungicides/cabrio-top',
+      officialProductUrl: 'https://ag.fmc.com/pk/en/products/fungicides/cabrio-top',
+      url: 'https://ag.fmc.com/pk/en/products/fungicides/cabrio-top',
+      description: 'Broad-spectrum fungicide registered with DPP Pakistan offering plant health physiological effects alongside fungal suppression.'
     }
   ]
 };
@@ -235,11 +239,26 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
     ? activeResult.prevention
     : sampleResult.recommendedActions;
 
-  const productsList = (activeResult.dppRegisteredProducts && activeResult.dppRegisteredProducts.length > 0)
+  const rawProducts = (activeResult.dppRegisteredProducts && activeResult.dppRegisteredProducts.length > 0)
     ? activeResult.dppRegisteredProducts
     : (activeResult.recommendedProducts && activeResult.recommendedProducts.length > 0)
     ? activeResult.recommendedProducts
     : sampleResult.recommendedProducts;
+
+  // User requirement: Only display products of FMC and Syngenta (verified scrapper compatibility)
+  const isFmcOrSyngenta = (p) => {
+    if (!p) return false;
+    const comp = (p.company || p.companyName || p.manufacturer || '').toLowerCase();
+    if (comp.includes('syngenta') || comp.includes('fmc')) return true;
+    const id = (p.id || '').toLowerCase();
+    if (id.startsWith('syngenta') || id.startsWith('fmc')) return true;
+    const url = (p.officialUrl || p.officialProductUrl || p.official_url || p.url || '').toLowerCase();
+    if (url.includes('syngenta') || url.includes('fmc.com')) return true;
+    return false;
+  };
+
+  const productsList = (rawProducts || []).filter(isFmcOrSyngenta);
+
 
   const numericConfidence = typeof activeResult.confidence === 'number'
     ? activeResult.confidence

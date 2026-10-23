@@ -164,8 +164,9 @@ export const FALLBACK_DISEASES = [
     ],
     recommendedProducts: [
       { name: 'Amistar Top', company: 'Syngenta Pakistan', activeIngredient: 'Azoxystrobin 200g/L + Difenoconazole 125g/L', url: 'https://www.syngenta.com.pk/product/amistar-top' },
-      { name: 'Nativo 75 WG', company: 'Bayer Crop Science Pakistan', activeIngredient: 'Tebuconazole 50% + Trifloxystrobin 25%', url: 'https://www.cropscience.bayer.com.pk/en-pk/products/fungicides/nativo-75-wg.html' }
+      { name: 'Tilt 250 EC', company: 'Syngenta Pakistan', activeIngredient: 'Propiconazole 250 g/L EC', url: 'https://www.syngenta.com.pk/product/tilt-250-ec' }
     ]
+
   },
   {
     id: 'tomato_early_blight',
@@ -238,7 +239,7 @@ export const FALLBACK_DISEASES = [
     ],
     recommendedProducts: [
       { name: 'Ridomil Gold', company: 'Syngenta Pakistan', activeIngredient: 'Metalaxyl-M 4% + Mancozeb 64% WP', url: 'https://www.syngenta.com.pk/product/ridomil-gold-wg' },
-      { name: 'Infinito', company: 'Bayer Crop Science Pakistan', activeIngredient: 'Fluopicolide + Propamocarb Hydrochloride', url: 'https://www.cropscience.bayer.com.pk/en-pk/products/fungicides/infinito.html' }
+      { name: 'Cabrio Top', company: 'FMC Pakistan', activeIngredient: 'Pyraclostrobin 5% + Metiram 55%', url: 'https://ag.fmc.com/pk/en/products/fungicides/cabrio-top' }
     ]
   },
   {
@@ -260,7 +261,7 @@ export const FALLBACK_DISEASES = [
       'Presence of weed hosts.'
     ],
     recommended_actions: [
-      'Control whitefly population with Confidor.',
+      'Control whitefly population with Polo 500 SC or Talstar.',
       'Uproot and destroy severely infected plants.',
       'Apply neem-based sprays.'
     ],
@@ -274,7 +275,8 @@ export const FALLBACK_DISEASES = [
       'Apply insecticides targeted at whitefly vectors.'
     ],
     recommendedProducts: [
-      { name: 'Confidor', company: 'Bayer Crop Science Pakistan', activeIngredient: 'Imidacloprid 200 SL', url: 'https://www.cropscience.bayer.com.pk/en-pk/products/insecticides/confidor-200-sl.html' }
+      { name: 'Polo 500 SC', company: 'Syngenta Pakistan', activeIngredient: 'Diafenthiuron 500 g/L SC', url: 'https://www.syngenta.com.pk/product/polo-500-sc' },
+      { name: 'Talstar 10 EC', company: 'FMC Pakistan', activeIngredient: 'Bifenthrin 10% EC', url: 'https://ag.fmc.com/pk/en/products/insecticides/talstar-10-ec' }
     ]
   },
   {
@@ -296,7 +298,7 @@ export const FALLBACK_DISEASES = [
       'Excessive nitrogen application.'
     ],
     recommended_actions: [
-      'Apply systemic fungicide (Nativo 75 WG or Amistar Top) immediately.',
+      'Apply systemic fungicide (Amistar Top or Score 250 EC) immediately.',
       'Split nitrogen fertilizer applications.',
       'Maintain shallow standing water.'
     ],
@@ -310,7 +312,7 @@ export const FALLBACK_DISEASES = [
       'Destroy infected straw and stubble after harvest.'
     ],
     recommendedProducts: [
-      { name: 'Nativo 75 WG', company: 'Bayer Crop Science Pakistan', activeIngredient: 'Tebuconazole 50% + Trifloxystrobin 25%', url: 'https://www.cropscience.bayer.com.pk/en-pk/products/fungicides/nativo-75-wg.html' },
+      { name: 'Score 250 EC', company: 'Syngenta Pakistan', activeIngredient: 'Difenoconazole 250 g/L EC', url: 'https://www.syngenta.com.pk/product/score-250-ec' },
       { name: 'Amistar Top', company: 'Syngenta Pakistan', activeIngredient: 'Azoxystrobin 200g/L + Difenoconazole 125g/L', url: 'https://www.syngenta.com.pk/product/amistar-top' }
     ]
   }
@@ -501,7 +503,7 @@ export function searchDiseaseByName(refData, cropName, diseaseName) {
     recommendedActions: found.recommended_actions || found.recommendedActions || [],
     prevention: found.prevention || [],
     bestPractices: found.best_practices || found.bestPractices || [],
-    recommendedProducts: found.recommendedProducts || (refData?.products || FALLBACK_PRODUCTS).filter(p => {
+    recommendedProducts: (found.recommendedProducts || (refData?.products || FALLBACK_PRODUCTS).filter(p => {
       const tgDis = Array.isArray(p.target_diseases) ? p.target_diseases : [];
       return tgDis.some(td => td.toLowerCase().includes(qName) || qName.includes(td.toLowerCase()));
     }).map(p => ({
@@ -511,7 +513,11 @@ export function searchDiseaseByName(refData, cropName, diseaseName) {
       url: p.official_url || p.officialUrl || p.url,
       officialUrl: p.official_url || p.officialUrl || p.url,
       officialProductUrl: p.official_url || p.officialUrl || p.url
-    }))
+    }))).filter(p => {
+      const c = ((p.company || p.companyName || '') + ' ' + (p.url || p.official_url || p.officialUrl || '')).toLowerCase();
+      return c.includes('syngenta') || c.includes('fmc');
+    })
+
   };
 }
 
