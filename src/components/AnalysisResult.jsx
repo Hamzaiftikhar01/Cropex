@@ -674,9 +674,18 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
 
                   <div className="mt-5 pt-4 border-t border-earth-100 dark:border-earth-800">
                     <a
-                      href={product.officialProductUrl || '#'}
+                      href={
+                        product.officialUrl ||
+                        product.officialProductUrl ||
+                        product.official_url ||
+                        product.url ||
+                        `https://www.google.com/search?q=${encodeURIComponent(
+                          (product.name || 'Pesticide') + ' ' + (product.companyName || product.company || 'Pakistan') + ' agricultural label DPP'
+                        )}`
+                      }
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
                       className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-earth-200 bg-earth-50/50 hover:bg-crop-50 hover:text-crop-700 hover:border-crop-300 px-4 py-2.5 text-xs sm:text-sm font-bold text-earth-750 transition-all dark:border-earth-750 dark:bg-earth-850 dark:text-earth-200 dark:hover:bg-crop-950/30 dark:hover:text-crop-300 cursor-pointer"
                     >
                       <span>Official Product Details & Label</span>

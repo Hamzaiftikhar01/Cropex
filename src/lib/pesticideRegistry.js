@@ -442,7 +442,11 @@ export function getRegisteredProductsForDiagnosis(crop, disease) {
       return false;
     });
     return cropMatch && diseaseMatch;
-  });
+  }).map((product) => ({
+    ...product,
+    officialProductUrl: product.officialUrl,
+    url: product.officialUrl,
+  }));
 }
 
 /**

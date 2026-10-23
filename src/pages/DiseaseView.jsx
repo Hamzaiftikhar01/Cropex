@@ -7,6 +7,7 @@ import AnalysisResult from '../components/AnalysisResult';
 import HistoryList from '../components/HistoryList';
 import { analyzeCropImage } from '../services/aiService';
 import { searchDiseaseByName, getMockDiagnosis } from '../lib/referenceData';
+import { getRegisteredProductsForDiagnosis } from '../lib/pesticideRegistry';
 import { calculateDiseaseRisk } from '../utils/agriRules';
 import { BookOpen, Wifi } from 'lucide-react';
 import {
@@ -139,6 +140,9 @@ export default function DiseaseView({
         // Phase 3: preserve RAG verified sources & grounded treatment
         verifiedSources: result.verifiedSources || [],
         groundedTreatment: result.groundedTreatment || null,
+        dppRegisteredProducts:
+          result.dppRegisteredProducts ||
+          getRegisteredProductsForDiagnosis(result.cropName || fieldProfile.cropType, result.disease),
       };
 
       setAnalysisResult(enrichedResult);
@@ -151,12 +155,14 @@ export default function DiseaseView({
       console.warn('API error encountered, using calibrated knowledge fallback:', err);
       
       const kbDetails = searchDiseaseByName(refData, fallbackReport?.crop, fallbackReport?.disease);
+      const fallbackDpp = getRegisteredProductsForDiagnosis(fieldProfile.cropType, fallbackReport?.disease);
       const fallbackResult = {
         ...(fallbackReport || {}),
         ...(kbDetails || {}),
         cropName: fieldProfile.cropType,
         disease: fallbackReport?.disease || 'Unknown',
         isUnindexed: !kbDetails,
+        dppRegisteredProducts: fallbackDpp.length > 0 ? fallbackDpp : undefined,
       };
 
       setAnalysisResult(fallbackResult);
@@ -176,14 +182,15 @@ export default function DiseaseView({
     setAnalysisResult(null);
 
     const mockReport = getMockDiagnosis(refData, fieldProfile.cropType);
-
     const kbDetails = searchDiseaseByName(refData, mockReport?.crop, mockReport?.disease);
+    const mockDpp = getRegisteredProductsForDiagnosis(fieldProfile.cropType, mockReport?.disease);
     const mockResult = {
       ...(mockReport || {}),
       ...(kbDetails || {}),
       cropName: fieldProfile.cropType,
       disease: mockReport?.disease || 'Unknown',
       isUnindexed: !kbDetails,
+      dppRegisteredProducts: mockDpp.length > 0 ? mockDpp : undefined,
     };
 
     setTimeout(() => {

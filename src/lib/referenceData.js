@@ -508,7 +508,9 @@ export function searchDiseaseByName(refData, cropName, diseaseName) {
       name: p.name,
       company: p.company,
       activeIngredient: p.active_ingredient,
-      url: p.official_url
+      url: p.official_url || p.officialUrl || p.url,
+      officialUrl: p.official_url || p.officialUrl || p.url,
+      officialProductUrl: p.official_url || p.officialUrl || p.url
     }))
   };
 }

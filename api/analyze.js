@@ -274,7 +274,9 @@ Return ONLY valid JSON, no markdown, no code fences:
         phiDays: p.phiDays,
         whoToxicityClass: p.whoToxicityClass,
         protectiveEquipment: p.protectiveEquipment,
+        officialUrl: p.officialUrl,
         officialProductUrl: p.officialUrl,
+        url: p.officialUrl,
         description: p.safetyInstructions,
       }));
     }
