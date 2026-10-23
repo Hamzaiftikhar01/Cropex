@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "benchmark:rag": "node scripts/benchmark/evaluate_rag.js",
     "benchmark:advisor": "node scripts/benchmark/evaluate_advisor_engine.js",
-    "benchmark:safety": "node scripts/benchmark/evaluate_treatment_safety.js"
+    "benchmark:safety": "node scripts/benchmark/evaluate_treatment_safety.js",
+    "benchmark:usability": "node scripts/benchmark/evaluate_farmer_usability.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.114.0",

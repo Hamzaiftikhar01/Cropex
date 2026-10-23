@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import { Bot, Sprout, BookOpen, ChevronDown, ChevronUp, ShieldCheck } from 'lucide-react';
+import { Bot, Sprout, BookOpen, ChevronDown, ChevronUp, ShieldCheck, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { generateChatResponse } from '../services/aiService';
+import { startListening, speakText, stopSpeaking, isSpeechRecognitionSupported } from '../lib/voiceService';
 
 function SourcesAccordion({ sources }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -57,7 +58,10 @@ export default function Chatbot({ fieldProfile, weatherData }) {
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [activeSpeechIdx, setActiveSpeechIdx] = useState(null);
   const messagesEndRef = useRef(null);
+  const recognitionRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -68,6 +72,55 @@ export default function Chatbot({ fieldProfile, weatherData }) {
       scrollToBottom();
     }
   }, [messages, isOpen]);
+
+  useEffect(() => {
+    return () => {
+      stopSpeaking();
+      if (recognitionRef.current) recognitionRef.current.stop();
+    };
+  }, []);
+
+  const toggleListening = () => {
+    if (isListening) {
+      if (recognitionRef.current) recognitionRef.current.stop();
+      setIsListening(false);
+      return;
+    }
+
+    if (!isSpeechRecognitionSupported()) {
+      alert('Speech Recognition is not supported in this browser. Please try Chrome or Edge.');
+      return;
+    }
+
+    setIsListening(true);
+    recognitionRef.current = startListening({
+      lang: 'ur-PK',
+      onResult: (transcript, isFinal) => {
+        setInput(transcript);
+        if (isFinal) {
+          setIsListening(false);
+        }
+      },
+      onError: () => setIsListening(false),
+      onEnd: () => setIsListening(false),
+    });
+  };
+
+  const toggleSpeech = (text, idx) => {
+    if (activeSpeechIdx === idx) {
+      stopSpeaking();
+      setActiveSpeechIdx(null);
+      return;
+    }
+
+    stopSpeaking();
+    setActiveSpeechIdx(idx);
+    speakText(text, {
+      lang: 'ur',
+      onEnd: () => setActiveSpeechIdx(null),
+      onError: () => setActiveSpeechIdx(null),
+    });
+  };
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -85,7 +138,7 @@ export default function Chatbot({ fieldProfile, weatherData }) {
       const content = typeof response === 'string' ? response : response.reply;
       const sources = response?.sources || [];
       setMessages([...newMessages, { role: 'assistant', content, sources }]);
-    } catch (_error) {
+    } catch {
       setMessages([...newMessages, { role: 'assistant', content: "I'm sorry, I encountered an error connecting to the AI. Please try again later." }]);
     } finally {
       setIsTyping(false);
@@ -101,10 +154,13 @@ export default function Chatbot({ fieldProfile, weatherData }) {
           <div className="bg-brand-primary text-neutral-surface p-4 flex justify-between items-center shadow-xs">
             <div className="flex items-center gap-2">
               <Bot size={24} className="text-white" aria-hidden="true" />
-              <h3 className="font-bold text-sm tracking-wide">AI Farm Advisor</h3>
+              <h3 className="font-bold text-sm tracking-wide">AI Farm Advisor (اردو / English)</h3>
             </div>
             <button 
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                stopSpeaking();
+                setIsOpen(false);
+              }}
               className="text-brand-surface hover:text-white transition-colors cursor-pointer"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
@@ -127,6 +183,28 @@ export default function Chatbot({ fieldProfile, weatherData }) {
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
                         {msg.content}
                       </ReactMarkdown>
+
+                      {/* Phase 6: Voice Readout Button */}
+                      <div className="mt-2 pt-1.5 border-t border-neutral-border/50 flex items-center justify-between not-prose">
+                        <button
+                          type="button"
+                          onClick={() => toggleSpeech(msg.content, idx)}
+                          className="inline-flex items-center gap-1.5 text-[11px] font-bold text-brand-primary hover:underline cursor-pointer"
+                        >
+                          {activeSpeechIdx === idx ? (
+                            <>
+                              <VolumeX size={13} className="text-red-500 animate-pulse" />
+                              <span className="text-red-600">Stop Voice (آواز بند کریں)</span>
+                            </>
+                          ) : (
+                            <>
+                              <Volume2 size={13} />
+                              <span>Listen (سنیں)</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+
                       {msg.sources && msg.sources.length > 0 && (
                         <SourcesAccordion sources={msg.sources} />
                       )}
@@ -148,15 +226,30 @@ export default function Chatbot({ fieldProfile, weatherData }) {
           </div>
 
           {/* Input Area */}
-          <form onSubmit={handleSend} className="p-3 bg-neutral-surface border-t border-neutral-border flex gap-2">
+          <form onSubmit={handleSend} className="p-3 bg-neutral-surface border-t border-neutral-border flex items-center gap-2">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about crops or weather..."
+              placeholder={isListening ? "سن رہے ہیں (Listening)..." : "Ask in Urdu or English..."}
               className="flex-1 bg-neutral-fill border-none rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-primary outline-none"
               disabled={isTyping}
             />
+
+            {/* Microphone Urdu Voice Input Button */}
+            <button
+              type="button"
+              onClick={toggleListening}
+              title={isListening ? "Listening (بولنا بند کریں)" : "Urdu Voice Input (بول کر لکھیں)"}
+              className={`p-2 rounded-xl transition-all cursor-pointer ${
+                isListening
+                  ? 'bg-red-500 text-white animate-pulse'
+                  : 'bg-neutral-fill hover:bg-neutral-border text-neutral-high'
+              }`}
+            >
+              {isListening ? <MicOff size={16} /> : <Mic size={16} />}
+            </button>
+
             <button
               type="submit"
               disabled={!input.trim() || isTyping}

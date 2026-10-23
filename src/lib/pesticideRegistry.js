@@ -427,13 +427,19 @@ export function isPesticideBanned(nameOrActive) {
  */
 export function getRegisteredProductsForDiagnosis(crop, disease) {
   const cNorm = (crop || '').toLowerCase().trim();
-  const dNorm = (disease || '').toLowerCase().trim();
+  const dNorm = (disease || '').toLowerCase().trim().replace(/[()\-_]/g, ' ');
 
   return REGISTERED_PESTICIDES_PK.filter((product) => {
     const cropMatch = product.targetCrops.some((c) => c === cNorm || cNorm.includes(c));
     const diseaseMatch = product.targetDiseases.some((d) => {
-      const lowerD = d.toLowerCase();
-      return dNorm.includes(lowerD) || lowerD.includes(dNorm);
+      const lowerD = d.toLowerCase().replace(/[()\-_]/g, ' ');
+      if (dNorm.includes(lowerD) || lowerD.includes(dNorm)) return true;
+      const dTokens = dNorm.split(/\s+/).filter(Boolean);
+      const prodTokens = lowerD.split(/\s+/).filter(Boolean);
+      const common = dTokens.filter((t) => prodTokens.includes(t) && t.length > 2);
+      if (common.length >= 2) return true;
+      if (dNorm.includes('clcu') && lowerD.includes('clcu')) return true;
+      return false;
     });
     return cropMatch && diseaseMatch;
   });

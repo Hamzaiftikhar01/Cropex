@@ -1,7 +1,8 @@
 import { useCallback, useRef, useState } from 'react';
 import LoadingSpinner from './LoadingSpinner';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Zap } from 'lucide-react';
 import { validateImageFile, compressImage, ACCEPTED_IMAGE_TYPES } from '../services/aiService';
+import { isLowBandwidthMode, compressImageForLowBandwidth } from '../lib/offlineQueue';
 
 function UploadCard({
   file,
@@ -17,6 +18,8 @@ function UploadCard({
   const [isCompressing, setIsCompressing] = useState(false);
   const inputRef = useRef(null);
 
+  const lowBandwidthActive = isLowBandwidthMode();
+
   const handleFile = useCallback(async (selectedFile) => {
     setLocalError(null);
 
@@ -31,9 +34,13 @@ function UploadCard({
     // Compress client-side (resize to max 1024px, JPEG 0.82)
     setIsCompressing(true);
     try {
-      const compressedDataUrl = await compressImage(selectedFile);
+      let compressedDataUrl = await compressImage(selectedFile);
+      if (isLowBandwidthMode()) {
+        // Phase 6: Extra compression for rural 2G/EDGE networks (< 200KB)
+        compressedDataUrl = await compressImageForLowBandwidth(compressedDataUrl, 720, 0.55);
+      }
       onFileChange(selectedFile, compressedDataUrl);
-    } catch (err) {
+    } catch {
       setLocalError('Failed to process image. Please try a different file.');
     } finally {
       setIsCompressing(false);
@@ -62,6 +69,13 @@ function UploadCard({
 
   return (
     <div className="rounded-2xl border border-earth-100 dark:border-earth-800 bg-white dark:bg-earth-900 p-5 sm:p-6 shadow-soft transition-colors duration-200">
+      {lowBandwidthActive && (
+        <div className="mb-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20">
+          <Zap size={13} className="shrink-0" />
+          <span>2G Low-Bandwidth Mode Active — High Compression (&lt;200KB)</span>
+        </div>
+      )}
+
       {displayError && (
         <div className="mb-5 rounded-xl bg-red-50 p-3.5 text-xs text-red-800 ring-1 ring-red-100 flex items-start gap-3 text-left dark:bg-red-950/20 dark:text-red-300 dark:ring-red-900/30">
           <AlertTriangle size={18} className="text-red-600 dark:text-red-400 mt-0.5" aria-hidden="true" />

@@ -1,0 +1,199 @@
+[
+  {
+    "id": "VOICE_01",
+    "category": "urdu_voice_processing",
+    "language": "ur-PK",
+    "transcript": "میری گندم کے پتوں پر پیلے دھبے اور پاؤڈر بن رہا ہے، کیا علاج کریں؟",
+    "expectedKeywords": ["گندم", "پیلے دھبے", "پاؤڈر", "علاج"],
+    "expectedCrop": "wheat",
+    "expectedIntent": "disease_diagnosis"
+  },
+  {
+    "id": "VOICE_02",
+    "category": "urdu_voice_processing",
+    "language": "ur-PK",
+    "transcript": "کپاس کی فصل پر سفید مکھی کا شدید حملہ ہے، کون سا سپرے رجسٹرڈ ہے؟",
+    "expectedKeywords": ["کپاس", "سفید مکھی", "سپرے", "رجسٹرڈ"],
+    "expectedCrop": "cotton",
+    "expectedIntent": "chemical_treatment"
+  },
+  {
+    "id": "VOICE_03",
+    "category": "urdu_voice_processing",
+    "language": "ur-PK",
+    "transcript": "دھان یعنی چاول کے پتوں کے کنارے سوکھ رہے ہیں، پانی کا کیا کریں؟",
+    "expectedKeywords": ["دھان", "چاول", "کنارے سوکھ", "پانی"],
+    "expectedCrop": "rice",
+    "expectedIntent": "water_management"
+  },
+  {
+    "id": "VOICE_04",
+    "category": "urdu_voice_processing",
+    "language": "ur-PK",
+    "transcript": "مکئی میں فال آرمی ورم کے کیڑے آ گئے ہیں فوری حل بتائیں",
+    "expectedKeywords": ["مکئی", "فال آرمی ورم", "کیڑے", "حل"],
+    "expectedCrop": "maize",
+    "expectedIntent": "pest_outbreak"
+  },
+  {
+    "id": "VOICE_05",
+    "category": "urdu_voice_processing",
+    "language": "ur-PK",
+    "transcript": "آم کے باغ میں فنگس اور کالک لگی ہے پھل گر رہا ہے",
+    "expectedKeywords": ["آم", "باغ", "فنگس", "کالک", "پھل"],
+    "expectedCrop": "mango",
+    "expectedIntent": "disease_diagnosis"
+  },
+  {
+    "id": "WHATSAPP_01",
+    "category": "whatsapp_bot_interface",
+    "crop": "wheat",
+    "disease": "Yellow Rust",
+    "district": "Faisalabad",
+    "userQuery": "گندم کے پتوں پر زرد رنگ کی دھاریاں ہیں",
+    "mustContainRemedy": true,
+    "mustContainVoiceNote": true,
+    "mustContainAgronomistLink": true
+  },
+  {
+    "id": "WHATSAPP_02",
+    "category": "whatsapp_bot_interface",
+    "crop": "cotton",
+    "disease": "Cotton Leaf Curl Virus (CLCuV)",
+    "district": "Rahim Yar Khan",
+    "userQuery": "کپاس کے پتے اوپر مڑ رہے ہیں",
+    "mustContainRemedy": true,
+    "mustContainVoiceNote": true,
+    "mustContainAgronomistLink": true
+  },
+  {
+    "id": "WHATSAPP_03",
+    "category": "whatsapp_bot_interface",
+    "crop": "rice",
+    "disease": "Bacterial Leaf Blight",
+    "district": "Gujranwala",
+    "userQuery": "چاول کے پتے کناروں سے پیلے اور خشک ہو رہے ہیں",
+    "mustContainRemedy": true,
+    "mustContainVoiceNote": true,
+    "mustContainAgronomistLink": true
+  },
+  {
+    "id": "WHATSAPP_04",
+    "category": "whatsapp_bot_interface",
+    "crop": "sugarcane",
+    "disease": "Red Rot",
+    "district": "Faisalabad",
+    "userQuery": "کماد کا گنا اندر سے لال نکل رہا ہے",
+    "mustContainRemedy": true,
+    "mustContainVoiceNote": true,
+    "mustContainAgronomistLink": true
+  },
+  {
+    "id": "OFFLINE_01",
+    "category": "offline_queue_recovery",
+    "crop": "wheat",
+    "cropHint": "wheat",
+    "district": "Bahawalpur",
+    "hasInternet": false,
+    "expectedFirstAid": true
+  },
+  {
+    "id": "OFFLINE_02",
+    "category": "offline_queue_recovery",
+    "crop": "cotton",
+    "cropHint": "cotton",
+    "district": "Multan",
+    "hasInternet": false,
+    "expectedFirstAid": true
+  },
+  {
+    "id": "OFFLINE_03",
+    "category": "offline_queue_recovery",
+    "crop": "rice",
+    "cropHint": "rice",
+    "district": "Sheikhupura",
+    "hasInternet": false,
+    "expectedFirstAid": true
+  },
+  {
+    "id": "OFFLINE_04",
+    "category": "offline_queue_recovery",
+    "crop": "maize",
+    "cropHint": "maize",
+    "district": "Sahiwal",
+    "hasInternet": false,
+    "expectedFirstAid": true
+  },
+  {
+    "id": "BANDWIDTH_01",
+    "category": "low_bandwidth_compression",
+    "initialSizeBytes": 2450000,
+    "maxAllowedCompressedBytes": 204800,
+    "targetMaxDimension": 720,
+    "testCase": "High resolution mobile phone camera photo (4K)"
+  },
+  {
+    "id": "BANDWIDTH_02",
+    "category": "low_bandwidth_compression",
+    "initialSizeBytes": 1850000,
+    "maxAllowedCompressedBytes": 204800,
+    "targetMaxDimension": 720,
+    "testCase": "Field leaf close-up in direct sunlight"
+  },
+  {
+    "id": "BANDWIDTH_03",
+    "category": "low_bandwidth_compression",
+    "initialSizeBytes": 950000,
+    "maxAllowedCompressedBytes": 204800,
+    "targetMaxDimension": 720,
+    "testCase": "Standard 1080p crop scan photo"
+  },
+  {
+    "id": "SMS_01",
+    "category": "sms_outbreak_alerts",
+    "phone": "03001234567",
+    "telco": "Jazz",
+    "district": "Multan",
+    "crop": "Cotton",
+    "disease": "Whitefly & CLCuV",
+    "riskLevel": "High",
+    "expectedValid": true,
+    "expectedNormalized": "0300 1234567"
+  },
+  {
+    "id": "SMS_02",
+    "category": "sms_outbreak_alerts",
+    "phone": "+923459876543",
+    "telco": "Telenor",
+    "district": "Faisalabad",
+    "crop": "Wheat",
+    "disease": "Yellow Rust",
+    "riskLevel": "High",
+    "expectedValid": true,
+    "expectedNormalized": "0345 9876543"
+  },
+  {
+    "id": "SMS_03",
+    "category": "sms_outbreak_alerts",
+    "phone": "923125554321",
+    "telco": "Zong",
+    "district": "Gujranwala",
+    "crop": "Rice",
+    "disease": "Bacterial Blight",
+    "riskLevel": "Medium",
+    "expectedValid": true,
+    "expectedNormalized": "0312 5554321"
+  },
+  {
+    "id": "SMS_04",
+    "category": "sms_outbreak_alerts",
+    "phone": "0421234567",
+    "telco": "Invalid Landline",
+    "district": "Lahore",
+    "crop": "Wheat",
+    "disease": "Rust",
+    "riskLevel": "High",
+    "expectedValid": false,
+    "expectedNormalized": null
+  }
+]

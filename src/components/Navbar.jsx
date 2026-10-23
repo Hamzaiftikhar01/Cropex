@@ -1,12 +1,24 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Languages, Sun, Moon, User, Settings, LogOut, Sprout } from 'lucide-react';
+import { Languages, Sun, Moon, User, Settings, LogOut, Sprout, MessageSquare, Bell, Wifi, WifiOff } from 'lucide-react';
+import WhatsAppBotModal from './WhatsAppBotModal';
+import SmsAlertModal from './SmsAlertModal';
+import { isLowBandwidthMode, setLowBandwidthMode, getOfflineQueue } from '../lib/offlineQueue';
 
 function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout, darkMode, onToggleDarkMode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [whatsappModalOpen, setWhatsappModalOpen] = useState(false);
+  const [smsModalOpen, setSmsModalOpen] = useState(false);
+  const [lowBandwidth, setLowBandwidth] = useState(false);
+  const [offlineCount, setOfflineCount] = useState(0);
   const { language, toggleLanguage, t } = useLanguage();
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    setLowBandwidth(isLowBandwidthMode());
+    setOfflineCount(getOfflineQueue().length);
+  }, []);
 
   const navLinks = [
     { label: t('dashboard'), view: 'dashboard' },
@@ -89,12 +101,58 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
         </ul>
 
         {/* Right Action Controls */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-2 lg:gap-2.5">
+          {/* WhatsApp Bot Simulation Launcher */}
+          <button
+            type="button"
+            onClick={() => setWhatsappModalOpen(true)}
+            className="h-9 inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 lg:px-3 text-xs font-bold transition shadow-xs cursor-pointer"
+            title="Open WhatsApp Farm Assistant (واٹس ایپ بوٹ)"
+          >
+            <MessageSquare size={14} />
+            <span>WhatsApp Bot</span>
+          </button>
+
+          {/* District SMS Outbreak Alerts */}
+          <button
+            type="button"
+            onClick={() => setSmsModalOpen(true)}
+            className="h-9 inline-flex items-center gap-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 dark:bg-amber-950/40 dark:text-amber-200 dark:border-amber-700/60 px-2 lg:px-2.5 text-xs font-bold transition shadow-xs cursor-pointer"
+            title="District Outbreak Emergency SMS Alerts"
+          >
+            <Bell size={14} className="text-amber-600 dark:text-amber-400" />
+            <span className="hidden lg:inline">Alerts</span>
+          </button>
+
+          {/* Low-Bandwidth 2G Mode Toggle */}
+          <button
+            type="button"
+            onClick={() => {
+              const next = !lowBandwidth;
+              setLowBandwidthMode(next);
+              setLowBandwidth(next);
+            }}
+            className={`h-9 inline-flex items-center gap-1.5 rounded-xl px-2 lg:px-2.5 text-xs font-bold border transition shadow-xs cursor-pointer ${
+              lowBandwidth
+                ? 'bg-blue-600 text-white border-blue-600'
+                : 'bg-neutral-fill border-neutral-border text-neutral-medium hover:text-neutral-high'
+            }`}
+            title="Toggle Rural 2G / Low-Bandwidth Mode"
+          >
+            {lowBandwidth ? <WifiOff size={14} /> : <Wifi size={14} />}
+            <span className="hidden xl:inline">{lowBandwidth ? '2G' : 'Speed'}</span>
+            {offlineCount > 0 && (
+              <span className="px-1.5 py-0.5 rounded-full bg-amber-500 text-white text-[9px] font-bold">
+                {offlineCount}
+              </span>
+            )}
+          </button>
+
           {/* Scan Leaf Button (Primary CTA) */}
           <a
             href="#upload"
             onClick={handleScanClick}
-            className="h-9 inline-flex items-center justify-center rounded-xl bg-brand-primary px-4 text-xs lg:text-sm font-semibold text-neutral-surface shadow-sm transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand-primary cursor-pointer"
+            className="h-9 inline-flex items-center justify-center rounded-xl bg-brand-primary px-3 lg:px-4 text-xs lg:text-sm font-semibold text-neutral-surface shadow-sm transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand-primary cursor-pointer"
           >
             {t('scanLeaf')}
           </a>
@@ -102,10 +160,10 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
           {/* Language Toggle Button */}
           <button
             onClick={() => toggleLanguage()}
-            className="h-9 inline-flex items-center justify-center rounded-xl bg-neutral-fill border border-neutral-border px-3 text-xs font-bold text-neutral-high shadow-sm hover:bg-neutral-border focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors cursor-pointer"
+            className="h-9 inline-flex items-center justify-center rounded-xl bg-neutral-fill border border-neutral-border px-2.5 text-xs font-bold text-neutral-high shadow-sm hover:bg-neutral-border focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors cursor-pointer"
             title="Toggle Language (English / Urdu / Punjabi)"
           >
-            <Languages size={16} className="mr-1" aria-hidden="true" />
+            <Languages size={15} className="mr-1" aria-hidden="true" />
             {getLanguageLabel()}
           </button>
 
@@ -236,6 +294,18 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
               </div>
             )}
             <button
+              onClick={() => { setWhatsappModalOpen(true); setMenuOpen(false); }}
+              className="text-left rounded-xl px-3.5 py-2.5 text-xs font-bold text-emerald-700 dark:text-emerald-300 hover:bg-neutral-fill"
+            >
+              <MessageSquare size={14} className="inline mr-2 text-emerald-600" aria-hidden="true" /> WhatsApp Farm Bot (واٹس ایپ)
+            </button>
+            <button
+              onClick={() => { setSmsModalOpen(true); setMenuOpen(false); }}
+              className="text-left rounded-xl px-3.5 py-2.5 text-xs font-bold text-amber-700 dark:text-amber-300 hover:bg-neutral-fill"
+            >
+              <Bell size={14} className="inline mr-2 text-amber-600" aria-hidden="true" /> District Outbreak Alerts (ایمرجنسی الرٹ)
+            </button>
+            <button
               onClick={() => { toggleLanguage(); setMenuOpen(false); }}
               className="text-left rounded-xl px-3.5 py-2.5 text-xs font-semibold text-neutral-medium hover:bg-neutral-fill"
             >
@@ -249,7 +319,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
             </button>
             {currentUser && (
               <button
-                onClick={(e) => {
+                onClick={() => {
                   onLogout();
                   setMenuOpen(false);
                 }}
@@ -261,6 +331,17 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
           </div>
         </div>
       )}
+
+      {/* Phase 6: WhatsApp Bot & SMS Emergency Modals */}
+      <WhatsAppBotModal
+        isOpen={whatsappModalOpen}
+        onClose={() => setWhatsappModalOpen(false)}
+      />
+
+      <SmsAlertModal
+        isOpen={smsModalOpen}
+        onClose={() => setSmsModalOpen(false)}
+      />
     </header>
   );
 }

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import Hero from '../components/Hero';
 import UploadCard from '../components/UploadCard';
@@ -7,7 +8,16 @@ import HistoryList from '../components/HistoryList';
 import { analyzeCropImage } from '../services/aiService';
 import { searchDiseaseByName, getMockDiagnosis } from '../lib/referenceData';
 import { calculateDiseaseRisk } from '../utils/agriRules';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, Wifi } from 'lucide-react';
+import {
+  isDeviceOnline,
+  getOfflineQueue,
+  addScanToOfflineQueue,
+  syncOfflineQueue,
+  clearOfflineQueue,
+  getLocalQuickFirstAid,
+  onNetworkChange,
+} from '../lib/offlineQueue';
 
 export default function DiseaseView({
   file,
@@ -29,6 +39,36 @@ export default function DiseaseView({
   refData
 }) {
   const { t } = useLanguage();
+  const [offlineScans, setOfflineScans] = useState([]);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncMessage, setSyncMessage] = useState('');
+
+  useEffect(() => {
+    setOfflineScans(getOfflineQueue());
+    const cleanup = onNetworkChange(() => {
+      setOfflineScans(getOfflineQueue());
+    });
+    return cleanup;
+  }, []);
+
+  const handleSyncOffline = async () => {
+    if (offlineScans.length === 0 || isSyncing) return;
+    setIsSyncing(true);
+    setSyncMessage('Syncing pending scans with cloud AI...');
+    try {
+      const results = await syncOfflineQueue((done, total) => {
+        setSyncMessage(`Synced ${done}/${total} scans...`);
+      });
+      const successful = results.filter(r => r.success);
+      setOfflineScans(getOfflineQueue());
+      setSyncMessage(`Successfully synced ${successful.length} of ${results.length} scans!`);
+      setTimeout(() => setSyncMessage(''), 4000);
+    } catch {
+      setSyncMessage('Failed to sync offline scans. Please check your connection.');
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   const riskInfo = calculateDiseaseRisk(fieldProfile.cropType, weatherData);
   const scopedHistory = (history || []).filter(h => !h.crop || h.crop === fieldProfile.cropType);
@@ -43,6 +83,34 @@ export default function DiseaseView({
     const fallbackReport = getMockDiagnosis(refData, fieldProfile.cropType);
     // Phase 2: pass crop hint so VLM uses scoped prompt
     const cropHint = fieldProfile.cropType?.toLowerCase();
+
+    // Phase 6: Offline field scan detection and local queueing
+    if (!isDeviceOnline()) {
+      addScanToOfflineQueue({
+        image: preview,
+        cropHint,
+        cropName: fieldProfile.cropType,
+        district: fieldProfile.district,
+      });
+      setOfflineScans(getOfflineQueue());
+      const quickHelp = getLocalQuickFirstAid(cropHint);
+      setIsAnalyzing(false);
+      setAnalysisResult({
+        cropName: fieldProfile.cropType,
+        disease: 'Saved to Offline Queue (آف لائن محفوظ)',
+        confidence: 100,
+        severity: 'Moderate',
+        description: 'آپ کا انٹرنیٹ منقطع ہے۔ یہ تصویر اور فیلڈ ڈیٹا آپ کے فون پر محفوظ کر دیا گیا ہے۔ انٹرنیٹ بحال ہوتے ہی خودکار طور پر سرور سے تفصیلی تشخیص سنک ہو جائے گی۔',
+        visibleSymptoms: quickHelp?.commonDiseases?.[0]?.symptoms || ['Visual leaf symptoms saved for sync.'],
+        likelyCauses: ['Offline rural connection'],
+        recommendedActions: [
+          quickHelp?.commonDiseases?.[0]?.emergencyFirstAid || 'Maintain good drainage and isolate affected plants.',
+          'Connect to mobile network or Wi-Fi to synchronize with AI diagnostic server.',
+        ],
+        recommendedProducts: [],
+      });
+      return;
+    }
 
     try {
       const result = await analyzeCropImage(file, cropHint);
@@ -200,6 +268,50 @@ export default function DiseaseView({
         {/* Upload + History Grid */}
         <div className="grid gap-6 lg:grid-cols-3 items-start">
           <div className="lg:col-span-2 space-y-4">
+            {/* Phase 6: Rural Offline Scans Queued Banner */}
+            {offlineScans.length > 0 && (
+              <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-soft animate-in fade-in duration-200">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0 font-bold text-sm">
+                    {offlineScans.length}
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-earth-900 dark:text-earth-100 flex items-center gap-2">
+                      <span>Offline Scans Queued (آف لائن محفوظ اسکینز)</span>
+                      <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
+                        {offlineScans.length} Pending
+                      </span>
+                    </h4>
+                    <p className="text-xs text-earth-600 dark:text-earth-400 mt-0.5">
+                      {syncMessage || 'Field scans saved locally without internet. Click sync to process with AI when online.'}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                  <button
+                    type="button"
+                    onClick={handleSyncOffline}
+                    disabled={isSyncing}
+                    className="px-4 py-2 text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 disabled:opacity-50 rounded-xl shadow-sm transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+                  >
+                    <Wifi size={14} className={isSyncing ? 'animate-pulse' : ''} />
+                    <span>{isSyncing ? 'Syncing...' : 'Sync Scans (سنک کریں)'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      clearOfflineQueue();
+                      setOfflineScans([]);
+                    }}
+                    disabled={isSyncing}
+                    className="px-3 py-2 text-xs font-medium text-earth-600 hover:text-earth-900 dark:text-earth-400 dark:hover:text-earth-200 transition-colors cursor-pointer"
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+            )}
+
             <UploadCard
               file={file}
               preview={preview}

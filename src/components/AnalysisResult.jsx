@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { downloadPdfReport } from '../utils/pdfGenerator';
 import { downloadWordReport } from '../utils/docGenerator';
 import ExpertEscalationModal from './ExpertEscalationModal';
+import { speakText, stopSpeaking } from '../lib/voiceService';
 
 const sampleResult = {
   crop: 'Cotton',
@@ -132,8 +133,13 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
   const [activeResult, setActiveResult] = useState(sampleResult);
   const [loadingStep, setLoadingStep] = useState(0);
   const [isEscalationOpen, setIsEscalationOpen] = useState(false);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
   const isDemo = !result && !isAnalyzing && !error;
+
+  useEffect(() => {
+    return () => stopSpeaking();
+  }, []);
 
   useEffect(() => {
     if (result) {
@@ -242,6 +248,24 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
   const isLowConfidence = numericConfidence < 70;
   const needsEscalation = Boolean(activeResult.requiresExpertEscalation || isHighSeverity || isLowConfidence);
 
+  const handleToggleAudioReport = () => {
+    if (isPlayingAudio) {
+      stopSpeaking();
+      setIsPlayingAudio(false);
+      return;
+    }
+
+    setIsPlayingAudio(true);
+    const primaryProduct = productsList[0];
+    const speechSummary = `تشخیص برائے ${finalCropName}۔ بیماری: ${finalDisease}۔ شدت: ${severityVal}، یقین: ${confidenceVal}۔ تجویز کردہ رجسٹرڈ دوا: ${primaryProduct?.name || 'محکمہ زراعت سے تصدیق شدہ دوا'}۔ خوراک: ${primaryProduct?.labelDosageAcre || primaryProduct?.dosage || 'لیبل کے مطابق'}۔ حفاظتی وقفہ: ${primaryProduct?.phiDays ? primaryProduct.phiDays + ' دن' : 'ہدایات کے مطابق'}۔ سپرے کے دوران دستانے اور حفاظتی ماسک کا استعمال لازمی کریں۔`;
+
+    speakText(speechSummary, {
+      lang: 'ur',
+      onEnd: () => setIsPlayingAudio(false),
+      onError: () => setIsPlayingAudio(false),
+    });
+  };
+
   return (
     <section id="results" className="border-t border-earth-100 bg-earth-50/40 py-12 sm:py-16 dark:border-earth-850 dark:bg-earth-900/40 transition-colors">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -258,6 +282,34 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+            {/* Phase 6: Voice Readout Button */}
+            <button
+              type="button"
+              onClick={handleToggleAudioReport}
+              className={`h-10 inline-flex items-center gap-2 rounded-xl px-4 text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer ${
+                isPlayingAudio
+                  ? 'bg-red-500 text-white animate-pulse'
+                  : 'border border-emerald-300 bg-emerald-50 text-emerald-900 hover:bg-emerald-100 dark:border-emerald-700/60 dark:bg-emerald-950/40 dark:text-emerald-200'
+              }`}
+            >
+              {isPlayingAudio ? (
+                <>
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+                  </svg>
+                  <span>Stop Voice (آواز بند کریں)</span>
+                </>
+              ) : (
+                <>
+                  <svg className="h-4 w-4 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  </svg>
+                  <span>Listen (رپورٹ سنیں)</span>
+                </>
+              )}
+            </button>
+
             <button
               type="button"
               onClick={() => setIsEscalationOpen(true)}
