@@ -55,9 +55,9 @@ const sampleResult = {
       phiDays: 30,
       whoToxicityClass: 'Class III (Slightly Hazardous)',
       protectiveEquipment: ['Nitrile chemical gloves', 'Face mask (N95/FFP2)', 'Eye goggles', 'Rubber boots'],
-      officialUrl: 'https://www.syngenta.com.pk/product/amistar-top',
-      officialProductUrl: 'https://www.syngenta.com.pk/product/amistar-top',
-      url: 'https://www.syngenta.com.pk/product/amistar-top',
+      officialUrl: 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02',
+      officialProductUrl: 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02',
+      url: 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02',
       description: 'Systemic dual-action fungicide registered with DPP Pakistan for preventative and curative control of foliar pathogens.'
     },
     {
@@ -80,6 +80,67 @@ const sampleResult = {
     }
   ]
 };
+
+/**
+ * Resolves verified live official website links for FMC and Syngenta Pakistan products.
+ */
+export function resolveOfficialProductUrl(product) {
+  if (!product) return '#';
+  const rawUrl = (product.officialUrl || product.officialProductUrl || product.official_url || product.url || '').trim();
+  const nameLower = (product.name || '').toLowerCase();
+  const companyLower = (product.company || product.companyName || product.manufacturer || '').toLowerCase();
+
+  // Syngenta Pakistan Verified Product Routing
+  if (companyLower.includes('syngenta') || rawUrl.includes('syngenta.com.pk') || (product.id && product.id.startsWith('syngenta_'))) {
+    if (nameLower.includes('amistar') || rawUrl.includes('amistar')) {
+      return 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02';
+    }
+    if (nameLower.includes('tilt') || rawUrl.includes('tilt')) {
+      return 'https://www.syngenta.com.pk/product/crop-protection/tilt-250-ec-01';
+    }
+    if (nameLower.includes('score') || rawUrl.includes('score')) {
+      return 'https://www.syngenta.com.pk/product/crop-protection/score-250-ec-01';
+    }
+    if (nameLower.includes('polo') || rawUrl.includes('polo')) {
+      return 'https://www.syngenta.com.pk/product/crop-protection/polo-500-sc-01';
+    }
+    if (nameLower.includes('match') || rawUrl.includes('match')) {
+      return 'https://www.syngenta.com.pk/product/match';
+    }
+    if (nameLower.includes('ridomil') || rawUrl.includes('ridomil')) {
+      return 'https://www.syngenta.com.pk/product/crop-protection/fungicides';
+    }
+    if (rawUrl && rawUrl.startsWith('http')) return rawUrl;
+    return 'https://www.syngenta.com.pk/product/crop-protection';
+  }
+
+  // FMC Pakistan Verified Product Routing
+  if (companyLower.includes('fmc') || rawUrl.includes('fmc.com') || (product.id && product.id.startsWith('fmc_'))) {
+    if (nameLower.includes('cabrio') || rawUrl.includes('cabrio')) {
+      return 'https://ag.fmc.com/pk/en/products/fungicides/cabrio-top';
+    }
+    if (nameLower.includes('talstar') || rawUrl.includes('talstar')) {
+      return 'https://ag.fmc.com/pk/en/products/insecticides/talstar';
+    }
+    if (nameLower.includes('ferterra') || rawUrl.includes('ferterra')) {
+      return 'https://ag.fmc.com/pk/en/products/insecticides/ferterra';
+    }
+    if (nameLower.includes('coragen') || rawUrl.includes('coragen')) {
+      return 'https://ag.fmc.com/pk/en/products/insecticides/coragen';
+    }
+    if (nameLower.includes('steward') || rawUrl.includes('steward')) {
+      return 'https://ag.fmc.com/pk/en/products/insecticides';
+    }
+    if (rawUrl && rawUrl.startsWith('http')) return rawUrl;
+    return 'https://ag.fmc.com/pk/en/products';
+  }
+
+  if (rawUrl && rawUrl.startsWith('http')) return rawUrl;
+
+  return `https://www.google.com/search?q=${encodeURIComponent(
+    (product.name || 'Pesticide') + ' ' + (product.companyName || product.company || 'Pakistan') + ' agricultural label DPP'
+  )}`;
+}
 
 function getPathogenDetails(crop, disease) {
   const norm = (disease || '').toLowerCase();
@@ -693,15 +754,7 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
 
                   <div className="mt-5 pt-4 border-t border-earth-100 dark:border-earth-800">
                     <a
-                      href={
-                        product.officialUrl ||
-                        product.officialProductUrl ||
-                        product.official_url ||
-                        product.url ||
-                        `https://www.google.com/search?q=${encodeURIComponent(
-                          (product.name || 'Pesticide') + ' ' + (product.companyName || product.company || 'Pakistan') + ' agricultural label DPP'
-                        )}`
-                      }
+                      href={resolveOfficialProductUrl(product)}
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}

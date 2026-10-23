@@ -103,7 +103,7 @@ export const REGISTERED_PESTICIDES_PK = [
     protectiveEquipment: ['Nitrile chemical gloves', 'Face mask (N95/FFP2)', 'Eye goggles', 'Rubber boots'],
     safetyInstructions: 'Do not spray against the wind. Wash spray equipment away from water channels. Store under lock and key away from food grains.',
     safetyInstructionsUr: 'ہوا کے رخ کے مخالف اسپرے نہ کریں۔ اسپرے پمپ کو نہروں اور کھالوں سے دور دھوئیں، خوراک اور چارے سے دور رکھیں۔',
-    officialUrl: 'https://www.syngenta.com.pk/product/amistar-top',
+    officialUrl: 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02',
   },
   {
     id: 'bayer_nativo_wheat',
@@ -165,7 +165,7 @@ export const REGISTERED_PESTICIDES_PK = [
     protectiveEquipment: ['Chemical gloves', 'Vapour respirator', 'Goggles'],
     safetyInstructions: 'Apply at early panicle emergence or at first sign of spindle-shaped leaf lesions.',
     safetyInstructionsUr: 'منجھر نکلنے کے ابتدائی مرحلے یا پتوں پر دھبے ظاہر ہوتے ہی سپرے کریں۔',
-    officialUrl: 'https://www.syngenta.com.pk/product/score-250-ec',
+    officialUrl: 'https://www.syngenta.com.pk/product/crop-protection/score-250-ec-01',
   },
   {
     id: 'suncrop_sun_cop_rice',
@@ -207,7 +207,7 @@ export const REGISTERED_PESTICIDES_PK = [
     protectiveEquipment: ['Chemical gloves', 'Face mask', 'Eye protection'],
     safetyInstructions: 'Crucial for Late Blight. Apply preventatively when Wallin or cool humid weather conditions persist.',
     safetyInstructionsUr: 'جھلساؤ کے لیے بنیادی دوا ہے۔ ٹھنڈے اور مرطوب موسم میں بیماری ظاہر ہونے سے پہلے حفاظتی سپرے کریں۔',
-    officialUrl: 'https://www.syngenta.com.pk/product/ridomil-gold-wg',
+    officialUrl: 'https://www.syngenta.com.pk/product/crop-protection/fungicides',
   },
   {
     id: 'bayer_infinito_potato',
@@ -309,7 +309,7 @@ export const REGISTERED_PESTICIDES_PK = [
     protectiveEquipment: ['Chemical gloves', 'Vapour respirator', 'Goggles', 'Overalls'],
     safetyInstructions: 'Vapour phase action reaches leaf undersides. Spray during early morning or late afternoon.',
     safetyInstructionsUr: 'پتوں کے نچلے حصے پر چھپی سفید مکھی کے خاتمے کے لیے گیس ایکشن کے تحت کام کرتی ہے۔ صبح یا عصر کے وقت سپرے کریں۔',
-    officialUrl: 'https://www.syngenta.com.pk/product/polo-500-sc',
+    officialUrl: 'https://www.syngenta.com.pk/product/crop-protection/polo-500-sc-01',
   },
   {
     id: 'fmc_talstar_cotton',
@@ -329,7 +329,7 @@ export const REGISTERED_PESTICIDES_PK = [
     protectiveEquipment: ['Rubber gloves', 'Face shield', 'Boots'],
     safetyInstructions: 'Knockdown suppression of sucking pests and chewing larvae. Avoid midday hot hours.',
     safetyInstructionsUr: 'کیڑوں کو فوری گرانے والی دوا ہے۔ شدید گرمی اور تیز دھوپ کے دوران سپرے نہ کریں۔',
-    officialUrl: 'https://ag.fmc.com/pk/en/products/insecticides/talstar-10-ec',
+    officialUrl: 'https://ag.fmc.com/pk/en/products/insecticides/talstar',
   },
   {
     id: 'fmc_ferterra_sugarcane',
@@ -393,7 +393,7 @@ export const REGISTERED_PESTICIDES_PK = [
     protectiveEquipment: ['Chemical resistant gloves', 'Respirator mask', 'Goggles', 'Protective suit'],
     safetyInstructions: 'Apply at first detection of elongated elliptical lesions on lower leaves before silking.',
     safetyInstructionsUr: 'چھلی بننے سے پہلے نچلے پتوں پر لمبے بیضوی دھبے نظر آتے ہی سپرے کریں۔',
-    officialUrl: 'https://www.syngenta.com.pk/product/tilt-250-ec',
+    officialUrl: 'https://www.syngenta.com.pk/product/crop-protection/tilt-250-ec-01',
   },
 ];
 

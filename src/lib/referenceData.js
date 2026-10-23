@@ -36,7 +36,7 @@ export const FALLBACK_PRODUCTS = [
     active_ingredient: 'Azoxystrobin 200g/L + Difenoconazole 125g/L',
     target_diseases: ['Leaf Rust', 'Early Blight', 'Blast', 'Purple Blotch', 'Powdery Mildew'],
     target_crops: ['Wheat', 'Tomato', 'Potato', 'Rice', 'Onion', 'Chili'],
-    official_url: 'https://www.syngenta.com.pk/product/amistar-top',
+    official_url: 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02',
     description: 'A systemic broad-spectrum fungicide with preventative and curative activity.'
   },
   {
@@ -47,7 +47,7 @@ export const FALLBACK_PRODUCTS = [
     active_ingredient: 'Metalaxyl-M 4% + Mancozeb 64% WP',
     target_diseases: ['Late Blight', 'Downy Mildew'],
     target_crops: ['Potato', 'Tomato', 'Onion'],
-    official_url: 'https://www.syngenta.com.pk/product/ridomil-gold-wg',
+    official_url: 'https://www.syngenta.com.pk/product/crop-protection/fungicides',
     description: 'Dual protective and curative suppression of oomycetes.'
   },
   {
@@ -124,7 +124,7 @@ export const FALLBACK_PRODUCTS = [
     active_ingredient: 'Lufenuron 50 EC',
     target_diseases: ['Armyworm control', 'Helicoverpa control'],
     target_crops: ['Cotton', 'Maize', 'Tomato'],
-    official_url: 'https://www.syngenta.com.pk/product/match-050-ec',
+    official_url: 'https://www.syngenta.com.pk/product/match',
     description: 'Insect growth regulator inhibiting foliar damage.'
   }
 ];
@@ -163,8 +163,8 @@ export const FALLBACK_DISEASES = [
       'Perform field monitoring during the boot and heading stages.'
     ],
     recommendedProducts: [
-      { name: 'Amistar Top', company: 'Syngenta Pakistan', activeIngredient: 'Azoxystrobin 200g/L + Difenoconazole 125g/L', url: 'https://www.syngenta.com.pk/product/amistar-top' },
-      { name: 'Tilt 250 EC', company: 'Syngenta Pakistan', activeIngredient: 'Propiconazole 250 g/L EC', url: 'https://www.syngenta.com.pk/product/tilt-250-ec' }
+      { name: 'Amistar Top', company: 'Syngenta Pakistan', activeIngredient: 'Azoxystrobin 200g/L + Difenoconazole 125g/L', url: 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02' },
+      { name: 'Tilt 250 EC', company: 'Syngenta Pakistan', activeIngredient: 'Propiconazole 250 g/L EC', url: 'https://www.syngenta.com.pk/product/crop-protection/tilt-250-ec-01' }
     ]
 
   },
@@ -202,7 +202,7 @@ export const FALLBACK_DISEASES = [
     ],
     recommendedProducts: [
       { name: 'Cabrio Top', company: 'FMC Pakistan', activeIngredient: 'Pyraclostrobin 5% + Metiram 55%', url: 'https://ag.fmc.com/pk/en/products/fungicides/cabrio-top' },
-      { name: 'Amistar Top', company: 'Syngenta Pakistan', activeIngredient: 'Azoxystrobin 200g/L + Difenoconazole 125g/L', url: 'https://www.syngenta.com.pk/product/amistar-top' }
+      { name: 'Amistar Top', company: 'Syngenta Pakistan', activeIngredient: 'Azoxystrobin 200g/L + Difenoconazole 125g/L', url: 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02' }
     ]
   },
   {
@@ -238,7 +238,7 @@ export const FALLBACK_DISEASES = [
       'Avoid overhead watering.'
     ],
     recommendedProducts: [
-      { name: 'Ridomil Gold', company: 'Syngenta Pakistan', activeIngredient: 'Metalaxyl-M 4% + Mancozeb 64% WP', url: 'https://www.syngenta.com.pk/product/ridomil-gold-wg' },
+      { name: 'Ridomil Gold', company: 'Syngenta Pakistan', activeIngredient: 'Metalaxyl-M 4% + Mancozeb 64% WP', url: 'https://www.syngenta.com.pk/product/crop-protection/fungicides' },
       { name: 'Cabrio Top', company: 'FMC Pakistan', activeIngredient: 'Pyraclostrobin 5% + Metiram 55%', url: 'https://ag.fmc.com/pk/en/products/fungicides/cabrio-top' }
     ]
   },
@@ -275,8 +275,8 @@ export const FALLBACK_DISEASES = [
       'Apply insecticides targeted at whitefly vectors.'
     ],
     recommendedProducts: [
-      { name: 'Polo 500 SC', company: 'Syngenta Pakistan', activeIngredient: 'Diafenthiuron 500 g/L SC', url: 'https://www.syngenta.com.pk/product/polo-500-sc' },
-      { name: 'Talstar 10 EC', company: 'FMC Pakistan', activeIngredient: 'Bifenthrin 10% EC', url: 'https://ag.fmc.com/pk/en/products/insecticides/talstar-10-ec' }
+      { name: 'Polo 500 SC', company: 'Syngenta Pakistan', activeIngredient: 'Diafenthiuron 500 g/L SC', url: 'https://www.syngenta.com.pk/product/crop-protection/polo-500-sc-01' },
+      { name: 'Talstar 10 EC', company: 'FMC Pakistan', activeIngredient: 'Bifenthrin 10% EC', url: 'https://ag.fmc.com/pk/en/products/insecticides/talstar' }
     ]
   },
   {
@@ -312,8 +312,8 @@ export const FALLBACK_DISEASES = [
       'Destroy infected straw and stubble after harvest.'
     ],
     recommendedProducts: [
-      { name: 'Score 250 EC', company: 'Syngenta Pakistan', activeIngredient: 'Difenoconazole 250 g/L EC', url: 'https://www.syngenta.com.pk/product/score-250-ec' },
-      { name: 'Amistar Top', company: 'Syngenta Pakistan', activeIngredient: 'Azoxystrobin 200g/L + Difenoconazole 125g/L', url: 'https://www.syngenta.com.pk/product/amistar-top' }
+      { name: 'Score 250 EC', company: 'Syngenta Pakistan', activeIngredient: 'Difenoconazole 250 g/L EC', url: 'https://www.syngenta.com.pk/product/crop-protection/score-250-ec-01' },
+      { name: 'Amistar Top', company: 'Syngenta Pakistan', activeIngredient: 'Azoxystrobin 200g/L + Difenoconazole 125g/L', url: 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02' }
     ]
   }
 ];
