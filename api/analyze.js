@@ -12,6 +12,10 @@
 import { checkRateLimit, getClientIp } from './_rateLimit.js';
 import { buildTaxonomyPromptBlock, DISEASE_TAXONOMY } from '../src/lib/diseaseTaxonomy.js';
 import { searchKnowledgeBase } from '../src/lib/ragSearch.js';
+import {
+  getRegisteredProductsForDiagnosis,
+  auditTreatmentSafety,
+} from '../src/lib/pesticideRegistry.js';
 
 // Constants — Phase 2: upgraded to a stronger vision model
 const GROQ_MODEL = 'qwen/qwen3.8-27b';
@@ -113,8 +117,11 @@ INSTRUCTIONS:
    - If you see a condition not in the list, still describe it but set disease_id to "unknown".
 4. Set confidence (0–100). Be honest — low quality images should get lower scores.
    - Confidence < 70 means the farmer should retake the photo or consult an expert.
-5. Recommended actions: ONLY suggest treatments registered in Pakistan. Never invent dosages.
-   Say "consult label or local extension officer" for specific amounts.
+5. Recommended actions & Treatment Safety (DPP Pakistan Compliance):
+   - ONLY suggest chemicals registered with the Pakistan Department of Plant Protection (DPP).
+   - NEVER invent or guess dosages. Refer strictly to the registered label dose or extension officer advice.
+   - BANNED SUBSTANCES: NEVER mention or recommend banned/cancelled chemicals in Pakistan (Endosulfan, Monocrotophos, DDT, Dieldrin, Aldrin, Heptachlor, Methyl Parathion, Methamidophos, Phosphamidon, Chlordane).
+   - Emphasise Pre-Harvest Interval (PHI) compliance for food safety.
 
 Return ONLY valid JSON, no markdown, no code fences:
 {
@@ -226,6 +233,58 @@ Return ONLY valid JSON, no markdown, no code fences:
         console.error('[analyze] RAG enrichment error:', ragErr);
       }
     }
+
+    // Phase 5: Pakistan DPP Treatment Safety Audit & Registered Products Enrichment
+    const combinedTreatmentText = [
+      parsed.analysisSummary,
+      ...(parsed.recommendedActions || []),
+      ...(parsed.likelyCauses || []),
+    ].filter(Boolean).join(' ');
+
+    const safetyAudit = auditTreatmentSafety(combinedTreatmentText);
+    parsed.safetyAudit = safetyAudit;
+
+    // Proactively check banned substances and filter hazardous recommendations if found
+    if (!safetyAudit.isSafe) {
+      console.warn('[analyze] Safety audit detected banned chemical mentions:', safetyAudit.bannedMatches);
+      parsed.safetyWarnings = safetyAudit.warnings;
+      if (Array.isArray(parsed.recommendedActions)) {
+        parsed.recommendedActions = parsed.recommendedActions.filter((act) => {
+          return !safetyAudit.bannedMatches.some((b) =>
+            act.toLowerCase().includes(b.activeIngredient.toLowerCase())
+          );
+        });
+      }
+    }
+
+    // Attach official DPP-registered products matching crop & disease
+    const registeredProducts = getRegisteredProductsForDiagnosis(parsed.crop, parsed.disease);
+    if (registeredProducts.length > 0) {
+      parsed.dppRegisteredProducts = registeredProducts;
+      parsed.recommendedProducts = registeredProducts.map((p) => ({
+        id: p.id,
+        name: p.name,
+        companyName: p.company,
+        company: p.company,
+        productType: p.productType,
+        activeIngredient: p.activeIngredient,
+        dosage: p.labelDosageAcre,
+        labelDosageAcre: p.labelDosageAcre,
+        dppRegistrationNo: p.dppRegistrationNo,
+        phiDays: p.phiDays,
+        whoToxicityClass: p.whoToxicityClass,
+        protectiveEquipment: p.protectiveEquipment,
+        officialProductUrl: p.officialUrl,
+        description: p.safetyInstructions,
+      }));
+    }
+
+    // Phase 5: Escalation threshold — confidence < 70% or High severity
+    const numericConfidence = typeof parsed.confidence === 'number'
+      ? parsed.confidence
+      : parseInt(parsed.confidence, 10) || 0;
+
+    parsed.requiresExpertEscalation = numericConfidence < 70 || parsed.severity === 'High';
 
     return res.status(200).json(parsed);
 

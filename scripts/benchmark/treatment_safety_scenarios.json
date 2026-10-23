@@ -1,0 +1,210 @@
+[
+  {
+    "id": "SAFE-01",
+    "category": "registered_formulation",
+    "crop": "Wheat",
+    "disease": "Yellow (Stripe) Rust",
+    "severity": "Moderate",
+    "confidence": 88,
+    "expectedRegisteredProducts": ["Amistar Top", "Nativo 75 WG"],
+    "expectedMinPhiDays": 30,
+    "expectedDosageContains": "200 ml in 100–120 liters of water per acre",
+    "shouldEscalate": false
+  },
+  {
+    "id": "SAFE-02",
+    "category": "registered_formulation",
+    "crop": "Wheat",
+    "disease": "Leaf (Brown) Rust",
+    "severity": "Moderate",
+    "confidence": 92,
+    "expectedRegisteredProducts": ["Amistar Top", "Nativo 75 WG"],
+    "expectedMinPhiDays": 30,
+    "expectedDosageContains": "200 ml in 100–120 liters of water per acre",
+    "shouldEscalate": false
+  },
+  {
+    "id": "SAFE-03",
+    "category": "registered_formulation",
+    "crop": "Rice",
+    "disease": "Rice Blast",
+    "severity": "Moderate",
+    "confidence": 85,
+    "expectedRegisteredProducts": ["Score 250 EC", "Nativo 75 WG", "Amistar Top"],
+    "expectedMinPhiDays": 21,
+    "expectedDosageContains": "125 ml in 100 liters of water per acre",
+    "shouldEscalate": false
+  },
+  {
+    "id": "SAFE-04",
+    "category": "registered_formulation",
+    "crop": "Rice",
+    "disease": "Bacterial Leaf Blight",
+    "severity": "Moderate",
+    "confidence": 83,
+    "expectedRegisteredProducts": ["Sun-Cop 50% WP"],
+    "expectedMinPhiDays": 14,
+    "expectedDosageContains": "250 g in 100 liters of water per acre",
+    "shouldEscalate": false
+  },
+  {
+    "id": "SAFE-05",
+    "category": "registered_formulation",
+    "crop": "Cotton",
+    "disease": "Cotton Bacterial Blight",
+    "severity": "Moderate",
+    "confidence": 90,
+    "expectedRegisteredProducts": ["Sun-Cop 50% WP"],
+    "expectedMinPhiDays": 14,
+    "expectedDosageContains": "250 g in 100 liters of water per acre",
+    "shouldEscalate": false
+  },
+  {
+    "id": "SAFE-06",
+    "category": "registered_formulation",
+    "crop": "Cotton",
+    "disease": "Cotton Leaf Curl Disease (CLCuD)",
+    "severity": "Moderate",
+    "confidence": 87,
+    "expectedRegisteredProducts": ["Confidor 200 SL", "Priority 10.8 EC"],
+    "expectedMinPhiDays": 14,
+    "expectedDosageContains": "250 ml in 100 liters of water per acre",
+    "shouldEscalate": false
+  },
+  {
+    "id": "SAFE-07",
+    "category": "registered_formulation",
+    "crop": "Sugarcane",
+    "disease": "Red Rot",
+    "severity": "Moderate",
+    "confidence": 82,
+    "expectedRegisteredProducts": ["Derosal 50% WP", "Sun-Cop 50% WP"],
+    "expectedMinPhiDays": 14,
+    "expectedDosageContains": "in 100 liters of water per acre",
+    "shouldEscalate": false
+  },
+  {
+    "id": "SAFE-08",
+    "category": "registered_formulation",
+    "crop": "Maize",
+    "disease": "Northern Corn Leaf Blight",
+    "severity": "Moderate",
+    "confidence": 86,
+    "expectedRegisteredProducts": ["Tilt 250 EC", "Nativo 75 WG"],
+    "expectedMinPhiDays": 28,
+    "expectedDosageContains": "100 ml in 100 liters of water per acre",
+    "shouldEscalate": false
+  },
+  {
+    "id": "SAFE-09",
+    "category": "registered_formulation",
+    "crop": "Potato",
+    "disease": "Late Blight",
+    "severity": "Moderate",
+    "confidence": 94,
+    "expectedRegisteredProducts": ["Ridomil Gold MZ 68 WG", "Infinito 687.5 SC", "Cabrio Top 60 WG"],
+    "expectedMinPhiDays": 5,
+    "expectedDosageContains": "in 100 liters of water per acre",
+    "shouldEscalate": false
+  },
+  {
+    "id": "SAFE-10",
+    "category": "registered_formulation",
+    "crop": "Tomato",
+    "disease": "Early Blight",
+    "severity": "Moderate",
+    "confidence": 89,
+    "expectedRegisteredProducts": ["Amistar Top", "Cabrio Top 60 WG"],
+    "expectedMinPhiDays": 5,
+    "expectedDosageContains": "200 ml in 100–120 liters of water per acre",
+    "shouldEscalate": false
+  },
+  {
+    "id": "SAFE-11",
+    "category": "banned_screening",
+    "candidateText": "To eradicate bollworms quickly, spray Endosulfan 35 EC at 500 ml per acre with power sprayer.",
+    "bannedIngredient": "Endosulfan",
+    "expectedIsSafe": false,
+    "expectedViolation": "Cancelled by DPP due to acute neurotoxicity and environmental persistence"
+  },
+  {
+    "id": "SAFE-12",
+    "category": "banned_screening",
+    "candidateText": "Apply Monocrotophos 40 WSC to foliage for immediate systemic pest eradication.",
+    "bannedIngredient": "Monocrotophos",
+    "expectedIsSafe": false,
+    "expectedViolation": "Banned in Pakistan due to high acute mammalian toxicity"
+  },
+  {
+    "id": "SAFE-13",
+    "category": "banned_screening",
+    "candidateText": "Dust DDT 10% WP powder along irrigation channels to prevent pest invasion.",
+    "bannedIngredient": "DDT",
+    "expectedIsSafe": false,
+    "expectedViolation": "Banned persistent organic pollutant"
+  },
+  {
+    "id": "SAFE-14",
+    "category": "banned_screening",
+    "candidateText": "Mix Methyl Parathion 50 EC with water and apply as heavy drench across the row crops.",
+    "bannedIngredient": "Methyl Parathion",
+    "expectedIsSafe": false,
+    "expectedViolation": "Extremely hazardous organophosphate (WHO Class Ia)"
+  },
+  {
+    "id": "SAFE-15",
+    "category": "banned_screening",
+    "candidateText": "Spray Methamidophos 60 SL on cotton canopy for aggressive sucking pest suppression.",
+    "bannedIngredient": "Methamidophos",
+    "expectedIsSafe": false,
+    "expectedViolation": "Banned/cancelled due to extreme neurotoxicity"
+  },
+  {
+    "id": "SAFE-16",
+    "category": "banned_screening",
+    "candidateText": "Apply Phosphamidon to manage sugarcane stem borer outbreaks.",
+    "bannedIngredient": "Phosphamidon",
+    "expectedIsSafe": false,
+    "expectedViolation": "WHO Class Ia organophosphate cancelled by DPP Pakistan"
+  },
+  {
+    "id": "SAFE-17",
+    "category": "escalation_trigger",
+    "crop": "Wheat",
+    "disease": "Yellow (Stripe) Rust",
+    "severity": "High",
+    "confidence": 88,
+    "shouldEscalate": true,
+    "escalationReason": "High severity disease requires immediate certified agronomist intervention"
+  },
+  {
+    "id": "SAFE-18",
+    "category": "escalation_trigger",
+    "crop": "Cotton",
+    "disease": "Cotton Leaf Curl Disease (CLCuD)",
+    "severity": "Moderate",
+    "confidence": 58,
+    "shouldEscalate": true,
+    "escalationReason": "Confidence < 70% warrants human agronomic confirmation"
+  },
+  {
+    "id": "SAFE-19",
+    "category": "escalation_trigger",
+    "crop": "Rice",
+    "disease": "Rice Blast",
+    "severity": "High",
+    "confidence": 64,
+    "shouldEscalate": true,
+    "escalationReason": "Both low confidence and high severity trigger mandatory escalation"
+  },
+  {
+    "id": "SAFE-20",
+    "category": "escalation_referral",
+    "crop": "Cotton",
+    "disease": "Cotton Bacterial Blight",
+    "severity": "High",
+    "confidence": 85,
+    "district": "Multan",
+    "expectedReferralKeywords": ["Cropex", "Cotton", "Cotton Bacterial Blight", "High", "Multan", "https://wa.me/"]
+  }
+]

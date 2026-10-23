@@ -350,12 +350,23 @@ Please ensure your code passes `npm run lint` before submitting.
 
 ---
 
-### 🧪 Phase 5 — Treatment Safety
+### ✅ Phase 5 — Treatment Safety & DPP Compliance *(Completed)*
 
-- Recommend only chemicals from the **registered pesticide list**
-- Quote doses from the label or retrieved source — **never let the LLM invent doses**
-- Show confidence and severity with every recommendation
-- Add a *"talk to an expert"* escalation path for serious or uncertain cases
+- **Official Pakistan DPP Registered Database:** Created verified repository of crop protection formulations (`src/lib/pesticideRegistry.js`) sourced from the Department of Plant Protection (DPP), Ministry of National Food Security & Research, PARC/NARC, and Punjab Extension.
+- **Strict Label Dosage Attribution:** Prevents LLM dosage hallucination by enforcing official formulation rates per acre (e.g. `200 ml in 100–120L water/acre`, `250 g/acre`), active ingredient concentrations, and manufacturer attribution.
+- **Pre-Harvest Intervals (PHI) & WHO Toxicity Classification:** Every registered chemical intervention specifies safety waiting periods (PHI days) before harvest and WHO hazard classifications (Class II, Class III, Class U) along with mandatory Personal Protective Equipment (PPE) gear checklists.
+- **Banned Chemical Screening & Rejection Guard:** Blacklist screening engine blocks 10 cancelled/prohibited substances in Pakistan (Endosulfan, Monocrotophos, DDT, Dieldrin, Aldrin, Heptachlor, Methyl Parathion, Methamidophos, Phosphamidon, Chlordane) with 0% tolerance.
+- **Human Expert Escalation Engine:**
+  - Automated escalation triggers for low AI confidence (<70%) or High disease severity.
+  - Interactive `ExpertEscalationModal.jsx` with direct phone links to PARC/NARC National Desk, Punjab Extension (0800-15000), Sindh Advisory (0800-29000), KPK Directorate (0800-88000), and CCRI Multan.
+  - 1-click pre-filled WhatsApp referral generator attaching crop, disease, severity, confidence, and district for agronomist review.
+  - Proper field sample collection and packaging protocol guide for lab testing.
+- **Safety Benchmark Evaluation:** 20-scenario safety evaluation (`npm run benchmark:safety`):
+  - **DPP Registered Formulation & Dosage Attribution:** **100.0%** (10/10)
+  - **Banned Pesticide Screening & Rejection Rate:** **100.0%** (6/6 blocked, 0% banned allowed)
+  - **Low-Confidence / High-Severity Escalation Accuracy:** **100.0%** (3/3 correctly triggered)
+  - **WhatsApp Referral & Gov Helpline Routing:** **100.0%** (1/1 valid)
+  - **Overall Scorecard:** **20/20 Scenarios Passed (100.0%)**
 
 ---
 

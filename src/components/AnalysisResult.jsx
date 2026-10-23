@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { downloadPdfReport } from '../utils/pdfGenerator';
 import { downloadWordReport } from '../utils/docGenerator';
+import ExpertEscalationModal from './ExpertEscalationModal';
 
 const sampleResult = {
   crop: 'Cotton',
@@ -43,13 +44,18 @@ const sampleResult = {
     {
       id: 'suncrop_sun_cop',
       name: 'Sun-Cop 50% WP',
-      companyName: 'Suncrop Group',
-      company: 'Suncrop Group',
-      productType: 'Bactericide / Fungicide',
+      companyName: 'Suncrop Group Pakistan',
+      company: 'Suncrop Group Pakistan',
+      productType: 'Contact Bactericide / Fungicide',
       activeIngredient: 'Copper Oxychloride 50% WP',
       dosage: '250g - 300g per 100 liters of water / acre',
+      labelDosageAcre: '250g - 300g in 100 liters of water per acre',
+      dppRegistrationNo: 'DPP-PK/F-0431/2016',
+      phiDays: 14,
+      whoToxicityClass: 'Class III (Slightly Hazardous)',
+      protectiveEquipment: ['Nitrile gloves', 'Dust/mist mask', 'Eye goggles', 'Rubber boots'],
       officialProductUrl: 'https://www.suncropgroup.com/',
-      description: 'Contact protective broad-spectrum bactericide and fungicide. Releases copper ions upon moisture contact, denaturing bacterial enzymes and forming a protective barrier that arrests Xanthomonas spread across leaf and boll surfaces.'
+      description: 'Contact protective broad-spectrum bactericide and fungicide registered with DPP Pakistan. Releases copper ions upon moisture contact, denaturing bacterial enzymes and forming a protective barrier that arrests Xanthomonas spread across leaf and boll surfaces.'
     },
     {
       id: 'bayer_confidor',
@@ -58,9 +64,14 @@ const sampleResult = {
       company: 'Bayer Crop Science Pakistan',
       productType: 'Systemic Insecticide',
       activeIngredient: 'Imidacloprid 200 g/L SL',
-      dosage: '250 ml per acre in 100L water',
+      dosage: '250 ml in 100L water / acre',
+      labelDosageAcre: '250 ml in 100 liters of water per acre',
+      dppRegistrationNo: 'DPP-PK/I-0198/2014',
+      phiDays: 21,
+      whoToxicityClass: 'Class II (Moderately Hazardous)',
+      protectiveEquipment: ['Chemical resistant gloves', 'Face shield', 'Protective overalls', 'Rubber boots'],
       officialProductUrl: 'https://www.cropscience.bayer.com.pk/en-pk/products/insecticides/confidor-200-sl.html',
-      description: 'Systemic neonicotinoid targeting sucking pests (whiteflies, thrips, and aphids) that create foliar puncture wounds through which bacterial blight enters, while simultaneously suppressing the vector of Cotton Leaf Curl Virus (CLCuV).'
+      description: 'Systemic neonicotinoid targeting sucking pests (whiteflies, thrips, and aphids) that create foliar puncture wounds through which bacterial blight enters, while suppressing the vector of Cotton Leaf Curl Virus (CLCuV).'
     }
   ]
 };
@@ -120,6 +131,7 @@ function getPathogenDetails(crop, disease) {
 function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
   const [activeResult, setActiveResult] = useState(sampleResult);
   const [loadingStep, setLoadingStep] = useState(0);
+  const [isEscalationOpen, setIsEscalationOpen] = useState(false);
 
   const isDemo = !result && !isAnalyzing && !error;
 
@@ -217,9 +229,18 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
     ? activeResult.prevention
     : sampleResult.recommendedActions;
 
-  const productsList = (activeResult.recommendedProducts && activeResult.recommendedProducts.length > 0)
+  const productsList = (activeResult.dppRegisteredProducts && activeResult.dppRegisteredProducts.length > 0)
+    ? activeResult.dppRegisteredProducts
+    : (activeResult.recommendedProducts && activeResult.recommendedProducts.length > 0)
     ? activeResult.recommendedProducts
     : sampleResult.recommendedProducts;
+
+  const numericConfidence = typeof activeResult.confidence === 'number'
+    ? activeResult.confidence
+    : parseInt(activeResult.confidence, 10) || 91;
+  const isHighSeverity = activeResult.severity === 'High';
+  const isLowConfidence = numericConfidence < 70;
+  const needsEscalation = Boolean(activeResult.requiresExpertEscalation || isHighSeverity || isLowConfidence);
 
   return (
     <section id="results" className="border-t border-earth-100 bg-earth-50/40 py-12 sm:py-16 dark:border-earth-850 dark:bg-earth-900/40 transition-colors">
@@ -236,11 +257,28 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
             </h2>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+            <button
+              type="button"
+              onClick={() => setIsEscalationOpen(true)}
+              className="h-10 inline-flex items-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-4 text-xs sm:text-sm font-bold text-amber-900 shadow-xs transition-all hover:bg-amber-100 dark:border-amber-700/60 dark:bg-amber-950/40 dark:text-amber-200 dark:hover:bg-amber-900/60 cursor-pointer"
+            >
+              <svg className="h-4 w-4 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <span>Talk to an Expert</span>
+              {needsEscalation && (
+                <span className="flex h-2 w-2 relative">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                </span>
+              )}
+            </button>
+
             <button
               type="button"
               onClick={() => downloadPdfReport(activeResult)}
-              className="h-10 inline-flex items-center gap-2 rounded-xl bg-crop-600 px-5 text-xs sm:text-sm font-bold text-white shadow-sm shadow-crop-600/20 transition-all hover:bg-crop-700 hover:shadow-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-crop-500"
+              className="h-10 inline-flex items-center gap-2 rounded-xl bg-crop-600 px-4 sm:px-5 text-xs sm:text-sm font-bold text-white shadow-sm shadow-crop-600/20 transition-all hover:bg-crop-700 hover:shadow-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-crop-500"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -251,7 +289,7 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
             <button
               type="button"
               onClick={() => downloadWordReport(activeResult)}
-              className="h-10 inline-flex items-center gap-2 rounded-xl border border-earth-200 bg-white px-4 text-xs sm:text-sm font-bold text-earth-800 shadow-xs transition-all hover:bg-earth-50 dark:border-earth-750 dark:bg-earth-900 dark:text-earth-200 dark:hover:bg-earth-800 cursor-pointer"
+              className="h-10 inline-flex items-center gap-2 rounded-xl border border-earth-200 bg-white px-3.5 sm:px-4 text-xs sm:text-sm font-bold text-earth-800 shadow-xs transition-all hover:bg-earth-50 dark:border-earth-750 dark:bg-earth-900 dark:text-earth-200 dark:hover:bg-earth-800 cursor-pointer"
             >
               <svg className="h-4 w-4 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -348,6 +386,53 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
               <span className="font-bold text-earth-900 dark:text-earth-50 block mb-1">Pathological Overview:</span>
               {activeResult.description || sampleResult.description}
             </div>
+
+            {/* Phase 5: Critical Safety Warning Banner if banned substances detected */}
+            {activeResult.safetyWarnings && activeResult.safetyWarnings.length > 0 && (
+              <div className="mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/40 dark:bg-red-950/30">
+                <div className="flex items-start gap-3">
+                  <span className="p-1.5 rounded-lg bg-red-600 text-white shrink-0 mt-0.5 text-xs font-bold">DANGER</span>
+                  <div>
+                    <h5 className="text-xs sm:text-sm font-bold text-red-700 dark:text-red-300">
+                      Prohibited Chemical Alert (Pakistan DPP Blacklist)
+                    </h5>
+                    {activeResult.safetyWarnings.map((warn, wIdx) => (
+                      <p key={wIdx} className="text-xs text-red-600 dark:text-red-400 mt-1 font-medium leading-relaxed">
+                        {warn}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Phase 5: Expert Escalation Recommendation Card */}
+            {needsEscalation && (
+              <div className="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-300 dark:border-amber-700/60 dark:bg-amber-950/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-lg bg-amber-500 text-white shrink-0 mt-0.5">
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h5 className="text-xs sm:text-sm font-bold text-amber-900 dark:text-amber-200">
+                      Expert Escalation Recommended ({isLowConfidence ? `Low Confidence: ${confidenceVal}` : 'High Severity Alert'})
+                    </h5>
+                    <p className="text-xs text-amber-800 dark:text-amber-300/90 mt-0.5 leading-relaxed">
+                      AI visual analysis indicates high risk or borderline certainty. Before applying high-potency chemical sprays, consult certified agricultural extension officers or send a WhatsApp referral.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsEscalationOpen(true)}
+                  className="shrink-0 text-xs font-bold px-3.5 py-2 rounded-lg bg-amber-600 text-white hover:bg-amber-700 transition shadow-sm cursor-pointer whitespace-nowrap"
+                >
+                  Connect with Expert
+                </button>
+              </div>
+            )}
           </div>
 
           {/* 1. VISIBLE SYMPTOMS */}
@@ -463,7 +548,7 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
                   className="flex flex-col justify-between rounded-2xl border border-earth-200 bg-white p-6 shadow-soft hover:shadow-card hover:border-crop-500/30 transition-all dark:border-earth-800 dark:bg-earth-900"
                 >
                   <div>
-                    <div className="flex items-center justify-between gap-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
                       <span className="inline-flex items-center rounded-lg bg-crop-50 px-2.5 py-1 text-xs font-bold text-crop-800 ring-1 ring-inset ring-crop-600/20 dark:bg-crop-950/40 dark:text-crop-300 dark:ring-crop-900/40">
                         {product.productType || 'Crop Protection'}
                       </span>
@@ -472,9 +557,28 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
                       </span>
                     </div>
 
-                    <h4 className="mt-3.5 text-lg font-bold text-earth-900 dark:text-earth-50">
+                    <h4 className="mt-3 text-lg font-bold text-earth-900 dark:text-earth-50">
                       {product.name}
                     </h4>
+
+                    {/* Phase 5: DPP Registration & PHI Tags */}
+                    <div className="mt-2 flex flex-wrap gap-1.5 items-center">
+                      {product.dppRegistrationNo && (
+                        <span className="inline-flex items-center gap-1 rounded bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-800 ring-1 ring-inset ring-emerald-600/20 dark:bg-emerald-950/40 dark:text-emerald-300">
+                          ✓ DPP: {product.dppRegistrationNo}
+                        </span>
+                      )}
+                      {product.phiDays && (
+                        <span className="inline-flex items-center gap-1 rounded bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-800 ring-1 ring-inset ring-blue-600/20 dark:bg-blue-950/40 dark:text-blue-300">
+                          ⏱ {product.phiDays}d PHI
+                        </span>
+                      )}
+                      {product.whoToxicityClass && (
+                        <span className="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-700 dark:bg-slate-850 dark:text-slate-300">
+                          ☣ {product.whoToxicityClass}
+                        </span>
+                      )}
+                    </div>
 
                     {product.activeIngredient && (
                       <p className="mt-2 text-xs text-earth-700 dark:text-earth-250">
@@ -483,19 +587,40 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
                       </p>
                     )}
 
-                    {product.dosage && (
-                      <p className="mt-1 text-xs text-earth-700 dark:text-earth-250">
-                        <span className="font-bold text-earth-900 dark:text-earth-100">Recommended Dosage: </span>
-                        {product.dosage}
-                      </p>
+                    {/* Official Label Dosage Per Acre */}
+                    {(product.labelDosageAcre || product.dosage) && (
+                      <div className="mt-2.5 p-2.5 rounded-xl bg-crop-50/50 dark:bg-crop-950/30 border border-crop-200/50 dark:border-crop-800/40">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-crop-800 dark:text-crop-300 block">
+                          Official DPP Label Dosage:
+                        </span>
+                        <span className="text-xs font-bold text-earth-900 dark:text-earth-100 mt-0.5 block">
+                          {product.labelDosageAcre || product.dosage}
+                        </span>
+                      </div>
                     )}
 
                     <p className="mt-3 text-xs sm:text-sm leading-relaxed text-earth-650 dark:text-earth-300 font-medium">
                       {product.description || product.notes || 'Curative and protective formulation targeting foliar pathogens.'}
                     </p>
+
+                    {/* Protective Equipment PPE */}
+                    {product.protectiveEquipment && product.protectiveEquipment.length > 0 && (
+                      <div className="mt-3 pt-2.5 border-t border-earth-100 dark:border-earth-800">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-earth-500 dark:text-earth-400 block mb-1">
+                          Mandatory PPE:
+                        </span>
+                        <div className="flex flex-wrap gap-1">
+                          {product.protectiveEquipment.map((ppe, pIdx) => (
+                            <span key={pIdx} className="text-[10px] font-medium px-2 py-0.5 rounded bg-earth-100 dark:bg-earth-800 text-earth-750 dark:text-earth-250">
+                              • {ppe}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-earth-100 dark:border-earth-800">
+                  <div className="mt-5 pt-4 border-t border-earth-100 dark:border-earth-800">
                     <a
                       href={product.officialProductUrl || '#'}
                       target="_blank"
@@ -513,6 +638,13 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
             </div>
           </div>
         )}
+
+        {/* Phase 5: Expert Escalation Modal */}
+        <ExpertEscalationModal
+          isOpen={isEscalationOpen}
+          onClose={() => setIsEscalationOpen(false)}
+          diagnosis={activeResult}
+        />
 
       </div>
     </section>

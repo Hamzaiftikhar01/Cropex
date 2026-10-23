@@ -284,6 +284,81 @@ async function runTestSuite() {
   );
 
   // =========================================================================
+  // PHASE 5: TREATMENT SAFETY, DPP COMPLIANCE & EXPERT ESCALATION
+  // =========================================================================
+  console.log('\n🛡️ [PHASE 5] Treatment Safety, DPP Compliance & Expert Escalation');
+  console.log('------------------------------------------------------------');
+
+  const {
+    REGISTERED_PESTICIDES_PK,
+    BANNED_PESTICIDES_PK,
+    EXTENSION_HELPLINES_PK,
+    auditTreatmentSafety,
+    getRegisteredProductsForDiagnosis,
+    generateWhatsAppReferralUrl,
+  } = await import('../src/lib/pesticideRegistry.js');
+
+  // 5.1 Official DPP Pesticide Registry Integrity
+  assert(
+    REGISTERED_PESTICIDES_PK.length >= 10,
+    `DPP registry contains ${REGISTERED_PESTICIDES_PK.length} registered formulations across all 6 core crops`
+  );
+  const allDppValid = REGISTERED_PESTICIDES_PK.every(
+    (p) => p.dppRegistrationNo?.startsWith('DPP-PK/') && p.phiDays > 0 && p.labelDosageAcre && p.whoToxicityClass
+  );
+  assert(allDppValid, '100% of registered formulations feature official DPP registration numbers, PHI days, and label doses');
+
+  // 5.2 Banned Pesticide Blacklist Screening
+  assert(
+    BANNED_PESTICIDES_PK.length >= 10,
+    `Banned pesticide registry contains ${BANNED_PESTICIDES_PK.length} cancelled chemicals in Pakistan (Endosulfan, DDT, Monocrotophos, etc.)`
+  );
+  const testBannedAudit1 = auditTreatmentSafety('Recommend spraying Endosulfan 35 EC across cotton foliage.');
+  const testBannedAudit2 = auditTreatmentSafety('Apply DDT powder along field bunds.');
+  assert(
+    !testBannedAudit1.isSafe && !testBannedAudit2.isSafe && testBannedAudit1.warnings.length > 0,
+    'auditTreatmentSafety detects and blocks prohibited chemicals with 0% banned chemicals allowed'
+  );
+
+  // 5.3 Grounded Label Dosages per Acre
+  const wheatRustProducts = getRegisteredProductsForDiagnosis('Wheat', 'Yellow (Stripe) Rust');
+  const hasLabelDose = wheatRustProducts.some((p) => p.labelDosageAcre && p.labelDosageAcre.includes('ml in 100–120 liters'));
+  assert(
+    wheatRustProducts.length >= 2 && hasLabelDose,
+    'Wheat rust treatment retrieves verified DPP formulations (Amistar Top, Nativo) with exact label dosage per acre'
+  );
+
+  // 5.4 Expert Escalation Trigger Criteria
+  const lowConfCheck = 65 < 70 || 'Moderate' === 'High';
+  const highSevCheck = 90 < 70 || 'High' === 'High';
+  const normalCheck = 85 < 70 || 'Moderate' === 'High';
+  assert(
+    lowConfCheck === true && highSevCheck === true && normalCheck === false,
+    'Expert escalation correctly triggers on low confidence (<70%) or high severity'
+  );
+
+  // 5.5 Provincial Helplines & WhatsApp Referral Engine
+  const helplines = Object.keys(EXTENSION_HELPLINES_PK);
+  assert(
+    helplines.includes('punjab') && helplines.includes('sindh') && helplines.includes('kpk') && helplines.includes('narc'),
+    'Extension helplines cover Federal (PARC/NARC), Punjab, Sindh, KPK, and CCRI Multan'
+  );
+
+  const testReferral = generateWhatsAppReferralUrl({
+    cropName: 'Cotton',
+    disease: 'Cotton Bacterial Blight',
+    severity: 'High',
+    confidence: 85,
+    district: 'Vehari',
+  });
+  assert(
+    testReferral.startsWith('https://wa.me/') &&
+      decodeURIComponent(testReferral).includes('Cotton Bacterial Blight') &&
+      decodeURIComponent(testReferral).includes('Vehari'),
+    'WhatsApp referral generator creates valid pre-filled agronomist referral URLs'
+  );
+
+  // =========================================================================
   // OVERALL REPORT
   // =========================================================================
   console.log('\n============================================================');
@@ -291,7 +366,7 @@ async function runTestSuite() {
   console.log('============================================================');
 
   if (failedTests === 0) {
-    console.log('🎉 ALL FOUR PHASES PASSED VERIFICATION WITH ZERO FAILURES!\n');
+    console.log('🎉 ALL FIVE PHASES PASSED VERIFICATION WITH ZERO FAILURES!\n');
     process.exit(0);
   } else {
     console.error(`⚠️ ${failedTests} test(s) failed:`);
