@@ -148,7 +148,13 @@ export default function DiseaseView({
         recommendedActions: (result.recommendedActions && result.recommendedActions.length > 0) ? result.recommendedActions : (kbDetails?.recommendedActions || fallbackReport?.recommendedActions || []),
         prevention: kbDetails?.prevention || fallbackReport?.prevention || [],
         bestPractices: kbDetails?.bestPractices || fallbackReport?.bestPractices || [],
-        recommendedProducts: (kbDetails?.recommendedProducts && kbDetails.recommendedProducts.length > 0) ? kbDetails.recommendedProducts : (fallbackReport?.recommendedProducts || []),
+        recommendedProducts: (result.recommendedProducts && result.recommendedProducts.length > 0)
+          ? result.recommendedProducts
+          : (result.dppRegisteredProducts && result.dppRegisteredProducts.length > 0)
+          ? result.dppRegisteredProducts
+          : (kbDetails?.recommendedProducts && kbDetails.recommendedProducts.length > 0)
+          ? kbDetails.recommendedProducts
+          : getRegisteredProductsForDiagnosis(result.cropName || result.crop || fieldProfile.cropType, result.disease),
         isUnindexed: !kbDetails,
         // Phase 2: preserve escalation fields from aiService
         needsEscalation: result.needsEscalation || false,
@@ -158,8 +164,9 @@ export default function DiseaseView({
         verifiedSources: result.verifiedSources || [],
         groundedTreatment: result.groundedTreatment || null,
         dppRegisteredProducts:
-          result.dppRegisteredProducts ||
-          getRegisteredProductsForDiagnosis(result.cropName || fieldProfile.cropType, result.disease),
+          (result.dppRegisteredProducts && result.dppRegisteredProducts.length > 0)
+            ? result.dppRegisteredProducts
+            : getRegisteredProductsForDiagnosis(result.cropName || result.crop || fieldProfile.cropType, result.disease),
       };
 
       setAnalysisResult(enrichedResult);

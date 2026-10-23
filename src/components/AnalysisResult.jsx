@@ -4,6 +4,7 @@ import { downloadPdfReport } from '../utils/pdfGenerator';
 import { downloadWordReport } from '../utils/docGenerator';
 import ExpertEscalationModal from './ExpertEscalationModal';
 import { speakText, stopSpeaking } from '../lib/voiceService';
+import { getRegisteredProductsForDiagnosis } from '../lib/pesticideRegistry';
 
 const sampleResult = {
   crop: 'Cotton',
@@ -44,40 +45,40 @@ const sampleResult = {
   ],
   recommendedProducts: [
     {
-      id: 'syngenta_amistar_top',
-      name: 'Amistar Top',
-      companyName: 'Syngenta Pakistan Ltd',
-      company: 'Syngenta Pakistan Ltd',
-      productType: 'Systemic Fungicide',
-      activeIngredient: 'Azoxystrobin 200 g/L + Difenoconazole 125 g/L SC',
-      dosage: '200 ml in 100–120 liters of water / acre',
-      labelDosageAcre: '200 ml in 100–120 liters of water per acre',
-      dppRegistrationNo: 'DPP-PK/F-1042/2018',
-      phiDays: 30,
-      whoToxicityClass: 'Class III (Slightly Hazardous)',
-      protectiveEquipment: ['Nitrile chemical gloves', 'Face mask (N95/FFP2)', 'Eye goggles', 'Rubber boots'],
-      officialUrl: 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02',
-      officialProductUrl: 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02',
-      url: 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02',
-      description: 'Systemic dual-action fungicide registered with DPP Pakistan for preventative and curative control of foliar pathogens.'
-    },
-    {
-      id: 'fmc_cabrio_top',
-      name: 'Cabrio Top 60 WG',
+      id: 'fmc_cuprocaffaro_copper',
+      name: 'Cuprocaffaro 50 WP',
       companyName: 'FMC United (Pvt) Ltd Pakistan',
       company: 'FMC United (Pvt) Ltd Pakistan',
-      productType: 'Broad-Spectrum Fungicide',
-      activeIngredient: 'Pyraclostrobin 5% + Metiram 55% WG',
-      dosage: '300 g in 100 liters of water / acre',
-      labelDosageAcre: '300 g in 100 liters of water per acre',
-      dppRegistrationNo: 'DPP-PK/F-0912/2017',
-      phiDays: 5,
-      whoToxicityClass: 'Class III (Slightly Hazardous)',
-      protectiveEquipment: ['Nitrile gloves', 'Particulate mask', 'Safety goggles', 'Rubber boots'],
-      officialUrl: 'https://ag.fmc.com/pk/en/products/fungicides/cabrio-top',
-      officialProductUrl: 'https://ag.fmc.com/pk/en/products/fungicides/cabrio-top',
-      url: 'https://ag.fmc.com/pk/en/products/fungicides/cabrio-top',
-      description: 'Broad-spectrum fungicide registered with DPP Pakistan offering plant health physiological effects alongside fungal suppression.'
+      productType: 'Protective Contact Bactericide & Fungicide',
+      activeIngredient: 'Copper Oxychloride 50% WP',
+      dosage: '250 g in 100 liters of water per acre',
+      labelDosageAcre: '250 g in 100 liters of water per acre',
+      dppRegistrationNo: 'DPP-PK/F-0380/2011',
+      phiDays: 14,
+      whoToxicityClass: 'Class II (Moderately Hazardous)',
+      protectiveEquipment: ['Heavy duty gloves', 'Dust respirator', 'Face shield', 'Boots'],
+      officialUrl: 'https://ag.fmc.com/pk/en/products/fungicides',
+      officialProductUrl: 'https://ag.fmc.com/pk/en/products/fungicides',
+      url: 'https://ag.fmc.com/pk/en/products/fungicides',
+      description: 'DPP Pakistan registered protective contact copper bactericide. Forms a protective barrier denaturing bacterial cellular proteins of Xanthomonas on foliage and stems.'
+    },
+    {
+      id: 'fmc_talstar_bifenthrin',
+      name: 'Talstar 10 EC',
+      companyName: 'FMC United (Pvt) Ltd Pakistan',
+      company: 'FMC United (Pvt) Ltd Pakistan',
+      productType: 'Broad-Spectrum Pyrethroid Insecticide & Miticide',
+      activeIngredient: 'Bifenthrin 10% EC',
+      dosage: '250–330 ml in 100 liters of water per acre',
+      labelDosageAcre: '250–330 ml in 100 liters of water per acre',
+      dppRegistrationNo: 'DPP-PK/I-0720/2015',
+      phiDays: 14,
+      whoToxicityClass: 'Class II (Moderately Hazardous)',
+      protectiveEquipment: ['Nitrile gloves', 'Chemical goggles', 'Organic vapour respirator', 'Rubber boots'],
+      officialUrl: 'https://ag.fmc.com/pk/en/products/insecticides/talstar',
+      officialProductUrl: 'https://ag.fmc.com/pk/en/products/insecticides/talstar',
+      url: 'https://ag.fmc.com/pk/en/products/insecticides/talstar',
+      description: 'Knockdown suppression of sucking pests and insect vectors that create wound entry sites for secondary bacterial infection.'
     }
   ]
 };
@@ -91,7 +92,7 @@ export function resolveOfficialProductUrl(product) {
   const nameLower = (product.name || '').toLowerCase();
   const companyLower = (product.company || product.companyName || product.manufacturer || '').toLowerCase();
 
-  // Syngenta Pakistan Verified Product Routing
+// Syngenta Pakistan Verified Product Routing
   if (companyLower.includes('syngenta') || rawUrl.includes('syngenta.com.pk') || (product.id && product.id.startsWith('syngenta_'))) {
     if (nameLower.includes('amistar') || rawUrl.includes('amistar')) {
       return 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02';
@@ -110,6 +111,21 @@ export function resolveOfficialProductUrl(product) {
     }
     if (nameLower.includes('ridomil') || rawUrl.includes('ridomil')) {
       return 'https://www.syngenta.com.pk/product/crop-protection/fungicides';
+    }
+    if (nameLower.includes('revus') || rawUrl.includes('revus')) {
+      return 'https://www.syngenta.com.pk/product/crop-protection/fungicides';
+    }
+    if (nameLower.includes('karate') || rawUrl.includes('karate')) {
+      return 'https://www.syngenta.com.pk/product/crop-protection/insecticides';
+    }
+    if (nameLower.includes('virtako') || rawUrl.includes('virtako')) {
+      return 'https://www.syngenta.com.pk/product/crop-protection/insecticides';
+    }
+    if (nameLower.includes('actara') || rawUrl.includes('actara')) {
+      return 'https://www.syngenta.com.pk/product/crop-protection/insecticides';
+    }
+    if (nameLower.includes('dividend') || rawUrl.includes('dividend')) {
+      return 'https://www.syngenta.com.pk/product/crop-protection/seed-care';
     }
     if (rawUrl && rawUrl.startsWith('http')) return rawUrl;
     return 'https://www.syngenta.com.pk/product/crop-protection';
@@ -130,7 +146,10 @@ export function resolveOfficialProductUrl(product) {
       return 'https://ag.fmc.com/pk/en/products/insecticides/coragen';
     }
     if (nameLower.includes('steward') || rawUrl.includes('steward')) {
-      return 'https://ag.fmc.com/pk/en/products/insecticides';
+      return 'https://ag.fmc.com/pk/en/products/insecticides/steward';
+    }
+    if (nameLower.includes('cuprocaffaro') || rawUrl.includes('cuprocaffaro') || nameLower.includes('copper')) {
+      return 'https://ag.fmc.com/pk/en/products/fungicides';
     }
     if (rawUrl && rawUrl.startsWith('http')) return rawUrl;
     return 'https://ag.fmc.com/pk/en/products';
@@ -147,10 +166,22 @@ function getPathogenDetails(crop, disease) {
   const norm = (disease || '').toLowerCase();
   const cNorm = (crop || '').toLowerCase();
 
-  if (norm.includes('bacterial') || norm.includes('xanthomonas') || cNorm.includes('cotton')) {
+  if (norm.includes('leaf curl') || norm.includes('clcu') || norm.includes('geminivirus') || norm.includes('virus')) {
+    return {
+      type: 'Viral Infection (Whitefly Vector)',
+      pathogen: 'Cotton leaf curl geminivirus complex'
+    };
+  }
+  if (norm.includes('bollworm') || norm.includes('armyworm') || norm.includes('borer') || norm.includes('aphid') || norm.includes('fly') || norm.includes('bug') || norm.includes('jassid') || norm.includes('thrip')) {
+    return {
+      type: 'Chewing/Sucking Insect Pest',
+      pathogen: 'Target foliage & reproductive chewing/sucking pest'
+    };
+  }
+  if (norm.includes('bacterial') || norm.includes('xanthomonas') || norm.includes('blackarm')) {
     return {
       type: 'Bacterial Disease',
-      pathogen: 'Xanthomonas citri pv. malvacearum'
+      pathogen: 'Xanthomonas axonopodis / Xanthomonas citri'
     };
   }
   if (norm.includes('early blight') || norm.includes('alternaria')) {
@@ -162,7 +193,7 @@ function getPathogenDetails(crop, disease) {
   if (norm.includes('rust') || norm.includes('puccinia')) {
     return {
       type: 'Fungal Disease',
-      pathogen: 'Puccinia triticina'
+      pathogen: 'Puccinia striiformis / Puccinia triticina'
     };
   }
   if (norm.includes('late blight') || norm.includes('phytophthora')) {
@@ -187,6 +218,12 @@ function getPathogenDetails(crop, disease) {
     return {
       type: 'Fungal Disease',
       pathogen: 'Exserohilum turcicum'
+    };
+  }
+  if (norm.includes('smut') || norm.includes('ustilago')) {
+    return {
+      type: 'Fungal Disease',
+      pathogen: 'Ustilago tritici / Sporisorium scitamineum'
     };
   }
   return {
@@ -301,12 +338,6 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
     ? activeResult.prevention
     : sampleResult.recommendedActions;
 
-  const rawProducts = (activeResult.dppRegisteredProducts && activeResult.dppRegisteredProducts.length > 0)
-    ? activeResult.dppRegisteredProducts
-    : (activeResult.recommendedProducts && activeResult.recommendedProducts.length > 0)
-    ? activeResult.recommendedProducts
-    : sampleResult.recommendedProducts;
-
   // User requirement: Only display products of FMC and Syngenta (verified scrapper compatibility)
   const isFmcOrSyngenta = (p) => {
     if (!p) return false;
@@ -319,7 +350,32 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
     return false;
   };
 
-  const productsList = (rawProducts || []).filter(isFmcOrSyngenta);
+  // 1. Query official DPP registry for this specific crop & disease first to ensure precision
+  const directRegisteredMatches = getRegisteredProductsForDiagnosis(finalCropName, finalDisease).filter(isFmcOrSyngenta);
+
+  let candidateProducts = [];
+  if (directRegisteredMatches.length > 0) {
+    candidateProducts = directRegisteredMatches;
+  } else {
+    if (Array.isArray(activeResult.recommendedProducts) && activeResult.recommendedProducts.length > 0) {
+      candidateProducts.push(...activeResult.recommendedProducts);
+    }
+    if (Array.isArray(activeResult.dppRegisteredProducts) && activeResult.dppRegisteredProducts.length > 0) {
+      candidateProducts.push(...activeResult.dppRegisteredProducts);
+    }
+  }
+
+  // 2. Filter for FMC and Syngenta
+  let filteredProducts = candidateProducts.filter(isFmcOrSyngenta);
+
+  // 3. De-duplicate by product name
+  const seenNames = new Set();
+  const productsList = filteredProducts.filter((p) => {
+    const key = (p.name || '').toLowerCase().trim();
+    if (!key || seenNames.has(key)) return false;
+    seenNames.add(key);
+    return true;
+  });
 
 
   const numericConfidence = typeof activeResult.confidence === 'number'

@@ -34,10 +34,32 @@ export const FALLBACK_PRODUCTS = [
     company: 'Syngenta Pakistan',
     product_type: 'Fungicide',
     active_ingredient: 'Azoxystrobin 200g/L + Difenoconazole 125g/L',
-    target_diseases: ['Leaf Rust', 'Early Blight', 'Blast', 'Purple Blotch', 'Powdery Mildew'],
-    target_crops: ['Wheat', 'Tomato', 'Potato', 'Rice', 'Onion', 'Chili'],
+    target_diseases: ['Yellow Rust', 'Leaf Rust', 'Rice Blast'],
+    target_crops: ['Wheat', 'Rice'],
     official_url: 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02',
-    description: 'A systemic broad-spectrum fungicide with preventative and curative activity.'
+    description: 'A systemic broad-spectrum fungicide with preventative and curative activity against rusts and blast.'
+  },
+  {
+    id: 'syngenta_tilt',
+    name: 'Tilt 250 EC',
+    company: 'Syngenta Pakistan',
+    product_type: 'Fungicide',
+    active_ingredient: 'Propiconazole 250 g/L EC',
+    target_diseases: ['Northern Leaf Blight', 'Northern Corn Leaf Blight', 'Sugarcane Red Rot', 'Sugarcane Smut', 'Leaf Rust', 'Yellow Rust', 'Powdery Mildew', 'Common Rust', 'Sheath Blight'],
+    target_crops: ['Maize', 'Wheat', 'Rice', 'Sugarcane'],
+    official_url: 'https://www.syngenta.com.pk/product/crop-protection/tilt-250-ec-01',
+    description: 'Broad-spectrum systemic triazole fungicide.'
+  },
+  {
+    id: 'syngenta_score',
+    name: 'Score 250 EC',
+    company: 'Syngenta Pakistan',
+    product_type: 'Fungicide',
+    active_ingredient: 'Difenoconazole 250 g/L EC',
+    target_diseases: ['Early Blight', 'Brown Spot', 'Purple Blotch', 'Anthracnose', 'Rice Blast'],
+    target_crops: ['Tomato', 'Potato', 'Rice', 'Onion', 'Chili'],
+    official_url: 'https://www.syngenta.com.pk/product/crop-protection/score-250-ec-01',
+    description: 'Systemic specialist fungicide against Alternaria early blight and leaf spot.'
   },
   {
     id: 'syngenta_ridomil_gold',
@@ -51,81 +73,125 @@ export const FALLBACK_PRODUCTS = [
     description: 'Dual protective and curative suppression of oomycetes.'
   },
   {
+    id: 'syngenta_revus',
+    name: 'Revus 250 SC',
+    company: 'Syngenta Pakistan',
+    product_type: 'Fungicide',
+    active_ingredient: 'Mandipropamid 250 g/L SC',
+    target_diseases: ['Late Blight', 'Downy Mildew'],
+    target_crops: ['Potato', 'Tomato'],
+    official_url: 'https://www.syngenta.com.pk/product/crop-protection/fungicides',
+    description: 'Specialist anti-oomycete fungicide with superior rainfastness.'
+  },
+  {
     id: 'fmc_cabrio_top',
     name: 'Cabrio Top',
     company: 'FMC Pakistan',
     product_type: 'Fungicide',
     active_ingredient: 'Pyraclostrobin 5% + Metiram 55%',
-    target_diseases: ['Early Blight', 'Late Blight', 'Anthracnose', 'Powdery Mildew'],
-    target_crops: ['Tomato', 'Potato', 'Chili'],
+    target_diseases: ['Early Blight', 'Late Blight', 'Anthracnose', 'Purple Blotch'],
+    target_crops: ['Tomato', 'Potato', 'Chili', 'Onion'],
     official_url: 'https://ag.fmc.com/pk/en/products/fungicides/cabrio-top',
-    description: 'Superior protective and curative control against early blight, late blight, and powdery mildew.'
+    description: 'Superior protective and curative control against early blight, late blight, and anthracnose.'
   },
   {
-    id: 'bayer_nativo',
-    name: 'Nativo 75 WG',
-    company: 'Bayer Crop Science Pakistan',
-    product_type: 'Fungicide',
-    active_ingredient: 'Tebuconazole 50% + Trifloxystrobin 25%',
-    target_diseases: ['Blast', 'Leaf Rust', 'Powdery Mildew', 'Purple Blotch', 'Late Blight'],
-    target_crops: ['Rice', 'Wheat', 'Chili', 'Onion', 'Tomato'],
-    official_url: 'https://www.cropscience.bayer.com.pk/en-pk/products/fungicides/nativo-75-wg.html',
-    description: 'Dual-action protective and curative systemic fungicide.'
-  },
-  {
-    id: 'bayer_infinito',
-    name: 'Infinito',
-    company: 'Bayer Crop Science Pakistan',
-    product_type: 'Fungicide',
-    active_ingredient: 'Fluopicolide + Propamocarb Hydrochloride',
-    target_diseases: ['Late Blight', 'Downy Mildew'],
-    target_crops: ['Potato', 'Tomato', 'Onion'],
-    official_url: 'https://www.cropscience.bayer.com.pk/en-pk/products/fungicides/infinito.html',
-    description: 'Translaminar mobility suppressing oomycete and blight growth.'
-  },
-  {
-    id: 'suncrop_sun_cop',
-    name: 'Sun-Cop',
-    company: 'Suncrop Group',
-    product_type: 'Fungicide',
+    id: 'fmc_cuprocaffaro',
+    name: 'Cuprocaffaro 50 WP',
+    company: 'FMC Pakistan',
+    product_type: 'Bactericide / Fungicide',
     active_ingredient: 'Copper Oxychloride 50% WP',
-    target_diseases: ['Bacterial Leaf Blight', 'Bacterial Blight', 'Anthracnose', 'Red Rot', 'Leaf Spot'],
-    target_crops: ['Rice', 'Cotton', 'Chili', 'Sugarcane', 'Wheat'],
-    official_url: 'https://www.suncropgroup.com/',
-    description: 'Contact protective broad-spectrum fungicide and bactericide.'
+    target_diseases: ['Cotton Bacterial Blight', 'Bacterial Leaf Blight', 'Pokkah Boeng', 'Citrus Canker'],
+    target_crops: ['Cotton', 'Rice', 'Sugarcane', 'Citrus', 'Tomato'],
+    official_url: 'https://ag.fmc.com/pk/en/products/fungicides',
+    description: 'Protective contact copper bactericide and fungicide.'
   },
   {
-    id: 'bayer_confidor',
-    name: 'Confidor',
-    company: 'Bayer Crop Science Pakistan',
-    product_type: 'Insecticide',
-    active_ingredient: 'Imidacloprid 200 SL',
-    target_diseases: ['Cotton Leaf Curl Virus vector control (Whiteflies)', 'Thrips control', 'Aphids control'],
-    target_crops: ['Cotton', 'Chili', 'Onion'],
-    official_url: 'https://www.cropscience.bayer.com.pk/en-pk/products/insecticides/confidor-200-sl.html',
-    description: 'Systemic insecticide targeting sucking pests.'
-  },
-  {
-    id: 'fmc_steward',
-    name: 'Steward',
+    id: 'fmc_coragen',
+    name: 'Coragen 200 SC',
     company: 'FMC Pakistan',
     product_type: 'Insecticide',
-    active_ingredient: 'Indoxacarb 150 SC',
-    target_diseases: ['Armyworm control', 'Bollworm control'],
-    target_crops: ['Cotton', 'Maize'],
-    official_url: 'https://ag.fmc.com/pk/en/products/insecticides/steward',
-    description: 'Broad-spectrum larvicide with contact and stomach action.'
+    active_ingredient: 'Chlorantraniliprole 200 g/L SC',
+    target_diseases: ['Fall Armyworm', 'Fruit Borer', 'Tomato Leaf Miner', 'Pink Bollworm', 'Stem Borer'],
+    target_crops: ['Maize', 'Cotton', 'Tomato', 'Sugarcane', 'Rice'],
+    official_url: 'https://ag.fmc.com/pk/en/products/insecticides/coragen',
+    description: 'Broad-spectrum diamide insecticide against caterpillars, armyworms, and borers.'
+  },
+  {
+    id: 'syngenta_polo',
+    name: 'Polo 500 SC',
+    company: 'Syngenta Pakistan',
+    product_type: 'Insecticide',
+    active_ingredient: 'Diafenthiuron 500 g/L SC',
+    target_diseases: ['Cotton Leaf Curl Virus', 'Whitefly', 'Mites', 'Jassids'],
+    target_crops: ['Cotton', 'Tomato', 'Chili'],
+    official_url: 'https://www.syngenta.com.pk/product/crop-protection/polo-500-sc-01',
+    description: 'Targeted insecticide for whitefly vector control in cotton.'
+  },
+  {
+    id: 'fmc_talstar',
+    name: 'Talstar 10 EC',
+    company: 'FMC Pakistan',
+    product_type: 'Insecticide',
+    active_ingredient: 'Bifenthrin 10% EC',
+    target_diseases: ['Cotton Leaf Curl Virus', 'Whitefly', 'Pink Bollworm', 'Wheat Aphid', 'Yellow Leaf Disease'],
+    target_crops: ['Cotton', 'Wheat', 'Sugarcane', 'Rice'],
+    official_url: 'https://ag.fmc.com/pk/en/products/insecticides/talstar',
+    description: 'Broad-spectrum pyrethroid insecticide and miticide.'
+  },
+  {
+    id: 'syngenta_virtako',
+    name: 'Virtako 40 WG',
+    company: 'Syngenta Pakistan',
+    product_type: 'Insecticide',
+    active_ingredient: 'Chlorantraniliprole 20% + Thiamethoxam 20% WG',
+    target_diseases: ['Stem Borer', 'Leaf Folder', 'Top Borer'],
+    target_crops: ['Rice', 'Sugarcane'],
+    official_url: 'https://www.syngenta.com.pk/product/crop-protection/insecticides',
+    description: 'Dual systemic insecticide for borers and sucking pests.'
+  },
+  {
+    id: 'fmc_ferterra',
+    name: 'Ferterra 0.4 GR',
+    company: 'FMC Pakistan',
+    product_type: 'Insecticide',
+    active_ingredient: 'Chlorantraniliprole 0.4% GR',
+    target_diseases: ['Stem Borer', 'Top Borer', 'Shoot Borer'],
+    target_crops: ['Sugarcane', 'Rice'],
+    official_url: 'https://ag.fmc.com/pk/en/products/insecticides/ferterra',
+    description: 'Systemic granular insecticide for root protection against borers.'
+  },
+  {
+    id: 'syngenta_actara',
+    name: 'Actara 25 WG',
+    company: 'Syngenta Pakistan',
+    product_type: 'Insecticide',
+    active_ingredient: 'Thiamethoxam 25% WG',
+    target_diseases: ['Whitefly', 'Cotton Leaf Curl Virus', 'Aphids', 'Wheat Aphid', 'Jassids', 'Yellow Leaf Disease'],
+    target_crops: ['Cotton', 'Wheat', 'Rice', 'Sugarcane', 'Tomato'],
+    official_url: 'https://www.syngenta.com.pk/product/crop-protection/insecticides',
+    description: 'Systemic neonicotinoid targeting sucking vectors.'
   },
   {
     id: 'syngenta_match',
-    name: 'Match',
+    name: 'Match 050 EC',
     company: 'Syngenta Pakistan',
     product_type: 'Insecticide',
     active_ingredient: 'Lufenuron 50 EC',
-    target_diseases: ['Armyworm control', 'Helicoverpa control'],
+    target_diseases: ['Fall Armyworm', 'Armyworm', 'Helicoverpa', 'Fruit Borer', 'Pink Bollworm'],
     target_crops: ['Cotton', 'Maize', 'Tomato'],
     official_url: 'https://www.syngenta.com.pk/product/match',
-    description: 'Insect growth regulator inhibiting foliar damage.'
+    description: 'Insect growth regulator inhibiting larval damage.'
+  },
+  {
+    id: 'fmc_steward',
+    name: 'Steward 150 SC',
+    company: 'FMC Pakistan',
+    product_type: 'Insecticide',
+    active_ingredient: 'Indoxacarb 150 SC',
+    target_diseases: ['Fall Armyworm', 'Armyworm', 'Fruit Borer', 'Pink Bollworm'],
+    target_crops: ['Cotton', 'Maize', 'Tomato'],
+    official_url: 'https://ag.fmc.com/pk/en/products/insecticides/steward',
+    description: 'Broad-spectrum larvicide with contact and stomach action.'
   }
 ];
 
@@ -149,7 +215,7 @@ export const FALLBACK_DISEASES = [
       'Wind-blown spores traveling long distances.'
     ],
     recommended_actions: [
-      'Apply systemic triazole fungicide (Amistar Top or Nativo 75 WG) immediately.',
+      'Apply systemic triazole fungicide (Amistar Top or Tilt 250 EC) immediately.',
       'Ensure balanced nitrogen levels to avoid overly dense foliage.',
       'Sanitize agricultural tools before working in neighboring fields.'
     ],
@@ -166,7 +232,42 @@ export const FALLBACK_DISEASES = [
       { name: 'Amistar Top', company: 'Syngenta Pakistan', activeIngredient: 'Azoxystrobin 200g/L + Difenoconazole 125g/L', url: 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02' },
       { name: 'Tilt 250 EC', company: 'Syngenta Pakistan', activeIngredient: 'Propiconazole 250 g/L EC', url: 'https://www.syngenta.com.pk/product/crop-protection/tilt-250-ec-01' }
     ]
-
+  },
+  {
+    id: 'wheat_loose_smut',
+    crop_id: 'wheat',
+    crop: 'Wheat',
+    disease_name: 'Loose Smut',
+    confidence: 93,
+    severity: 'Moderate',
+    description: 'A seed-borne fungal disease caused by Ustilago tritici transforming wheat ears into black powdery masses.',
+    symptoms: [
+      'Ears emerge as black powdery masses of spores.',
+      'Spore masses blow away leaving only the bare central stem (rachis).',
+      'Infected plants appear slightly taller and mature earlier.'
+    ],
+    causes: [
+      'Fungus Ustilago tritici.',
+      'Internally infected seed from prior crop season.',
+      'Cool, humid weather during the heading and flowering stage.'
+    ],
+    recommended_actions: [
+      'Treat seed prior to sowing with Dividend Star 036 FS.',
+      'Carefully rogue out and destroy infected heads in paper bags before spore dispersal.',
+      'Use certified disease-free seed.'
+    ],
+    prevention: [
+      'Plant certified, fungicide-treated seed.',
+      'Do not keep seed from fields showing smut infection.',
+      'Implement crop rotation.'
+    ],
+    best_practices: [
+      'Treat wheat seed with systemic seed treatment slurry before sowing.',
+      'Regular scouting during ear emergence.'
+    ],
+    recommendedProducts: [
+      { name: 'Dividend Star 036 FS', company: 'Syngenta Pakistan', activeIngredient: 'Difenoconazole 30 g/L + Cyproconazole 6.25 g/L FS', url: 'https://www.syngenta.com.pk/product/crop-protection/seed-care' }
+    ]
   },
   {
     id: 'tomato_early_blight',
@@ -188,7 +289,7 @@ export const FALLBACK_DISEASES = [
     ],
     recommended_actions: [
       'Prune lower branches to improve air circulation.',
-      'Apply protective or systemic fungicides (Cabrio Top or Amistar Top).',
+      'Apply protective or systemic fungicides (Score 250 EC or Cabrio Top).',
       'Remove and safely discard heavily infected crop foliage.'
     ],
     prevention: [
@@ -201,8 +302,8 @@ export const FALLBACK_DISEASES = [
       'Water at base using drip lines to keep leaves dry.'
     ],
     recommendedProducts: [
-      { name: 'Cabrio Top', company: 'FMC Pakistan', activeIngredient: 'Pyraclostrobin 5% + Metiram 55%', url: 'https://ag.fmc.com/pk/en/products/fungicides/cabrio-top' },
-      { name: 'Amistar Top', company: 'Syngenta Pakistan', activeIngredient: 'Azoxystrobin 200g/L + Difenoconazole 125g/L', url: 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02' }
+      { name: 'Score 250 EC', company: 'Syngenta Pakistan', activeIngredient: 'Difenoconazole 250 g/L EC', url: 'https://www.syngenta.com.pk/product/crop-protection/score-250-ec-01' },
+      { name: 'Cabrio Top', company: 'FMC Pakistan', activeIngredient: 'Pyraclostrobin 5% + Metiram 55%', url: 'https://ag.fmc.com/pk/en/products/fungicides/cabrio-top' }
     ]
   },
   {
@@ -224,7 +325,7 @@ export const FALLBACK_DISEASES = [
       'Wind-blown spores from infected potatoes or tomatoes.'
     ],
     recommended_actions: [
-      'Apply systemic fungicide (Ridomil Gold or Infinito) immediately.',
+      'Apply systemic fungicide (Ridomil Gold or Revus 250 SC) immediately.',
       'Remove and destroy infected plants.',
       'Avoid overhead watering.'
     ],
@@ -239,6 +340,79 @@ export const FALLBACK_DISEASES = [
     ],
     recommendedProducts: [
       { name: 'Ridomil Gold', company: 'Syngenta Pakistan', activeIngredient: 'Metalaxyl-M 4% + Mancozeb 64% WP', url: 'https://www.syngenta.com.pk/product/crop-protection/fungicides' },
+      { name: 'Revus 250 SC', company: 'Syngenta Pakistan', activeIngredient: 'Mandipropamid 250 g/L SC', url: 'https://www.syngenta.com.pk/product/crop-protection/fungicides' }
+    ]
+  },
+  {
+    id: 'potato_late_blight',
+    crop_id: 'potato',
+    crop: 'Potato',
+    disease_name: 'Late Blight',
+    confidence: 95,
+    severity: 'High',
+    description: 'A devastating oomycete infection caused by Phytophthora infestans causing foliar collapse and tuber rot.',
+    symptoms: [
+      'Dark water-soaked lesions on leaves rapidly turning purplish-brown.',
+      'White fungal sporulation on lesion undersides in cool, foggy weather.',
+      'Dry brown granular rot beneath tuber skins.'
+    ],
+    causes: [
+      'Phytophthora infestans.',
+      'Prolonged high humidity (>90%) with cool temperatures (15-20°C).',
+      'Infected seed tubers or volunteer potato cull piles.'
+    ],
+    recommended_actions: [
+      'Spray Ridomil Gold MZ 68 WG or Revus 250 SC preventatively.',
+      'Cease irrigation immediately during high disease risk periods.',
+      'Burn or dispose of haulms before harvest to prevent tuber contamination.'
+    ],
+    prevention: [
+      'Plant certified certified disease-free seed tubers.',
+      'Hill up potato rows deeply to protect tubers from spore wash-down.',
+      'Maintain regular preventative fungicide schedule in winter.'
+    ],
+    best_practices: [
+      'Scout low-lying or damp field corners daily.',
+      'Respect Pre-Harvest Interval (PHI) before digging tubers.'
+    ],
+    recommendedProducts: [
+      { name: 'Ridomil Gold', company: 'Syngenta Pakistan', activeIngredient: 'Metalaxyl-M 4% + Mancozeb 64% WP', url: 'https://www.syngenta.com.pk/product/crop-protection/fungicides' },
+      { name: 'Revus 250 SC', company: 'Syngenta Pakistan', activeIngredient: 'Mandipropamid 250 g/L SC', url: 'https://www.syngenta.com.pk/product/crop-protection/fungicides' }
+    ]
+  },
+  {
+    id: 'potato_early_blight',
+    crop_id: 'potato',
+    crop: 'Potato',
+    disease_name: 'Early Blight',
+    confidence: 91,
+    severity: 'Moderate',
+    description: 'Target-spot leaf disease caused by Alternaria solani affecting senescing lower potato leaves.',
+    symptoms: [
+      'Brown, angular to circular spots with concentric target rings.',
+      'Yellow chlorotic halos surrounding lesions.',
+      'Premature defoliation of lower canopy.'
+    ],
+    causes: [
+      'Alternaria solani fungus.',
+      'Alternating wet and dry weather cycles with plant stress.',
+      'Crop residue in soil.'
+    ],
+    recommended_actions: [
+      'Apply Score 250 EC or Cabrio Top.',
+      'Maintain adequate potassium and nitrogen nutrition.',
+      'Irrigate regularly to prevent water stress.'
+    ],
+    prevention: [
+      'Rotate crops with non-solanaceous crops.',
+      'Ensure balanced soil fertilization.'
+    ],
+    best_practices: [
+      'Avoid sprinkler irrigation in the late afternoon.',
+      'Spray early at first sight of lower leaf target spots.'
+    ],
+    recommendedProducts: [
+      { name: 'Score 250 EC', company: 'Syngenta Pakistan', activeIngredient: 'Difenoconazole 250 g/L EC', url: 'https://www.syngenta.com.pk/product/crop-protection/score-250-ec-01' },
       { name: 'Cabrio Top', company: 'FMC Pakistan', activeIngredient: 'Pyraclostrobin 5% + Metiram 55%', url: 'https://ag.fmc.com/pk/en/products/fungicides/cabrio-top' }
     ]
   },
@@ -261,7 +435,7 @@ export const FALLBACK_DISEASES = [
       'Presence of weed hosts.'
     ],
     recommended_actions: [
-      'Control whitefly population with Polo 500 SC or Talstar.',
+      'Control whitefly population with Polo 500 SC, Talstar 10 EC, or Actara 25 WG.',
       'Uproot and destroy severely infected plants.',
       'Apply neem-based sprays.'
     ],
@@ -276,6 +450,42 @@ export const FALLBACK_DISEASES = [
     ],
     recommendedProducts: [
       { name: 'Polo 500 SC', company: 'Syngenta Pakistan', activeIngredient: 'Diafenthiuron 500 g/L SC', url: 'https://www.syngenta.com.pk/product/crop-protection/polo-500-sc-01' },
+      { name: 'Talstar 10 EC', company: 'FMC Pakistan', activeIngredient: 'Bifenthrin 10% EC', url: 'https://ag.fmc.com/pk/en/products/insecticides/talstar' }
+    ]
+  },
+  {
+    id: 'cotton_bacterial_blight',
+    crop_id: 'cotton',
+    crop: 'Cotton',
+    disease_name: 'Cotton Bacterial Blight',
+    confidence: 92,
+    severity: 'Moderate',
+    description: 'Bacterial pathogen Xanthomonas citri causing angular leaf lesions, blackarm stem cankers, and boll rot.',
+    symptoms: [
+      'Angular water-soaked leaf spots bounded strictly by minor veins.',
+      'Lesions progressively turning dark brown to black.',
+      'Black elongated cankers along leaf petioles and stems (blackarm phase).'
+    ],
+    causes: [
+      'Bacterium Xanthomonas citri pv. malvacearum.',
+      'Warm temperatures (28-34°C) with driving rain or high humidity.',
+      'Infected un-delinted seed.'
+    ],
+    recommended_actions: [
+      'Spray Cuprocaffaro 50 WP (Copper Oxychloride) to halt bacterial spread.',
+      'Use acid-delinted certified seeds.',
+      'Avoid overhead high-pressure watering.'
+    ],
+    prevention: [
+      'Grow resistant cotton varieties (FH-142, BS-15).',
+      'Deep plow crop stubble after picking.'
+    ],
+    best_practices: [
+      'Maintain rigorous field sanitation and rogue infected seedlings.',
+      'Rotate crops with non-host cereals.'
+    ],
+    recommendedProducts: [
+      { name: 'Cuprocaffaro 50 WP', company: 'FMC Pakistan', activeIngredient: 'Copper Oxychloride 50% WP', url: 'https://ag.fmc.com/pk/en/products/fungicides' },
       { name: 'Talstar 10 EC', company: 'FMC Pakistan', activeIngredient: 'Bifenthrin 10% EC', url: 'https://ag.fmc.com/pk/en/products/insecticides/talstar' }
     ]
   },
@@ -298,7 +508,7 @@ export const FALLBACK_DISEASES = [
       'Excessive nitrogen application.'
     ],
     recommended_actions: [
-      'Apply systemic fungicide (Amistar Top or Score 250 EC) immediately.',
+      'Apply systemic fungicide (Score 250 EC or Amistar Top) immediately.',
       'Split nitrogen fertilizer applications.',
       'Maintain shallow standing water.'
     ],
@@ -314,6 +524,184 @@ export const FALLBACK_DISEASES = [
     recommendedProducts: [
       { name: 'Score 250 EC', company: 'Syngenta Pakistan', activeIngredient: 'Difenoconazole 250 g/L EC', url: 'https://www.syngenta.com.pk/product/crop-protection/score-250-ec-01' },
       { name: 'Amistar Top', company: 'Syngenta Pakistan', activeIngredient: 'Azoxystrobin 200g/L + Difenoconazole 125g/L', url: 'https://www.syngenta.com.pk/product/crop-protection/amistar-top-02' }
+    ]
+  },
+  {
+    id: 'rice_stem_borer',
+    crop_id: 'rice',
+    crop: 'Rice',
+    disease_name: 'Rice Stem Borer',
+    confidence: 94,
+    severity: 'High',
+    description: 'Lepidopteran larvae boring into stems causing deadhearts in tillering stage and whiteheads at heading.',
+    symptoms: [
+      'Dead central shoot (deadheart) that easily pulls out.',
+      'Erect, bleached white panicles (whiteheads) with no grain filling.',
+      'Larval boreholes and frass near lower stem nodes.'
+    ],
+    causes: [
+      'Scirpophaga incertulas / Chilo suppressalis larvae.',
+      'Dense planting and high nitrogen fertilization.',
+      'Stubble left in fields from previous season.'
+    ],
+    recommended_actions: [
+      'Broadcast Ferterra 0.4 GR at early tillering.',
+      'Apply Virtako 40 WG or Coragen 200 SC at first moth emergence.',
+      'Clip seedling leaf tips before transplanting to remove egg masses.'
+    ],
+    prevention: [
+      'Plow down stubble immediately after harvest.',
+      'Avoid excessive nitrogen fertilizer.'
+    ],
+    best_practices: [
+      'Monitor with light traps and pheromone lures.',
+      'Apply granular insecticides into standing water.'
+    ],
+    recommendedProducts: [
+      { name: 'Virtako 40 WG', company: 'Syngenta Pakistan', activeIngredient: 'Chlorantraniliprole 20% + Thiamethoxam 20% WG', url: 'https://www.syngenta.com.pk/product/crop-protection/insecticides' },
+      { name: 'Ferterra 0.4 GR', company: 'FMC Pakistan', activeIngredient: 'Chlorantraniliprole 0.4% GR', url: 'https://ag.fmc.com/pk/en/products/insecticides/ferterra' }
+    ]
+  },
+  {
+    id: 'maize_fall_armyworm',
+    crop_id: 'maize',
+    crop: 'Maize',
+    disease_name: 'Fall Armyworm',
+    confidence: 96,
+    severity: 'High',
+    description: 'Invasive pest Spodoptera frugiperda feeding voraciously inside maize whorls causing severe defoliation.',
+    symptoms: [
+      'Ragged, windowpaned feeding holes on whorl leaves.',
+      'Abundant sawdust-like larval frass accumulating inside plant whorls.',
+      'Larvae with dark heads and inverted Y shape visible inside central leaf rolls.'
+    ],
+    causes: [
+      'Spodoptera frugiperda caterpillar infestation.',
+      'Warm, humid weather favoring rapid generational turnover.',
+      'Continuous maize planting in adjacent tracts.'
+    ],
+    recommended_actions: [
+      'Spray Coragen 200 SC or Match 050 EC directly into the central plant whorl.',
+      'Apply Steward 150 SC in rotation for resistance management.',
+      'Hand-pick and crush caterpillars in early morning scouting.'
+    ],
+    prevention: [
+      'Early uniform sowing to avoid peak adult moth flights.',
+      'Intercrop with legumes or desmodium to deter egg laying.'
+    ],
+    best_practices: [
+      'Ensure spray nozzle points directly into whorls rather than broad flat foliage.',
+      'Apply early in the morning or near sunset.'
+    ],
+    recommendedProducts: [
+      { name: 'Coragen 200 SC', company: 'FMC Pakistan', activeIngredient: 'Chlorantraniliprole 200 g/L SC', url: 'https://ag.fmc.com/pk/en/products/insecticides/coragen' },
+      { name: 'Match 050 EC', company: 'Syngenta Pakistan', activeIngredient: 'Lufenuron 50 g/L EC', url: 'https://www.syngenta.com.pk/product/match' }
+    ]
+  },
+  {
+    id: 'maize_northern_leaf_blight',
+    crop_id: 'maize',
+    crop: 'Maize',
+    disease_name: 'Northern Leaf Blight',
+    confidence: 93,
+    severity: 'Moderate',
+    description: 'Fungal disease caused by Exserohilum turcicum producing long elliptical tan lesions.',
+    symptoms: [
+      'Large, long elliptical grayish-green to tan lesions (cigar-shaped).',
+      'Lesions coalesce causing complete burning and drying of leaf blades.',
+      'Dark olive fungal spores visible on lesions during damp mornings.'
+    ],
+    causes: [
+      'Fungus Exserohilum turcicum.',
+      'Moderate temperatures (18-27°C) and persistent dew or leaf wetness.',
+      'Infected corn debris on soil surface.'
+    ],
+    recommended_actions: [
+      'Apply Tilt 250 EC (Propiconazole) at first sign of lower leaf lesions.',
+      'Ensure balanced soil nutrition with adequate potash.',
+      'Plow under residue after harvest.'
+    ],
+    prevention: [
+      'Plant resistant maize hybrids.',
+      'Rotate fields out of corn for at least 1-2 years.'
+    ],
+    best_practices: [
+      'Scout lower leaves before tasseling stage.',
+      'Avoid overhead irrigation that extends leaf wetness periods.'
+    ],
+    recommendedProducts: [
+      { name: 'Tilt 250 EC', company: 'Syngenta Pakistan', activeIngredient: 'Propiconazole 250 g/L EC', url: 'https://www.syngenta.com.pk/product/crop-protection/tilt-250-ec-01' }
+    ]
+  },
+  {
+    id: 'sugarcane_stem_borer',
+    crop_id: 'sugarcane',
+    crop: 'Sugarcane',
+    disease_name: 'Sugarcane Stem Borer',
+    confidence: 94,
+    severity: 'High',
+    description: 'Chilo infuscatellus larvae tunneling through internodes causing deadhearts, sugar loss, and cane breakage.',
+    symptoms: [
+      'Dead dry heart in young tillers that pulls out easily with foul odor.',
+      'Entry holes in cane internodes surrounded by red stains and frass.',
+      'Stunted shoots with bunchy tops.'
+    ],
+    causes: [
+      'Shoot and stem borer moth larvae.',
+      'Dry weather with hot summer temperatures during early shoot growth.',
+      'Ratoon crops harboring overwintering larvae.'
+    ],
+    recommended_actions: [
+      'Broadcast Ferterra 0.4 GR at 4 kg/acre with irrigation.',
+      'Apply Virtako 40 WG or Coragen 200 SC at borer emergence.',
+      'Release Trichogramma egg parasitoid cards.'
+    ],
+    prevention: [
+      'Earth up cane rows at 45-60 days to bury shoot borer entry points.',
+      'Burn dry trash and avoid water stagnation.'
+    ],
+    best_practices: [
+      'Regular scouting at early tillering.',
+      'Use certified pest-free seed cane.'
+    ],
+    recommendedProducts: [
+      { name: 'Ferterra 0.4 GR', company: 'FMC Pakistan', activeIngredient: 'Chlorantraniliprole 0.4% GR', url: 'https://ag.fmc.com/pk/en/products/insecticides/ferterra' },
+      { name: 'Virtako 40 WG', company: 'Syngenta Pakistan', activeIngredient: 'Chlorantraniliprole 20% + Thiamethoxam 20% WG', url: 'https://www.syngenta.com.pk/product/crop-protection/insecticides' }
+    ]
+  },
+  {
+    id: 'sugarcane_red_rot',
+    crop_id: 'sugarcane',
+    crop: 'Sugarcane',
+    disease_name: 'Red Rot',
+    confidence: 95,
+    severity: 'High',
+    description: 'Devastating fungal disease Colletotrichum falcatum causing internal cane reddening and alcoholic odor.',
+    symptoms: [
+      'Third and fourth leaves show yellowing, withering, and drooping.',
+      'Longitudinal split reveals red internal stalk tissue with transverse white patches.',
+      'Alcoholic or sour fermenting odor from split stalks.'
+    ],
+    causes: [
+      'Fungus Colletotrichum falcatum.',
+      'Infected seed setts.',
+      'Waterlogged soil and poorly drained heavy clays.'
+    ],
+    recommended_actions: [
+      'Dip seed setts in Tilt 250 EC solution before planting.',
+      'Uproot and burn infected stools immediately; do not keep ratoon.',
+      'Provide rapid drainage to eliminate waterlogging.'
+    ],
+    prevention: [
+      'Plant red rot resistant varieties (CPF-249, CP-77/400).',
+      'Select seed cane only from inspected, certified disease-free nurseries.'
+    ],
+    best_practices: [
+      'Rotate affected fields with rice or wheat for 2 seasons.',
+      'Disinfect harvesting knives with formalin or heat.'
+    ],
+    recommendedProducts: [
+      { name: 'Tilt 250 EC', company: 'Syngenta Pakistan', activeIngredient: 'Propiconazole 250 g/L EC', url: 'https://www.syngenta.com.pk/product/crop-protection/tilt-250-ec-01' }
     ]
   }
 ];
@@ -505,7 +893,10 @@ export function searchDiseaseByName(refData, cropName, diseaseName) {
     bestPractices: found.best_practices || found.bestPractices || [],
     recommendedProducts: (found.recommendedProducts || (refData?.products || FALLBACK_PRODUCTS).filter(p => {
       const tgDis = Array.isArray(p.target_diseases) ? p.target_diseases : [];
-      return tgDis.some(td => td.toLowerCase().includes(qName) || qName.includes(td.toLowerCase()));
+      const tgCrops = Array.isArray(p.target_crops) ? p.target_crops : [];
+      const matchesCrop = !qCrop || tgCrops.some(tc => tc.toLowerCase().includes(qCrop) || qCrop.includes(tc.toLowerCase()));
+      const matchesDisease = tgDis.some(td => td.toLowerCase().includes(qName) || qName.includes(td.toLowerCase()));
+      return matchesCrop && matchesDisease;
     }).map(p => ({
       name: p.name,
       company: p.company,
