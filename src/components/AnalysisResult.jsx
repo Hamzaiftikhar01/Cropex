@@ -395,6 +395,31 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
             </ul>
           </div>
 
+          {/* Phase 3: Grounded RAG Knowledge Base Advisory */}
+          {activeResult.groundedTreatment && (
+            <div className="mt-8 pt-5 border-t border-earth-100 dark:border-earth-800 relative z-10 bg-crop-50/30 dark:bg-crop-950/20 p-4 rounded-xl border border-crop-200/50 dark:border-crop-800/50">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-crop-100 text-crop-800 dark:bg-crop-900/40 dark:text-crop-300">
+                  VERIFIED ADVISORY
+                </span>
+                <span className="text-[10px] text-earth-500 dark:text-earth-400 font-medium">
+                  Source: {activeResult.groundedTreatment.source}
+                </span>
+              </div>
+              <h4 className="text-sm font-bold text-earth-900 dark:text-earth-100 mb-1">
+                {activeResult.groundedTreatment.title}
+              </h4>
+              <p className="text-xs sm:text-sm text-earth-700 dark:text-earth-200 leading-relaxed">
+                {activeResult.groundedTreatment.guidance}
+              </p>
+              {activeResult.groundedTreatment.guidance_ur && (
+                <p className="mt-2 text-xs text-earth-600 dark:text-earth-300 leading-relaxed text-right" dir="rtl">
+                  {activeResult.groundedTreatment.guidance_ur}
+                </p>
+              )}
+            </div>
+          )}
+
           {/* 4. AI DIAGNOSTIC DISCLAIMER */}
           <div className="mt-8 p-4 rounded-xl bg-earth-50/80 dark:bg-earth-950/60 border border-earth-150 dark:border-earth-800 relative z-10">
             <span className="text-[10px] font-bold text-earth-500 dark:text-earth-350 uppercase tracking-widest block">

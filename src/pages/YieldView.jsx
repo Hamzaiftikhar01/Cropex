@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { calculateYieldForecast, calculateDiseaseRisk } from '../utils/agriRules';
-import { Target, Calendar, Sun, Sprout, Bug, Lightbulb } from 'lucide-react';
+import { Target, Calendar, Sun, Sprout, Bug, Lightbulb, TrendingUp, TrendingDown, ShieldCheck, AlertTriangle, BookOpen } from 'lucide-react';
 
 export default function YieldView({ fieldProfile, weatherData }) {
   const { t, language } = useLanguage();
@@ -11,7 +11,7 @@ export default function YieldView({ fieldProfile, weatherData }) {
   const [simulatedDisease, setSimulatedDisease] = useState(diseaseRisk);
   const [simulatedHeatwave, setSimulatedHeatwave] = useState(false);
 
-  // Sync state if crop changes (just in case key doesn't trigger)
+  // Sync state if crop changes
   useEffect(() => {
     setSimulatedDisease(diseaseRisk);
     setSimulatedHeatwave(false);
@@ -25,9 +25,7 @@ export default function YieldView({ fieldProfile, weatherData }) {
     : weatherData;
 
   const yieldData = calculateYieldForecast(
-    fieldProfile.cropType,
-    fieldProfile.soilType,
-    fieldProfile.sowingDate,
+    fieldProfile,
     calcWeatherData,
     simulatedDisease,
     language
@@ -57,9 +55,29 @@ export default function YieldView({ fieldProfile, weatherData }) {
             </span>
             <span className="text-lg sm:text-xl text-earth-100 font-bold ml-2">{t('maundsPerAcre')}</span>
           </div>
-          <span className="text-xs text-earth-300 bg-earth-800/80 border border-earth-700 px-3.5 py-1.5 rounded-full font-semibold self-start sm:self-auto">
-            <Target size={16} className="inline mr-1" aria-hidden="true" /> {t('yieldAverage')}: {yieldData.expectedYield} {t('maunds')}
-          </span>
+
+          {/* District Baseline & Delta Comparison */}
+          <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+            <span className="text-xs text-earth-300 bg-earth-800/80 border border-earth-700 px-3 py-1.5 rounded-full font-semibold">
+              <Target size={14} className="inline mr-1" aria-hidden="true" />
+              {fieldProfile.district || 'District'} {t('yieldAverage')}: {yieldData.districtAverage} {t('maunds')}
+            </span>
+            {yieldData.deltaFromAverage !== undefined && (
+              <span className={`text-xs px-3 py-1.5 rounded-full font-bold flex items-center gap-1 ${
+                yieldData.deltaFromAverage >= 0
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                  : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+              }`}>
+                {yieldData.deltaFromAverage >= 0 ? <TrendingUp size={13} aria-hidden="true" /> : <TrendingDown size={13} aria-hidden="true" />}
+                {yieldData.deltaFromAverage >= 0 ? `+${yieldData.deltaFromAverage}%` : `${yieldData.deltaFromAverage}%`} vs Baseline
+              </span>
+            )}
+            {yieldData.confidence && (
+              <span className="text-xs bg-crop-500/20 text-crop-300 border border-crop-500/30 px-3 py-1.5 rounded-full font-semibold flex items-center gap-1">
+                <ShieldCheck size={13} aria-hidden="true" /> {yieldData.confidence}% Confidence
+              </span>
+            )}
+          </div>
         </div>
 
         <p className="mt-4 text-xs sm:text-sm text-earth-200 border-t border-earth-700/50 pt-3.5 font-semibold italic">
@@ -70,9 +88,14 @@ export default function YieldView({ fieldProfile, weatherData }) {
       <div className="grid gap-6 md:grid-cols-3 items-stretch">
         {/* Regression Penalties Breakdown */}
         <div className="bg-white border border-earth-100 rounded-2xl p-5 sm:p-6 dark:bg-earth-900 dark:border-earth-800 shadow-soft md:col-span-2 space-y-4">
-          <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-earth-800 dark:text-earth-200">
-            {t('yieldBreakdown')}
-          </h4>
+          <div className="flex justify-between items-center">
+            <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-earth-800 dark:text-earth-200">
+              {t('yieldBreakdown')}
+            </h4>
+            <span className="text-[11px] font-mono text-crop-600 dark:text-crop-400 font-semibold">
+              Gradient-Boosted Ensemble
+            </span>
+          </div>
           
           <div className="space-y-3.5">
             {/* Sowing Factor */}
@@ -80,7 +103,7 @@ export default function YieldView({ fieldProfile, weatherData }) {
               <div className="flex justify-between text-xs font-semibold text-earth-650 dark:text-earth-350">
                 <span className="flex items-center gap-1"><Calendar size={14} aria-hidden="true" /> {t('sowingAlign')}</span>
                 <span className={yieldData.sowingFactor < 1.0 ? 'text-red-500 font-bold' : 'text-green-600 font-bold'}>
-                  {yieldData.sowingFactor.toFixed(2)}x
+                  {yieldData.sowingFactor.toFixed(2)}x {yieldData.stressAttribution?.sowingPenalty > 0 ? `(-${yieldData.stressAttribution.sowingPenalty}%)` : ''}
                 </span>
               </div>
               <div className="w-full bg-earth-100 dark:bg-earth-800 h-2 rounded-full mt-1.5 overflow-hidden">
@@ -96,7 +119,7 @@ export default function YieldView({ fieldProfile, weatherData }) {
               <div className="flex justify-between text-xs font-semibold text-earth-650 dark:text-earth-350">
                 <span className="flex items-center gap-1"><Sun size={14} aria-hidden="true" /> {t('tempStress')}</span>
                 <span className={yieldData.weatherFactor < 1.0 ? 'text-red-500 font-bold' : 'text-green-600 font-bold'}>
-                  {yieldData.weatherFactor.toFixed(2)}x
+                  {yieldData.weatherFactor.toFixed(2)}x {yieldData.stressAttribution?.heatPenalty > 0 ? `(-${yieldData.stressAttribution.heatPenalty}%)` : ''}
                 </span>
               </div>
               <div className="w-full bg-earth-100 dark:bg-earth-800 h-2 rounded-full mt-1.5 overflow-hidden">
@@ -112,7 +135,7 @@ export default function YieldView({ fieldProfile, weatherData }) {
               <div className="flex justify-between text-xs font-semibold text-earth-650 dark:text-earth-350">
                 <span className="flex items-center gap-1"><Sprout size={14} aria-hidden="true" /> {t('soilEfficiency')}</span>
                 <span className={yieldData.soilFactor < 1.0 ? 'text-red-500 font-bold' : 'text-green-600 font-bold'}>
-                  {yieldData.soilFactor.toFixed(2)}x
+                  {yieldData.soilFactor.toFixed(2)}x {yieldData.stressAttribution?.soilAdjustment !== 0 ? `(${yieldData.stressAttribution?.soilAdjustment > 0 ? '+' : ''}${yieldData.stressAttribution?.soilAdjustment}%)` : ''}
                 </span>
               </div>
               <div className="w-full bg-earth-100 dark:bg-earth-800 h-2 rounded-full mt-1.5 overflow-hidden">
@@ -128,7 +151,7 @@ export default function YieldView({ fieldProfile, weatherData }) {
               <div className="flex justify-between text-xs font-semibold text-earth-650 dark:text-earth-350">
                 <span className="flex items-center gap-1"><Bug size={14} aria-hidden="true" /> {t('diseaseInfect')}</span>
                 <span className={yieldData.diseaseFactor < 1.0 ? 'text-red-500 font-bold' : 'text-green-600 font-bold'}>
-                  {yieldData.diseaseFactor.toFixed(2)}x
+                  {yieldData.diseaseFactor.toFixed(2)}x {yieldData.stressAttribution?.diseasePenalty > 0 ? `(-${yieldData.stressAttribution.diseasePenalty}%)` : ''}
                 </span>
               </div>
               <div className="w-full bg-earth-100 dark:bg-earth-800 h-2 rounded-full mt-1.5 overflow-hidden">
@@ -140,9 +163,12 @@ export default function YieldView({ fieldProfile, weatherData }) {
             </div>
           </div>
           
-          <p className="text-[10px] text-earth-500 dark:text-earth-350 pt-2 border-t border-earth-100 dark:border-earth-800">
-            Formula: Yield = Base Potential × Max(0.60, Sowing × Weather × Soil × Disease). Factors calculated daily.
-          </p>
+          <div className="pt-2 border-t border-earth-100 dark:border-earth-800 flex items-center justify-between text-[11px] text-earth-500 dark:text-earth-400">
+            <span className="flex items-center gap-1">
+              <BookOpen size={13} className="text-crop-600 dark:text-crop-400" aria-hidden="true" />
+              {yieldData.literatureCitation || 'PBS / CRS Agro-Ecological Baselines'}
+            </span>
+          </div>
         </div>
 
         {/* Interactive Sandbox */}
@@ -192,6 +218,32 @@ export default function YieldView({ fieldProfile, weatherData }) {
           </div>
         </div>
       </div>
+
+      {/* Actionable Mitigation Advisories */}
+      {yieldData.mitigations && yieldData.mitigations.length > 0 && (
+        <div className="bg-white border border-earth-100 rounded-2xl p-5 sm:p-6 dark:bg-earth-900 dark:border-earth-800 shadow-soft space-y-3">
+          <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-earth-800 dark:text-earth-200 flex items-center gap-1.5">
+            <AlertTriangle size={16} className="text-amber-500" aria-hidden="true" />
+            Agronomic Stress Mitigations ({yieldData.mitigations.length} Identified)
+          </h4>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {yieldData.mitigations.map((m, idx) => (
+              <div key={idx} className="p-3.5 bg-earth-50 dark:bg-earth-950/60 rounded-xl border border-earth-100 dark:border-earth-800 text-xs">
+                <div className="flex items-center justify-between font-bold text-earth-900 dark:text-earth-100">
+                  <span className="text-xs font-semibold">{m.factor}</span>
+                  <span className="text-rose-500 font-mono text-[11px] font-bold bg-rose-50 dark:bg-rose-950/40 px-2 py-0.5 rounded">
+                    {m.impact}
+                  </span>
+                </div>
+                <p className="mt-1.5 text-earth-650 dark:text-earth-350 leading-relaxed text-[11px]">
+                  {m.advice}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+

@@ -37,7 +37,7 @@ export default async function handler(req, res) {
   }
 
   // ── Input validation ─────────────────────────────────────────────────────────
-  const { messages } = req.body || {};
+  const { messages, ragContext, sources } = req.body || {};
 
   if (!Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'Missing messages array.' });
@@ -62,8 +62,23 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'No valid messages provided.' });
   }
 
+  // Inject RAG grounding instructions and sources into system prompt
+  if (ragContext && typeof ragContext === 'string') {
+    const ragSystemPrompt = `\n\n=== VERIFIED LOCAL RESEARCH SOURCES (PAKISTAN) ===\n${ragContext}\n==================================================\n\nSTRICT INSTRUCTIONS FOR RAG FAITHFULNESS:\n1. Base disease treatments, product recommendations, and crop advice ONLY on the verified sources above.\n2. Cite your sources clearly in your response (e.g. "[Source: NARC Wheat Program]" or "[Source: DPP Pakistan]").\n3. NEVER invent or extrapolate chemical dosages. Only quote dosages present in the sources; otherwise advise consulting the product label.\n4. If the sources above do not contain the answer, explicitly inform the farmer and advise contacting their district agricultural extension officer or calling the NARC helpline (051-9255000).\n5. Keep advice concise, practical, and farmer-friendly. Respond in Urdu or English according to the farmer's language.`;
+
+    const systemIdx = sanitizedMessages.findIndex((m) => m.role === 'system');
+    if (systemIdx >= 0) {
+      sanitizedMessages[systemIdx].content += ragSystemPrompt;
+    } else {
+      sanitizedMessages.unshift({
+        role: 'system',
+        content: `You are Cropex AI, an expert precision farming advisor for Pakistan.${ragSystemPrompt}`,
+      });
+    }
+  }
+
   // ── API key ──────────────────────────────────────────────────────────────────
-  const apiKey = process.env.GROQ_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY || process.env.VITE_GROQ_API_KEY;
   if (!apiKey) {
     return res.status(500).json({ error: 'Server configuration error.' });
   }
@@ -86,7 +101,7 @@ export default async function handler(req, res) {
           model: GROQ_MODEL,
           messages: sanitizedMessages,
           temperature: 0.5,
-          max_tokens: 512,
+          max_tokens: 1024,
         }),
       });
     } finally {
@@ -106,7 +121,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Unexpected AI response.' });
     }
 
-    return res.status(200).json({ reply });
+    return res.status(200).json({ reply, sources: Array.isArray(sources) ? sources : [] });
 
   } catch (err) {
     if (err.name === 'AbortError') {

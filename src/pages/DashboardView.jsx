@@ -29,9 +29,7 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
     language
   );
   const yieldInfo = calculateYieldForecast(
-    fieldProfile.cropType,
-    fieldProfile.soilType,
-    fieldProfile.sowingDate,
+    fieldProfile,
     weatherData,
     riskInfo.percentage,
     language
@@ -380,6 +378,11 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                 <span className="text-xs text-neutral-medium block mt-0.5 font-medium">
                   {riskInfo.diseaseName}
                 </span>
+                {riskInfo.literatureCitation && (
+                  <span className="text-[10px] text-neutral-medium/80 block mt-0.5 font-mono truncate max-w-[200px]" title={riskInfo.literatureCitation}>
+                    Ref: {riskInfo.literatureCitation.split('(')[0].trim()}
+                  </span>
+                )}
               </div>
               <Bug size={24} className="text-red-500 dark:text-red-400" aria-hidden="true" />
             </div>
@@ -441,6 +444,15 @@ export default function DashboardView({ fieldProfile, weatherData, loading, onNa
                     {t('maundsPerAcre')}
                   </span>
                 </div>
+                {yieldInfo.deltaFromAverage !== undefined && (
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded mt-1 inline-block ${
+                    yieldInfo.deltaFromAverage >= 0
+                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                      : 'bg-rose-500/10 text-rose-600 dark:text-rose-400'
+                  }`}>
+                    {yieldInfo.deltaFromAverage >= 0 ? `+${yieldInfo.deltaFromAverage}%` : `${yieldInfo.deltaFromAverage}%`} vs {fieldProfile.district || 'Baseline'} ({yieldInfo.districtAverage || 45} mnds)
+                  </span>
+                )}
               </div>
               <Activity size={24} className="text-crop-600 dark:text-crop-400" aria-hidden="true" />
             </div>

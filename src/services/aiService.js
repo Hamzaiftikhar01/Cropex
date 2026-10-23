@@ -251,18 +251,66 @@ export async function analyzeCropImage(imageInput, cropHint) {
 }
 
 // =============================================================================
-// Chatbot
-// =============================================================================
+import { searchKnowledgeBase, formatRagContextForPrompt } from '../lib/ragSearch.js';
+
+export { searchKnowledgeBase };
 
 /**
- * Sends conversation history to the secure chat proxy.
+ * Searches knowledge base via serverless API endpoint or local fallback.
+ * @param {string} query
+ * @param {object} [options]
+ * @returns {Promise<object>}
+ */
+export async function queryRagKnowledgeBase(query, options = {}) {
+  try {
+    return await callApi('/api/rag', { query, ...options }, 15_000);
+  } catch (_err) {
+    // Graceful offline/local fallback
+    return searchKnowledgeBase(query, options);
+  }
+}
+
+/**
+ * Sends conversation history to the secure chat proxy with RAG knowledge grounding.
  *
  * @param {Array<{role: string, content: string}>} messageHistory
  * @param {{ fieldProfile?: object, weatherData?: object }} contextData
- * @returns {Promise<string>} Assistant reply text
+ * @returns {Promise<{ reply: string, sources: Array<object> }>} Assistant reply and cited sources
  */
 export async function generateChatResponse(messageHistory, contextData) {
   const { fieldProfile, weatherData } = contextData || {};
+
+  // Extract latest user inquiry for RAG retrieval
+  const lastUserMsg = [...messageHistory].reverse().find((m) => m.role === 'user')?.content || '';
+
+  let ragContext = '';
+  let sources = [];
+
+  try {
+    const cropId = fieldProfile?.cropType ? fieldProfile.cropType.toLowerCase() : null;
+    const searchRes = searchKnowledgeBase(lastUserMsg, {
+      cropId,
+      limit: 4,
+      minScore: 0.5,
+    });
+
+    if (searchRes.results && searchRes.results.length > 0) {
+      sources = searchRes.results.map((r) => ({
+        id: r.chunk.id,
+        title: r.chunk.title,
+        source: r.chunk.source,
+        category: r.chunk.category,
+        cropId: r.chunk.crop_id,
+        diseaseId: r.chunk.disease_id,
+        content: r.chunk.content,
+        content_ur: r.chunk.content_ur || null,
+        score: r.score,
+      }));
+      ragContext = formatRagContextForPrompt(searchRes.results);
+    }
+  } catch (ragErr) {
+    console.warn('[aiService] RAG retrieval skipped:', ragErr);
+  }
 
   const systemContent = `You are a highly intelligent, empathetic agricultural expert assistant for Cropex — an AI farming platform for Pakistan.
 Prioritize local context: District: ${fieldProfile?.district || 'Unknown'}, Crop: ${fieldProfile?.cropType || 'Unknown'}.
@@ -275,7 +323,25 @@ DISCLAIMER: Advice is AI-generated. Always verify with a certified agronomist.`;
     ...messageHistory.map((m) => ({ role: m.role, content: m.content })),
   ];
 
-  const data = await callApi('/api/chat', { messages }, 30_000);
+  let data;
+  try {
+    data = await callApi('/api/chat', { messages, ragContext, sources }, 35_000);
+  } catch (apiErr) {
+    console.warn('[aiService] Chat API error, using grounded knowledge base response:', apiErr);
+    if (sources && sources.length > 0) {
+      const topChunk = sources[0];
+      const otherCitations = sources.slice(1).map((s) => s.title).join(', ');
+      const fallbackReply = `**${topChunk.title}**\n\n${topChunk.content}\n\n${
+        topChunk.content_ur ? `\n\n*${topChunk.content_ur}*` : ''
+      }\n\n📍 **Verified Source:** ${topChunk.source}${otherCitations ? `\n📚 **Related advisories:** ${otherCitations}` : ''}`;
+      return {
+        reply: fallbackReply,
+        sources,
+      };
+    }
+    throw apiErr;
+  }
+
   const reply = data?.reply;
 
   if (typeof reply !== 'string') {
@@ -284,7 +350,10 @@ DISCLAIMER: Advice is AI-generated. Always verify with a certified agronomist.`;
     });
   }
 
-  return reply;
+  return {
+    reply,
+    sources: data?.sources || sources || [],
+  };
 }
 
 // =============================================================================
@@ -300,8 +369,20 @@ DISCLAIMER: Advice is AI-generated. Always verify with a certified agronomist.`;
  * @param {string} district
  * @returns {string}
  */
-export function getLocalCropAdvice(cropName, district) {
-  return `For best results in ${district}, consult your local agriculture extension office for the recommended sowing window and approved varieties of ${cropName}.`;
+export async function getLocalCropAdvice(cropName, district) {
+  try {
+    const cropId = cropName ? cropName.toLowerCase().trim() : null;
+    const res = searchKnowledgeBase(`${cropName || ''} agronomy sowing guide`, {
+      cropId,
+      limit: 1,
+    });
+    if (res.results && res.results.length > 0) {
+      return res.results[0].chunk.content;
+    }
+  } catch (_e) {
+    // fallback
+  }
+  return `For best results in ${district || 'your area'}, consult your local agriculture extension office for the recommended sowing window and approved varieties of ${cropName}.`;
 }
 
 // =============================================================================

@@ -1,8 +1,54 @@
 import { useState, useRef, useEffect } from 'react';
-import { Bot, Sprout } from 'lucide-react';
+import { Bot, Sprout, BookOpen, ChevronDown, ChevronUp, ShieldCheck } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { generateChatResponse } from '../services/aiService';
+
+function SourcesAccordion({ sources }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  if (!sources || sources.length === 0) return null;
+
+  return (
+    <div className="mt-2.5 pt-2 border-t border-neutral-border/60 text-xs not-prose">
+      <button
+        type="button"
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="flex items-center justify-between w-full text-brand-primary font-medium hover:text-brand-secondary transition-colors cursor-pointer py-1"
+      >
+        <span className="flex items-center gap-1.5">
+          <BookOpen size={13} className="text-brand-primary" aria-hidden="true" />
+          <span>Verified Local Sources ({sources.length})</span>
+          <ShieldCheck size={13} className="text-emerald-600" aria-hidden="true" />
+        </span>
+        {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+      </button>
+
+      {isExpanded && (
+        <div className="mt-2 space-y-2 animate-fade-in">
+          {sources.map((src, i) => (
+            <div
+              key={src.id || i}
+              className="bg-neutral-fill/70 rounded-lg p-2 border border-neutral-border/50 text-[11px] text-neutral-medium"
+            >
+              <div className="font-semibold text-neutral-high text-[11.5px] leading-snug">
+                {src.title}
+              </div>
+              <div className="text-[10px] text-brand-primary mt-0.5 font-medium">
+                Citation: {src.source || 'Official Research Advisory'}
+              </div>
+              {src.content && (
+                <p className="mt-1 text-neutral-medium line-clamp-2 leading-relaxed">
+                  {src.content}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Chatbot({ fieldProfile, weatherData }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,9 +81,11 @@ export default function Chatbot({ fieldProfile, weatherData }) {
     setIsTyping(true);
 
     try {
-      const responseText = await generateChatResponse(newMessages, { fieldProfile, weatherData });
-      setMessages([...newMessages, { role: 'assistant', content: responseText }]);
-    } catch (error) {
+      const response = await generateChatResponse(newMessages, { fieldProfile, weatherData });
+      const content = typeof response === 'string' ? response : response.reply;
+      const sources = response?.sources || [];
+      setMessages([...newMessages, { role: 'assistant', content, sources }]);
+    } catch (_error) {
       setMessages([...newMessages, { role: 'assistant', content: "I'm sorry, I encountered an error connecting to the AI. Please try again later." }]);
     } finally {
       setIsTyping(false);
@@ -75,9 +123,14 @@ export default function Chatbot({ fieldProfile, weatherData }) {
                   {msg.role === 'user' ? (
                     msg.content
                   ) : (
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {msg.content}
-                    </ReactMarkdown>
+                    <>
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {msg.content}
+                      </ReactMarkdown>
+                      {msg.sources && msg.sources.length > 0 && (
+                        <SourcesAccordion sources={msg.sources} />
+                      )}
+                    </>
                   )}
                 </div>
               </div>

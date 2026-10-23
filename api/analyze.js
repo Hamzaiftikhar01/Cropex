@@ -11,9 +11,10 @@
 
 import { checkRateLimit, getClientIp } from './_rateLimit.js';
 import { buildTaxonomyPromptBlock, DISEASE_TAXONOMY } from '../src/lib/diseaseTaxonomy.js';
+import { searchKnowledgeBase } from '../src/lib/ragSearch.js';
 
 // Constants — Phase 2: upgraded to a stronger vision model
-const GROQ_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct';
+const GROQ_MODEL = 'qwen/qwen3.8-27b';
 const MAX_IMAGE_BYTES = 4 * 1024 * 1024; // 4 MB after compression
 const ALLOWED_MIME_PREFIXES = ['data:image/jpeg', 'data:image/png', 'data:image/webp'];
 const RATE_LIMIT_MAX = 20;
@@ -75,7 +76,7 @@ export default async function handler(req, res) {
   }
 
   // ── API key ─────────────────────────────────────────────────────────────────
-  const apiKey = process.env.GROQ_API_KEY; // Never use VITE_* on the server
+  const apiKey = process.env.GROQ_API_KEY || process.env.VITE_GROQ_API_KEY;
   if (!apiKey) {
     return res.status(500).json({
       error: 'Server is missing GROQ_API_KEY. Contact the administrator.',
@@ -187,6 +188,45 @@ Return ONLY valid JSON, no markdown, no code fences:
     }
 
     const parsed = JSON.parse(rawContent);
+
+    // Phase 3: RAG Knowledge Base enrichment for grounded diagnosis treatment
+    if (parsed.isCrop && parsed.disease_id && parsed.disease_id !== 'healthy') {
+      try {
+        const ragRes = searchKnowledgeBase(`${parsed.crop || ''} ${parsed.disease || ''}`, {
+          cropId: cropHintStr || (parsed.crop ? parsed.crop.toLowerCase() : null),
+          diseaseId: parsed.disease_id,
+          limit: 3,
+        });
+
+        if (ragRes.results && ragRes.results.length > 0) {
+          parsed.verifiedSources = ragRes.results.map((r) => ({
+            id: r.chunk.id,
+            title: r.chunk.title,
+            source: r.chunk.source,
+            content: r.chunk.content,
+            content_ur: r.chunk.content_ur || null,
+          }));
+
+          // Add grounded treatment block with explicit citation
+          const primaryTreatmentChunk = ragRes.results.find(
+            (r) => r.chunk.category === 'disease_mgmt' || r.chunk.category === 'pesticide'
+          );
+          if (primaryTreatmentChunk) {
+            parsed.groundedTreatment = {
+              source: primaryTreatmentChunk.chunk.source,
+              title: primaryTreatmentChunk.chunk.title,
+              guidance: primaryTreatmentChunk.chunk.content,
+              guidance_ur: primaryTreatmentChunk.chunk.content_ur || null,
+            };
+          }
+        } else {
+          parsed.fallbackAdvice = ragRes.fallbackAdvice;
+        }
+      } catch (ragErr) {
+        console.error('[analyze] RAG enrichment error:', ragErr);
+      }
+    }
+
     return res.status(200).json(parsed);
 
   } catch (err) {

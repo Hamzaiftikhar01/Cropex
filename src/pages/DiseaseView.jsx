@@ -7,6 +7,7 @@ import HistoryList from '../components/HistoryList';
 import { analyzeCropImage } from '../services/aiService';
 import { searchDiseaseByName, getMockDiagnosis } from '../lib/referenceData';
 import { calculateDiseaseRisk } from '../utils/agriRules';
+import { BookOpen } from 'lucide-react';
 
 export default function DiseaseView({
   file,
@@ -67,6 +68,9 @@ export default function DiseaseView({
         needsEscalation: result.needsEscalation || false,
         escalationActions: result.escalationActions || [],
         disease_id: result.disease_id || null,
+        // Phase 3: preserve RAG verified sources & grounded treatment
+        verifiedSources: result.verifiedSources || [],
+        groundedTreatment: result.groundedTreatment || null,
       };
 
       setAnalysisResult(enrichedResult);
@@ -164,6 +168,20 @@ export default function DiseaseView({
           <p className="text-xs sm:text-sm text-earth-600 dark:text-earth-400 font-medium">
             {riskInfo.explanation}
           </p>
+
+          {riskInfo.literatureCitation && (
+            <div className="mt-3 pt-2.5 border-t border-earth-100 dark:border-earth-800 flex flex-wrap items-center justify-between gap-2 text-[11px] text-earth-500 dark:text-earth-400">
+              <span className="font-mono flex items-center gap-1.5">
+                <BookOpen size={13} className="text-crop-600 dark:text-crop-400 shrink-0" aria-hidden="true" />
+                <span className="font-semibold text-earth-700 dark:text-earth-300">Standard:</span> {riskInfo.literatureCitation}
+              </span>
+              {riskInfo.epidemiologyThreshold && (
+                <span className="text-[10px] bg-earth-50 dark:bg-earth-800/60 border border-earth-200 dark:border-earth-700 px-2 py-0.5 rounded text-earth-650 dark:text-earth-350">
+                  {riskInfo.epidemiologyThreshold}
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Section Header */}

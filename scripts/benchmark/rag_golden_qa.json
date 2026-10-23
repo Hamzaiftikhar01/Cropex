@@ -1,0 +1,402 @@
+[
+  {
+    "id": "qa_01",
+    "crop_id": "wheat",
+    "category": "disease_mgmt",
+    "question": "What fungicide should I spray for yellow rust on wheat in Punjab?",
+    "expected_chunk_ids": ["wheat_yellow_rust_mgmt"],
+    "expected_answer_keywords": ["amistar", "nativo", "azoxystrobin", "tebuconazole", "stripe"]
+  },
+  {
+    "id": "qa_02",
+    "crop_id": "wheat",
+    "category": "disease_mgmt",
+    "question": "How do I distinguish leaf rust from yellow rust in wheat?",
+    "expected_chunk_ids": ["wheat_leaf_rust_mgmt", "wheat_yellow_rust_mgmt"],
+    "expected_answer_keywords": ["scattered", "round", "stripe", "pustules", "puccinia"]
+  },
+  {
+    "id": "qa_03",
+    "crop_id": "wheat",
+    "category": "disease_mgmt",
+    "question": "My wheat heads turned into black powdery dust. Can I spray something now?",
+    "expected_chunk_ids": ["wheat_loose_smut_mgmt"],
+    "expected_answer_keywords": ["loose smut", "seed treatment", "too late", "raxil", "vitavax"]
+  },
+  {
+    "id": "qa_04",
+    "crop_id": "wheat",
+    "category": "disease_mgmt",
+    "question": "What is the economic threshold for wheat aphids and what chemical to spray?",
+    "expected_chunk_ids": ["wheat_aphid_mgmt"],
+    "expected_answer_keywords": ["10-15", "confidor", "imidacloprid", "mospilan", "aphid"]
+  },
+  {
+    "id": "qa_05",
+    "crop_id": "wheat",
+    "category": "disease_mgmt",
+    "question": "How to control Karnal bunt in wheat to avoid export rejection?",
+    "expected_chunk_ids": ["wheat_karnal_bunt_mgmt"],
+    "expected_answer_keywords": ["certified seed", "raxil", "tilletia", "seed treatment"]
+  },
+  {
+    "id": "qa_06",
+    "crop_id": "rice",
+    "category": "disease_mgmt",
+    "question": "Rice leaf has diamond spindle shaped gray spots with brown borders. What is it and treatment?",
+    "expected_chunk_ids": ["rice_blast_mgmt"],
+    "expected_answer_keywords": ["blast", "magnaporthe", "nativo", "amistar"]
+  },
+  {
+    "id": "qa_07",
+    "crop_id": "rice",
+    "category": "disease_mgmt",
+    "question": "How to treat bacterial leaf blight in rice? Straw-yellow wilting with bacterial ooze.",
+    "expected_chunk_ids": ["rice_blight_mgmt"],
+    "expected_answer_keywords": ["copper", "nitrogen", "bacterial", "kresek"]
+  },
+  {
+    "id": "qa_08",
+    "crop_id": "rice",
+    "category": "disease_mgmt",
+    "question": "What fungicide cures sheath blight near water level in paddy rice?",
+    "expected_chunk_ids": ["rice_sheath_blight_mgmt"],
+    "expected_answer_keywords": ["validacin", "nativo", "rhizoctonia", "sheath"]
+  },
+  {
+    "id": "qa_09",
+    "crop_id": "rice",
+    "category": "disease_mgmt",
+    "question": "Rice panicle grains turned into yellow-green velvety spore balls. What disease?",
+    "expected_chunk_ids": ["rice_false_smut_mgmt"],
+    "expected_answer_keywords": ["false smut", "green smut", "amistar", "panicle"]
+  },
+  {
+    "id": "qa_10",
+    "crop_id": "rice",
+    "category": "disease_mgmt",
+    "question": "How to treat brown spot on rice in low fertility soils?",
+    "expected_chunk_ids": ["rice_brown_spot_mgmt"],
+    "expected_answer_keywords": ["bipolaris", "cabrio top", "nutrition", "potash"]
+  },
+  {
+    "id": "qa_11",
+    "crop_id": "cotton",
+    "category": "disease_mgmt",
+    "question": "Cotton leaves are curling upward with thickened veins and enations. How to cure CLCuV?",
+    "expected_chunk_ids": ["cotton_clcuv_mgmt"],
+    "expected_answer_keywords": ["whitefly", "curl virus", "confidor", "oberon", "vector"]
+  },
+  {
+    "id": "qa_12",
+    "crop_id": "cotton",
+    "category": "disease_mgmt",
+    "question": "Cotton angular leaf spot and blackarm on stems. What bactericide is approved?",
+    "expected_chunk_ids": ["cotton_bacterial_blight_mgmt"],
+    "expected_answer_keywords": ["copper", "sun-cop", "bacterial blight", "angular"]
+  },
+  {
+    "id": "qa_13",
+    "crop_id": "cotton",
+    "category": "disease_mgmt",
+    "question": "Cotton plant suddenly wilts with brown ring inside stem. Fusarium wilt management?",
+    "expected_chunk_ids": ["cotton_fusarium_wilt_mgmt"],
+    "expected_answer_keywords": ["fusarium", "topsin-m", "seed treatment", "wilt"]
+  },
+  {
+    "id": "qa_14",
+    "crop_id": "cotton",
+    "category": "disease_mgmt",
+    "question": "How to control pink bollworm inside cotton bolls?",
+    "expected_chunk_ids": ["cotton_pink_bollworm_mgmt", "cotton_bollworm_mgmt"],
+    "expected_answer_keywords": ["pink bollworm", "coragen", "emamectin", "pectinophora"]
+  },
+  {
+    "id": "qa_15",
+    "crop_id": "cotton",
+    "category": "disease_mgmt",
+    "question": "Alternaria target spots with concentric rings on cotton leaves. What to spray?",
+    "expected_chunk_ids": ["cotton_alternaria_mgmt"],
+    "expected_answer_keywords": ["alternaria", "amistar", "cabrio top", "concentric"]
+  },
+  {
+    "id": "qa_16",
+    "crop_id": "sugarcane",
+    "category": "disease_mgmt",
+    "question": "Sugarcane stalk interior is red with white patches and smells alcoholic. What disease?",
+    "expected_chunk_ids": ["sugarcane_red_rot_mgmt"],
+    "expected_answer_keywords": ["red rot", "colletotrichum", "sett treatment", "bavistin"]
+  },
+  {
+    "id": "qa_17",
+    "crop_id": "sugarcane",
+    "category": "disease_mgmt",
+    "question": "Black whip emerging from top of sugarcane plant. How to manage whip smut?",
+    "expected_chunk_ids": ["sugarcane_smut_mgmt"],
+    "expected_answer_keywords": ["smut", "whip", "hot water", "sett"]
+  },
+  {
+    "id": "qa_18",
+    "crop_id": "sugarcane",
+    "category": "disease_mgmt",
+    "question": "Sugarcane bushy grassy shoots with pale thin leaves. How to stop Grassy Shoot Disease?",
+    "expected_chunk_ids": ["sugarcane_grassy_shoot_mgmt"],
+    "expected_answer_keywords": ["grassy shoot", "phytoplasma", "leafhopper", "confidor"]
+  },
+  {
+    "id": "qa_19",
+    "crop_id": "sugarcane",
+    "category": "disease_mgmt",
+    "question": "Yellow midrib on top sugarcane leaves spreading across blade. What virus?",
+    "expected_chunk_ids": ["sugarcane_yellow_leaf_mgmt"],
+    "expected_answer_keywords": ["yellow leaf", "aphid", "scylv", "certified"]
+  },
+  {
+    "id": "qa_20",
+    "crop_id": "sugarcane",
+    "category": "disease_mgmt",
+    "question": "Twisted top knife-cut deformity in sugarcane young leaves. Pokkah boeng treatment?",
+    "expected_chunk_ids": ["sugarcane_pokkah_boeng_mgmt"],
+    "expected_answer_keywords": ["pokkah boeng", "fusarium", "amistar", "twisted"]
+  },
+  {
+    "id": "qa_21",
+    "crop_id": "maize",
+    "category": "disease_mgmt",
+    "question": "Long cigar-shaped gray lesions on maize leaves. Northern Corn Leaf Blight spray?",
+    "expected_chunk_ids": ["maize_nlb_mgmt"],
+    "expected_answer_keywords": ["northern", "blight", "amistar", "nativo", "exserohilum"]
+  },
+  {
+    "id": "qa_22",
+    "crop_id": "maize",
+    "category": "disease_mgmt",
+    "question": "Rectangular lesions parallel to maize leaf veins. Grey leaf spot cure?",
+    "expected_chunk_ids": ["maize_grey_leaf_spot_mgmt"],
+    "expected_answer_keywords": ["grey leaf spot", "cercospora", "cabrio top", "amistar"]
+  },
+  {
+    "id": "qa_23",
+    "crop_id": "maize",
+    "category": "disease_mgmt",
+    "question": "Fall armyworm caterpillar feeding in maize whorl with inverted Y on head. Insecticide dosage?",
+    "expected_chunk_ids": ["maize_fall_armyworm_mgmt"],
+    "expected_answer_keywords": ["coragen", "emamectin", "fall armyworm", "spodoptera", "whorl"]
+  },
+  {
+    "id": "qa_24",
+    "crop_id": "maize",
+    "category": "disease_mgmt",
+    "question": "Pink mold on maize ear tip and rotted kernels. Ear rot prevention?",
+    "expected_chunk_ids": ["maize_ear_rot_mgmt"],
+    "expected_answer_keywords": ["ear rot", "fusarium", "drying", "nativo"]
+  },
+  {
+    "id": "qa_25",
+    "crop_id": "maize",
+    "category": "disease_mgmt",
+    "question": "Brick red powdery pustules on both upper and lower corn leaves. Common rust spray?",
+    "expected_chunk_ids": ["maize_common_rust_mgmt"],
+    "expected_answer_keywords": ["common rust", "puccinia sorghi", "amistar", "nativo"]
+  },
+  {
+    "id": "qa_26",
+    "crop_id": "tomato",
+    "category": "disease_mgmt",
+    "question": "Concentric rings target board spots on lower tomato leaves. Early blight treatment?",
+    "expected_chunk_ids": ["tomato_early_blight_mgmt"],
+    "expected_answer_keywords": ["early blight", "alternaria", "cabrio top", "amistar"]
+  },
+  {
+    "id": "qa_27",
+    "crop_id": "tomato",
+    "category": "disease_mgmt",
+    "question": "Water-soaked lesions on tomato leaves with white mold underneath during cold wet weather. Late blight remedy?",
+    "expected_chunk_ids": ["tomato_late_blight_mgmt"],
+    "expected_answer_keywords": ["late blight", "phytophthora", "ridomil gold", "infinito"]
+  },
+  {
+    "id": "qa_28",
+    "crop_id": "tomato",
+    "category": "disease_mgmt",
+    "question": "Tomato plant suddenly wilts green with white bacterial stream from cut stem. Cure?",
+    "expected_chunk_ids": ["tomato_bacterial_wilt_mgmt"],
+    "expected_answer_keywords": ["bacterial wilt", "no chemical cure", "ralstonia", "rotation"]
+  },
+  {
+    "id": "qa_29",
+    "crop_id": "tomato",
+    "category": "disease_mgmt",
+    "question": "Silvery transparent leaf tunnels with black frass on tomato leaves. Tuta absoluta miner control?",
+    "expected_chunk_ids": ["tomato_leaf_miner_mgmt"],
+    "expected_answer_keywords": ["tuta absoluta", "coragen", "voliam targo", "pheromone", "miner"]
+  },
+  {
+    "id": "qa_30",
+    "crop_id": "tomato",
+    "category": "disease_mgmt",
+    "question": "Black sunken leather rot on bottom blossom end of green tomato fruits. Chemical or nutrient problem?",
+    "expected_chunk_ids": ["tomato_blossom_end_rot_mgmt"],
+    "expected_answer_keywords": ["calcium", "blossom end rot", "irrigation", "foliar"]
+  },
+  {
+    "id": "qa_31",
+    "crop_id": "wheat",
+    "category": "pesticide",
+    "question": "What is the recommended dose of Amistar Top for wheat in Pakistan?",
+    "expected_chunk_ids": ["wheat_yellow_rust_mgmt", "pesticide_amistar_top"],
+    "expected_answer_keywords": ["200ml", "amistar top", "acre", "syngenta"]
+  },
+  {
+    "id": "qa_32",
+    "crop_id": "wheat",
+    "category": "pesticide",
+    "question": "What is the dose of Nativo 75 WG per acre for rust?",
+    "expected_chunk_ids": ["wheat_yellow_rust_mgmt", "pesticide_nativo"],
+    "expected_answer_keywords": ["80g", "nativo", "acre", "bayer"]
+  },
+  {
+    "id": "qa_33",
+    "crop_id": "cotton",
+    "category": "pesticide",
+    "question": "What is the dosage of Confidor 200 SL for sucking pests on cotton?",
+    "expected_chunk_ids": ["pesticide_confidor", "cotton_clcuv_mgmt", "wheat_aphid_mgmt"],
+    "expected_answer_keywords": ["confidor", "imidacloprid", "bayer"]
+  },
+  {
+    "id": "qa_34",
+    "crop_id": "tomato",
+    "category": "pesticide",
+    "question": "What is the dose of Ridomil Gold for tomato late blight?",
+    "expected_chunk_ids": ["tomato_late_blight_mgmt", "pesticide_ridomil_gold"],
+    "expected_answer_keywords": ["ridomil gold", "syngenta", "mancozeb", "metalaxyl"]
+  },
+  {
+    "id": "qa_35",
+    "crop_id": "maize",
+    "category": "pesticide",
+    "question": "How much Coragen to spray per acre for maize fall armyworm?",
+    "expected_chunk_ids": ["maize_fall_armyworm_mgmt", "pesticide_coragen"],
+    "expected_answer_keywords": ["coragen", "chlorantraniliprole", "fmc", "acre"]
+  },
+  {
+    "id": "qa_36",
+    "crop_id": null,
+    "category": "advisory",
+    "question": "What safety precautions must I take when spraying poisonous agricultural pesticides?",
+    "expected_chunk_ids": ["advisory_pesticide_safety", "ur_general_safety"],
+    "expected_answer_keywords": ["gloves", "mask", "wind", "label", "empty bottles"]
+  },
+  {
+    "id": "qa_37",
+    "crop_id": null,
+    "category": "advisory",
+    "question": "What are the emergency helpline numbers for farmers in Punjab and federal NARC?",
+    "expected_chunk_ids": ["advisory_extension_services", "ur_general_safety"],
+    "expected_answer_keywords": ["0800-22444", "051-9255000", "helpline", "narc"]
+  },
+  {
+    "id": "qa_38",
+    "crop_id": null,
+    "category": "advisory",
+    "question": "How can I prepare organic neem leaf extract for low-cost insect pest control?",
+    "expected_chunk_ids": ["general_organic_alternatives"],
+    "expected_answer_keywords": ["neem", "extract", "organic", "soap", "spray"]
+  },
+  {
+    "id": "qa_39",
+    "crop_id": null,
+    "category": "advisory",
+    "question": "How does disease resistance break down in crop varieties and how to prevent it?",
+    "expected_chunk_ids": ["general_disease_resistance"],
+    "expected_answer_keywords": ["resistance", "diversification", "pathogen", "seed council"]
+  },
+  {
+    "id": "qa_40",
+    "crop_id": "wheat",
+    "category": "agronomy",
+    "question": "What is the best sowing time for wheat in Punjab to get maximum yield?",
+    "expected_chunk_ids": ["wheat_sowing_guide"],
+    "expected_answer_keywords": ["november", "sowing", "punjab", "seed rate", "yield"]
+  },
+  {
+    "id": "qa_41",
+    "crop_id": "wheat",
+    "category": "agronomy",
+    "question": "What is the balanced NPK fertilizer recommendation for irrigated wheat?",
+    "expected_chunk_ids": ["advisory_fertilizer_use", "wheat_sowing_guide"],
+    "expected_answer_keywords": ["urea", "dap", "potash", "nitrogen", "phosphorus"]
+  },
+  {
+    "id": "qa_42",
+    "crop_id": "rice",
+    "category": "agronomy",
+    "question": "How many days after transplanting should zinc sulfate be applied to basmati rice?",
+    "expected_chunk_ids": ["rice_nursery_guide"],
+    "expected_answer_keywords": ["transplanting", "nursery", "basmati", "seedling"]
+  },
+  {
+    "id": "qa_43",
+    "crop_id": "rice",
+    "category": "agronomy",
+    "question": "What is the alternate wetting and drying AWD irrigation method in rice paddy?",
+    "expected_chunk_ids": ["advisory_water_conservation"],
+    "expected_answer_keywords": ["water", "irrigation", "saving"]
+  },
+  {
+    "id": "qa_44",
+    "crop_id": "cotton",
+    "category": "agronomy",
+    "question": "When should cotton irrigation be stopped before final picking?",
+    "expected_chunk_ids": ["cotton_sowing_guide"],
+    "expected_answer_keywords": ["irrigation", "picking", "cotton"]
+  },
+  {
+    "id": "qa_45",
+    "crop_id": "sugarcane",
+    "category": "agronomy",
+    "question": "How should sugarcane setts be treated before planting to prevent seed-borne diseases?",
+    "expected_chunk_ids": ["sugarcane_smut_mgmt", "sugarcane_red_rot_mgmt", "sugarcane_planting_guide"],
+    "expected_answer_keywords": ["sett", "treatment", "fungicide", "hot water"]
+  },
+  {
+    "id": "qa_46",
+    "crop_id": "tomato",
+    "category": "agronomy",
+    "question": "How to stake indeterminate tomato plants and prune suckers?",
+    "expected_chunk_ids": ["tomato_production_guide"],
+    "expected_answer_keywords": ["staking", "pruning", "tomato", "air circulation"]
+  },
+  {
+    "id": "qa_47",
+    "crop_id": "wheat",
+    "category": "disease_mgmt",
+    "question": "گندم کی پیلی زنگ کی پہچان اور علاج کیا ہے؟",
+    "expected_chunk_ids": ["ur_wheat_rust_advisory", "wheat_yellow_rust_mgmt"],
+    "expected_answer_keywords": ["زرد زنگ", "ایمسٹار", "نیٹیوو", "گندم"]
+  },
+  {
+    "id": "qa_48",
+    "crop_id": "cotton",
+    "category": "disease_mgmt",
+    "question": "کپاس میں سفید مکھی کا سستا دیسی یا کیمیائی علاج کیا ہے؟",
+    "expected_chunk_ids": ["ur_cotton_whitefly_advisory", "cotton_whitefly_mgmt"],
+    "expected_answer_keywords": ["سفید مکھی", "نیم", "کپاس", "علاج"]
+  },
+  {
+    "id": "qa_49",
+    "crop_id": null,
+    "category": "advisory",
+    "question": "زرعی زہروں کے سپرے کے دوران کسان کیا حفاظتی تدابیر اختیار کریں؟",
+    "expected_chunk_ids": ["ur_general_safety", "advisory_pesticide_safety"],
+    "expected_answer_keywords": ["حفاظت", "ماسک", "دستانے", "ہیلپ لائن"]
+  },
+  {
+    "id": "qa_50",
+    "crop_id": null,
+    "category": "advisory",
+    "question": "If my crop disease is not in any book, who should I contact in Pakistan?",
+    "expected_chunk_ids": ["general_when_unsure", "advisory_extension_services"],
+    "expected_answer_keywords": ["extension officer", "zila", "narc", "helpline", "051-9255000"]
+  }
+]

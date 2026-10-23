@@ -1,0 +1,286 @@
+[
+  {
+    "id": "punjab_2020_yellow_rust_epidemic",
+    "name": "2020 Punjab Yellow Rust Epidemic",
+    "district": "Sialkot",
+    "cropType": "wheat",
+    "soilType": "loamy",
+    "sowingDate": "2019-11-15",
+    "weather": {
+      "daily": [
+        { "tempMin": 9, "tempMax": 14, "humidityAvg": 86, "precipitationSum": 5, "precipitationProb": 75 },
+        { "tempMin": 8, "tempMax": 13, "humidityAvg": 88, "precipitationSum": 8, "precipitationProb": 80 },
+        { "tempMin": 10, "tempMax": 15, "humidityAvg": 82, "precipitationSum": 2, "precipitationProb": 60 },
+        { "tempMin": 9, "tempMax": 14, "humidityAvg": 85, "precipitationSum": 0, "precipitationProb": 30 },
+        { "tempMin": 8, "tempMax": 13, "humidityAvg": 87, "precipitationSum": 4, "precipitationProb": 65 },
+        { "tempMin": 9, "tempMax": 14, "humidityAvg": 84, "precipitationSum": 0, "precipitationProb": 20 },
+        { "tempMin": 10, "tempMax": 15, "humidityAvg": 83, "precipitationSum": 0, "precipitationProb": 15 }
+      ]
+    },
+    "expectedOutbreak": true,
+    "expectedDiseaseKeyword": "Rust",
+    "expectedRiskMin": 75,
+    "expectedYieldDropMin": 10,
+    "historicalYieldReported": 34
+  },
+  {
+    "id": "sindh_2022_monsoon_flood_rice",
+    "name": "2022 Sindh Monsoon Super Floods",
+    "district": "Sukkur",
+    "cropType": "rice",
+    "soilType": "clay",
+    "sowingDate": "2022-05-25",
+    "weather": {
+      "daily": [
+        { "tempMin": 25, "tempMax": 30, "humidityAvg": 94, "precipitationSum": 45, "precipitationProb": 95 },
+        { "tempMin": 24, "tempMax": 29, "humidityAvg": 96, "precipitationSum": 60, "precipitationProb": 98 },
+        { "tempMin": 25, "tempMax": 31, "humidityAvg": 90, "precipitationSum": 30, "precipitationProb": 85 },
+        { "tempMin": 26, "tempMax": 32, "humidityAvg": 88, "precipitationSum": 15, "precipitationProb": 70 },
+        { "tempMin": 25, "tempMax": 30, "humidityAvg": 92, "precipitationSum": 20, "precipitationProb": 80 },
+        { "tempMin": 24, "tempMax": 29, "humidityAvg": 91, "precipitationSum": 10, "precipitationProb": 60 },
+        { "tempMin": 25, "tempMax": 31, "humidityAvg": 89, "precipitationSum": 5, "precipitationProb": 50 }
+      ]
+    },
+    "expectedOutbreak": true,
+    "expectedDiseaseKeyword": "Blast",
+    "expectedRiskMin": 80,
+    "expectedYieldDropMin": 15,
+    "historicalYieldReported": 38
+  },
+  {
+    "id": "punjab_2021_terminal_heatwave_wheat",
+    "name": "2021 Multan Terminal Grain-Fill Heatwave",
+    "district": "Multan",
+    "cropType": "wheat",
+    "soilType": "loamy",
+    "sowingDate": "2020-11-20",
+    "weather": {
+      "daily": [
+        { "tempMin": 22, "tempMax": 39, "humidityAvg": 24, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 23, "tempMax": 40, "humidityAvg": 20, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 24, "tempMax": 41, "humidityAvg": 18, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 23, "tempMax": 39, "humidityAvg": 22, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 21, "tempMax": 38, "humidityAvg": 25, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 20, "tempMax": 37, "humidityAvg": 28, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 22, "tempMax": 39, "humidityAvg": 22, "precipitationSum": 0, "precipitationProb": 0 }
+      ]
+    },
+    "expectedOutbreak": false,
+    "expectedHeatShock": true,
+    "expectedYieldDropMin": 15,
+    "historicalYieldReported": 32
+  },
+  {
+    "id": "bahawalpur_2019_whitefly_clcuv_cotton",
+    "name": "2019 Bahawalpur Cotton Whitefly / CLCuV Epidemic",
+    "district": "Bahawalpur",
+    "cropType": "cotton",
+    "soilType": "sandy",
+    "sowingDate": "2019-05-25",
+    "weather": {
+      "daily": [
+        { "tempMin": 29, "tempMax": 42, "humidityAvg": 38, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 30, "tempMax": 43, "humidityAvg": 35, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 31, "tempMax": 42, "humidityAvg": 40, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 28, "tempMax": 41, "humidityAvg": 42, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 29, "tempMax": 42, "humidityAvg": 36, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 30, "tempMax": 43, "humidityAvg": 34, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 29, "tempMax": 41, "humidityAvg": 41, "precipitationSum": 0, "precipitationProb": 0 }
+      ]
+    },
+    "expectedOutbreak": true,
+    "expectedDiseaseKeyword": "Whitefly",
+    "expectedRiskMin": 75,
+    "expectedYieldDropMin": 20,
+    "historicalYieldReported": 15
+  },
+  {
+    "id": "okara_2023_potato_late_blight",
+    "name": "2023 Okara Potato Late Blight Outbreak",
+    "district": "Okara",
+    "cropType": "potato",
+    "soilType": "loamy",
+    "sowingDate": "2023-10-15",
+    "weather": {
+      "daily": [
+        { "tempMin": 13, "tempMax": 20, "humidityAvg": 92, "precipitationSum": 3, "precipitationProb": 60 },
+        { "tempMin": 12, "tempMax": 19, "humidityAvg": 94, "precipitationSum": 5, "precipitationProb": 75 },
+        { "tempMin": 14, "tempMax": 21, "humidityAvg": 88, "precipitationSum": 0, "precipitationProb": 30 },
+        { "tempMin": 13, "tempMax": 20, "humidityAvg": 90, "precipitationSum": 2, "precipitationProb": 50 },
+        { "tempMin": 12, "tempMax": 19, "humidityAvg": 91, "precipitationSum": 0, "precipitationProb": 25 },
+        { "tempMin": 13, "tempMax": 20, "humidityAvg": 89, "precipitationSum": 0, "precipitationProb": 20 },
+        { "tempMin": 14, "tempMax": 21, "humidityAvg": 88, "precipitationSum": 1, "precipitationProb": 40 }
+      ]
+    },
+    "expectedOutbreak": true,
+    "expectedDiseaseKeyword": "Late Blight",
+    "expectedRiskMin": 85,
+    "expectedYieldDropMin": 10,
+    "historicalYieldReported": 185
+  },
+  {
+    "id": "gujranwala_2023_normal_basmati_season",
+    "name": "2023 Gujranwala Optimal Basmati Rice",
+    "district": "Gujranwala",
+    "cropType": "rice",
+    "soilType": "clay",
+    "sowingDate": "2023-06-15",
+    "weather": {
+      "daily": [
+        { "tempMin": 23, "tempMax": 33, "humidityAvg": 68, "precipitationSum": 5, "precipitationProb": 30 },
+        { "tempMin": 24, "tempMax": 34, "humidityAvg": 65, "precipitationSum": 0, "precipitationProb": 15 },
+        { "tempMin": 22, "tempMax": 32, "humidityAvg": 72, "precipitationSum": 10, "precipitationProb": 45 },
+        { "tempMin": 23, "tempMax": 33, "humidityAvg": 66, "precipitationSum": 0, "precipitationProb": 10 },
+        { "tempMin": 24, "tempMax": 34, "humidityAvg": 64, "precipitationSum": 0, "precipitationProb": 5 },
+        { "tempMin": 23, "tempMax": 32, "humidityAvg": 70, "precipitationSum": 8, "precipitationProb": 40 },
+        { "tempMin": 22, "tempMax": 33, "humidityAvg": 67, "precipitationSum": 0, "precipitationProb": 10 }
+      ]
+    },
+    "expectedOutbreak": false,
+    "expectedRiskMax": 55,
+    "expectedDeltaNearBaseline": true,
+    "historicalYieldReported": 50
+  },
+  {
+    "id": "sargodha_2020_optimal_wheat_harvest",
+    "name": "2020 Sargodha Bumper Wheat Crop",
+    "district": "Sargodha",
+    "cropType": "wheat",
+    "soilType": "loamy",
+    "sowingDate": "2019-11-10",
+    "weather": {
+      "daily": [
+        { "tempMin": 9, "tempMax": 21, "humidityAvg": 55, "precipitationSum": 2, "precipitationProb": 20 },
+        { "tempMin": 8, "tempMax": 22, "humidityAvg": 50, "precipitationSum": 0, "precipitationProb": 10 },
+        { "tempMin": 10, "tempMax": 23, "humidityAvg": 52, "precipitationSum": 0, "precipitationProb": 15 },
+        { "tempMin": 9, "tempMax": 22, "humidityAvg": 54, "precipitationSum": 5, "precipitationProb": 35 },
+        { "tempMin": 8, "tempMax": 21, "humidityAvg": 56, "precipitationSum": 0, "precipitationProb": 10 },
+        { "tempMin": 9, "tempMax": 22, "humidityAvg": 51, "precipitationSum": 0, "precipitationProb": 5 },
+        { "tempMin": 10, "tempMax": 23, "humidityAvg": 49, "precipitationSum": 0, "precipitationProb": 5 }
+      ]
+    },
+    "expectedOutbreak": false,
+    "expectedRiskMax": 45,
+    "expectedDeltaNearBaseline": true,
+    "historicalYieldReported": 45
+  },
+  {
+    "id": "badin_2021_sugarcane_red_rot",
+    "name": "2021 Badin Sugarcane Red Rot Outbreak",
+    "district": "Badin",
+    "cropType": "sugarcane",
+    "soilType": "clay",
+    "sowingDate": "2021-02-20",
+    "weather": {
+      "daily": [
+        { "tempMin": 26, "tempMax": 34, "humidityAvg": 88, "precipitationSum": 25, "precipitationProb": 80 },
+        { "tempMin": 27, "tempMax": 35, "humidityAvg": 86, "precipitationSum": 30, "precipitationProb": 85 },
+        { "tempMin": 26, "tempMax": 33, "humidityAvg": 89, "precipitationSum": 15, "precipitationProb": 70 },
+        { "tempMin": 25, "tempMax": 34, "humidityAvg": 85, "precipitationSum": 10, "precipitationProb": 60 },
+        { "tempMin": 26, "tempMax": 34, "humidityAvg": 87, "precipitationSum": 5, "precipitationProb": 40 },
+        { "tempMin": 27, "tempMax": 35, "humidityAvg": 84, "precipitationSum": 0, "precipitationProb": 20 },
+        { "tempMin": 26, "tempMax": 34, "humidityAvg": 85, "precipitationSum": 0, "precipitationProb": 15 }
+      ]
+    },
+    "expectedOutbreak": true,
+    "expectedDiseaseKeyword": "Red Rot",
+    "expectedRiskMin": 75,
+    "expectedYieldDropMin": 12,
+    "historicalYieldReported": 680
+  },
+  {
+    "id": "sahiwal_2023_maize_northern_leaf_blight",
+    "name": "2023 Sahiwal Maize Turcicum Blight",
+    "district": "Sahiwal",
+    "cropType": "maize",
+    "soilType": "loamy",
+    "sowingDate": "2023-08-01",
+    "weather": {
+      "daily": [
+        { "tempMin": 19, "tempMax": 26, "humidityAvg": 84, "precipitationSum": 12, "precipitationProb": 75 },
+        { "tempMin": 18, "tempMax": 25, "humidityAvg": 86, "precipitationSum": 18, "precipitationProb": 80 },
+        { "tempMin": 20, "tempMax": 27, "humidityAvg": 80, "precipitationSum": 5, "precipitationProb": 50 },
+        { "tempMin": 19, "tempMax": 26, "humidityAvg": 82, "precipitationSum": 8, "precipitationProb": 65 },
+        { "tempMin": 18, "tempMax": 25, "humidityAvg": 85, "precipitationSum": 4, "precipitationProb": 55 },
+        { "tempMin": 19, "tempMax": 26, "humidityAvg": 81, "precipitationSum": 0, "precipitationProb": 20 },
+        { "tempMin": 20, "tempMax": 27, "humidityAvg": 79, "precipitationSum": 0, "precipitationProb": 15 }
+      ]
+    },
+    "expectedOutbreak": true,
+    "expectedDiseaseKeyword": "Blight",
+    "expectedRiskMin": 75,
+    "expectedYieldDropMin": 10,
+    "historicalYieldReported": 68
+  },
+  {
+    "id": "faisalabad_2022_late_sown_wheat",
+    "name": "2022 Faisalabad Late Sown Wheat (Dec 28)",
+    "district": "Faisalabad",
+    "cropType": "wheat",
+    "soilType": "loamy",
+    "sowingDate": "2022-12-28",
+    "weather": {
+      "daily": [
+        { "tempMin": 8, "tempMax": 21, "humidityAvg": 50, "precipitationSum": 0, "precipitationProb": 10 },
+        { "tempMin": 7, "tempMax": 20, "humidityAvg": 52, "precipitationSum": 0, "precipitationProb": 5 },
+        { "tempMin": 9, "tempMax": 22, "humidityAvg": 48, "precipitationSum": 0, "precipitationProb": 10 },
+        { "tempMin": 8, "tempMax": 21, "humidityAvg": 55, "precipitationSum": 3, "precipitationProb": 25 },
+        { "tempMin": 7, "tempMax": 20, "humidityAvg": 51, "precipitationSum": 0, "precipitationProb": 5 },
+        { "tempMin": 8, "tempMax": 22, "humidityAvg": 49, "precipitationSum": 0, "precipitationProb": 5 },
+        { "tempMin": 9, "tempMax": 23, "humidityAvg": 47, "precipitationSum": 0, "precipitationProb": 0 }
+      ]
+    },
+    "expectedOutbreak": false,
+    "expectedSowingPenalty": true,
+    "expectedYieldDropMin": 15,
+    "historicalYieldReported": 28
+  },
+  {
+    "id": "swat_2023_tomato_mountain_blight",
+    "name": "2023 Swat Valley Tomato Late Blight",
+    "district": "Swat",
+    "cropType": "tomato",
+    "soilType": "loamy",
+    "sowingDate": "2023-09-10",
+    "weather": {
+      "daily": [
+        { "tempMin": 12, "tempMax": 19, "humidityAvg": 90, "precipitationSum": 14, "precipitationProb": 75 },
+        { "tempMin": 11, "tempMax": 18, "humidityAvg": 92, "precipitationSum": 20, "precipitationProb": 85 },
+        { "tempMin": 13, "tempMax": 20, "humidityAvg": 86, "precipitationSum": 5, "precipitationProb": 50 },
+        { "tempMin": 12, "tempMax": 19, "humidityAvg": 89, "precipitationSum": 8, "precipitationProb": 60 },
+        { "tempMin": 11, "tempMax": 18, "humidityAvg": 88, "precipitationSum": 2, "precipitationProb": 35 },
+        { "tempMin": 12, "tempMax": 19, "humidityAvg": 87, "precipitationSum": 0, "precipitationProb": 20 },
+        { "tempMin": 13, "tempMax": 20, "humidityAvg": 86, "precipitationSum": 0, "precipitationProb": 15 }
+      ]
+    },
+    "expectedOutbreak": true,
+    "expectedDiseaseKeyword": "Late Blight",
+    "expectedRiskMin": 85,
+    "expectedYieldDropMin": 15,
+    "historicalYieldReported": 240
+  },
+  {
+    "id": "ryk_2024_arid_cotton_drought",
+    "name": "2024 Rahim Yar Khan Extreme Heat & Drought",
+    "district": "Rahim Yar Khan",
+    "cropType": "cotton",
+    "soilType": "sandy",
+    "sowingDate": "2024-05-05",
+    "weather": {
+      "daily": [
+        { "tempMin": 30, "tempMax": 44, "humidityAvg": 22, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 31, "tempMax": 45, "humidityAvg": 19, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 32, "tempMax": 44, "humidityAvg": 20, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 29, "tempMax": 43, "humidityAvg": 24, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 30, "tempMax": 44, "humidityAvg": 21, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 31, "tempMax": 45, "humidityAvg": 18, "precipitationSum": 0, "precipitationProb": 0 },
+        { "tempMin": 30, "tempMax": 43, "humidityAvg": 23, "precipitationSum": 0, "precipitationProb": 0 }
+      ]
+    },
+    "expectedOutbreak": true,
+    "expectedDiseaseKeyword": "Whitefly",
+    "expectedHeatShock": true,
+    "expectedYieldDropMin": 15,
+    "historicalYieldReported": 14
+  }
+]
