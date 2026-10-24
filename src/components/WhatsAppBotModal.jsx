@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Send, Camera, Volume2, VolumeX, PhoneCall, CheckCheck } from 'lucide-react';
 import { speakText, stopSpeaking } from '../lib/voiceService';
 import { generateWhatsAppReferralUrl } from '../lib/pesticideRegistry';
@@ -27,12 +28,22 @@ export default function WhatsAppBotModal({ isOpen, onClose, defaultCrop = 'Wheat
   useEffect(() => {
     if (isOpen) {
       chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+
+      const handleKeyDown = (e) => {
+        if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        document.body.style.overflow = prevOverflow;
+        window.removeEventListener('keydown', handleKeyDown);
+        stopSpeaking();
+        setIsPlayingAudio(false);
+      };
     }
-    return () => {
-      stopSpeaking();
-      setIsPlayingAudio(false);
-    };
-  }, [isOpen, messages]);
+  }, [isOpen, messages, onClose]);
 
   if (!isOpen) return null;
 
@@ -134,10 +145,20 @@ export default function WhatsAppBotModal({ isOpen, onClose, defaultCrop = 'Wheat
     });
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-fade-in text-left">
+  const modalContent = (
+    <div 
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-fade-in text-left"
+      role="dialog"
+      aria-modal="true"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       {/* WhatsApp Window Wrapper */}
-      <div className="relative w-full max-w-md h-[620px] max-h-[92vh] flex flex-col rounded-3xl overflow-hidden shadow-2xl bg-[#EFEAE2] dark:bg-[#0b141a] border border-earth-300 dark:border-earth-800">
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-md h-[620px] max-h-[92vh] flex flex-col rounded-3xl overflow-hidden shadow-2xl bg-[#EFEAE2] dark:bg-[#0b141a] border border-earth-300 dark:border-earth-800"
+      >
         
         {/* WhatsApp Top Green Header */}
         <div className="flex items-center justify-between px-4 py-3 bg-[#075E54] dark:bg-[#202c33] text-white shrink-0 shadow-md">
@@ -324,4 +345,8 @@ export default function WhatsAppBotModal({ isOpen, onClose, defaultCrop = 'Wheat
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined'
+    ? createPortal(modalContent, document.body)
+    : modalContent;
 }

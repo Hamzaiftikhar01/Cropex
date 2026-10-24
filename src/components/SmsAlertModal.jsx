@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Bell, Smartphone, CheckCircle2 } from 'lucide-react';
 import {
   isValidPakistaniPhone,
@@ -30,6 +31,23 @@ export default function SmsAlertModal({ isOpen, onClose, defaultDistrict = 'Fais
       setDistrict(existing[0].district || defaultDistrict);
     }
   }, [defaultDistrict]);
+
+  useEffect(() => {
+    if (isOpen) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+
+      const handleKeyDown = (e) => {
+        if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        document.body.style.overflow = prevOverflow;
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -75,9 +93,19 @@ export default function SmsAlertModal({ isOpen, onClose, defaultDistrict = 'Fais
     language,
   });
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in text-left">
-      <div className="relative w-full max-w-lg rounded-2xl bg-white dark:bg-earth-900 border border-earth-200 dark:border-earth-800 shadow-2xl p-6 sm:p-7 overflow-hidden">
+  const modalContent = (
+    <div 
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in text-left"
+      role="dialog"
+      aria-modal="true"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-lg rounded-2xl bg-white dark:bg-earth-900 border border-earth-200 dark:border-earth-800 shadow-2xl p-6 sm:p-7 overflow-hidden"
+      >
         
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-earth-150 dark:border-earth-800">
@@ -262,4 +290,8 @@ export default function SmsAlertModal({ isOpen, onClose, defaultDistrict = 'Fais
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined'
+    ? createPortal(modalContent, document.body)
+    : modalContent;
 }

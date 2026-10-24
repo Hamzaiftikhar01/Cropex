@@ -1,15 +1,41 @@
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Settings } from 'lucide-react';
 
 function SettingsModal({ isOpen, onClose, darkMode, onToggleDarkMode, onClearHistory, historyCount }) {
   const [showConfirm, setShowConfirm] = useState(false);
 
+  useEffect(() => {
+    if (isOpen) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      const handleKeyDown = (e) => {
+        if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.style.overflow = prevOverflow;
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Application Settings">
-      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-earth-100 bg-white p-6 shadow-elevated transition-all dark:border-earth-800 dark:bg-earth-850">
+  const modalContent = (
+    <div 
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in text-left" 
+      role="dialog" 
+      aria-modal="true" 
+      aria-label="Application Settings"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-md overflow-hidden rounded-3xl border border-earth-100 bg-white p-6 shadow-elevated transition-all dark:border-earth-800 dark:bg-earth-850"
+      >
         
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-earth-100 dark:border-earth-800">
@@ -113,6 +139,10 @@ function SettingsModal({ isOpen, onClose, darkMode, onToggleDarkMode, onClearHis
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined'
+    ? createPortal(modalContent, document.body)
+    : modalContent;
 }
 
 export default SettingsModal;

@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Phone, MessageCircle, AlertTriangle, ShieldCheck, X, MapPin } from 'lucide-react';
 import { EXTENSION_HELPLINES_PK, generateWhatsAppReferralUrl } from '../lib/pesticideRegistry';
 import { useLanguage } from '../context/LanguageContext';
@@ -5,6 +7,21 @@ import { useLanguage } from '../context/LanguageContext';
 export default function ExpertEscalationModal({ isOpen, onClose, diagnosis, fieldDistrict }) {
   const { language } = useLanguage();
   const isUrdu = language === 'ur';
+
+  useEffect(() => {
+    if (isOpen) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      const handleKeyDown = (e) => {
+        if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.style.overflow = prevOverflow;
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -14,9 +31,17 @@ export default function ExpertEscalationModal({ isOpen, onClose, diagnosis, fiel
     district: currentDistrict,
   });
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in text-left">
+  const modalContent = (
+    <div 
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in text-left"
+      role="dialog"
+      aria-modal="true"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div 
+        onClick={(e) => e.stopPropagation()}
         className="relative w-full max-w-xl bg-white dark:bg-earth-900 rounded-3xl border border-earth-200 dark:border-earth-700 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
         role="dialog"
         aria-modal="true"
@@ -195,4 +220,8 @@ export default function ExpertEscalationModal({ isOpen, onClose, diagnosis, fiel
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined'
+    ? createPortal(modalContent, document.body)
+    : modalContent;
 }

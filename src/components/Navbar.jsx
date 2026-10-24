@@ -5,7 +5,17 @@ import WhatsAppBotModal from './WhatsAppBotModal';
 import SmsAlertModal from './SmsAlertModal';
 import { isLowBandwidthMode, setLowBandwidthMode, getOfflineQueue } from '../lib/offlineQueue';
 
-function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout, darkMode, onToggleDarkMode }) {
+function Navbar({ 
+  currentView, 
+  onNavigate, 
+  onOpenSettings, 
+  onOpenWhatsapp,
+  onOpenSms,
+  currentUser, 
+  onLogout, 
+  darkMode, 
+  onToggleDarkMode 
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [whatsappModalOpen, setWhatsappModalOpen] = useState(false);
@@ -14,6 +24,16 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
   const [offlineCount, setOfflineCount] = useState(0);
   const { language, toggleLanguage, t } = useLanguage();
   const dropdownRef = useRef(null);
+
+  const handleOpenWhatsapp = () => {
+    if (onOpenWhatsapp) onOpenWhatsapp();
+    else setWhatsappModalOpen(true);
+  };
+
+  const handleOpenSms = () => {
+    if (onOpenSms) onOpenSms();
+    else setSmsModalOpen(true);
+  };
 
   useEffect(() => {
     setLowBandwidth(isLowBandwidthMode());
@@ -105,7 +125,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
           {/* WhatsApp Bot Simulation Launcher */}
           <button
             type="button"
-            onClick={() => setWhatsappModalOpen(true)}
+            onClick={handleOpenWhatsapp}
             className="h-8 lg:h-9 inline-flex items-center justify-center gap-1.5 rounded-full bg-[#1b281f] hover:bg-[#25372b] text-stone-200 border border-[#2d3e31] px-3 lg:px-3.5 text-xs font-medium transition shadow-xs cursor-pointer whitespace-nowrap shrink-0"
             title="Open WhatsApp Farm Assistant (واٹس ایپ بوٹ)"
           >
@@ -116,7 +136,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
           {/* District SMS Outbreak Alerts */}
           <button
             type="button"
-            onClick={() => setSmsModalOpen(true)}
+            onClick={handleOpenSms}
             className="h-8 lg:h-9 inline-flex items-center justify-center gap-1.5 rounded-full bg-[#1b281f] hover:bg-[#25372b] text-stone-200 border border-[#2d3e31] px-2.5 lg:px-3 text-xs font-medium transition shadow-xs cursor-pointer whitespace-nowrap shrink-0"
             title="District Outbreak Emergency SMS Alerts"
           >
@@ -276,13 +296,13 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
               </div>
             )}
             <button
-              onClick={() => { setWhatsappModalOpen(true); setMenuOpen(false); }}
+              onClick={() => { handleOpenWhatsapp(); setMenuOpen(false); }}
               className="text-left rounded-xl px-3.5 py-2.5 text-xs font-bold text-emerald-400 hover:bg-white/10 w-full"
             >
               <MessageSquare size={14} className="inline mr-2 text-emerald-400" aria-hidden="true" /> WhatsApp Farm Bot (واٹس ایپ)
             </button>
             <button
-              onClick={() => { setSmsModalOpen(true); setMenuOpen(false); }}
+              onClick={() => { handleOpenSms(); setMenuOpen(false); }}
               className="text-left rounded-xl px-3.5 py-2.5 text-xs font-bold text-amber-400 hover:bg-white/10 w-full"
             >
               <Bell size={14} className="inline mr-2 text-amber-400" aria-hidden="true" /> District Outbreak Alerts (ایمرجنسی الرٹ)
@@ -314,16 +334,20 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
         </div>
       )}
 
-      {/* Phase 6: WhatsApp Bot & SMS Emergency Modals */}
-      <WhatsAppBotModal
-        isOpen={whatsappModalOpen}
-        onClose={() => setWhatsappModalOpen(false)}
-      />
+      {/* Phase 6: Fallback WhatsApp Bot & SMS Emergency Modals if not handled at App root */}
+      {!onOpenWhatsapp && (
+        <WhatsAppBotModal
+          isOpen={whatsappModalOpen}
+          onClose={() => setWhatsappModalOpen(false)}
+        />
+      )}
 
-      <SmsAlertModal
-        isOpen={smsModalOpen}
-        onClose={() => setSmsModalOpen(false)}
-      />
+      {!onOpenSms && (
+        <SmsAlertModal
+          isOpen={smsModalOpen}
+          onClose={() => setSmsModalOpen(false)}
+        />
+      )}
     </header>
   );
 }

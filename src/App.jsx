@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import SettingsModal from './components/SettingsModal';
+import WhatsAppBotModal from './components/WhatsAppBotModal';
+import SmsAlertModal from './components/SmsAlertModal';
 import FieldProfileSelector from './components/FieldProfileSelector';
 import Chatbot from './components/Chatbot';
 
@@ -44,6 +46,9 @@ function App() {
     return 'dashboard';
   });
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [whatsappModalOpen, setWhatsappModalOpen] = useState(false);
+  const [smsModalOpen, setSmsModalOpen] = useState(false);
+  const isAnyModalOpen = whatsappModalOpen || smsModalOpen || settingsOpen;
 
   useEffect(() => {
     const handleHash = () => {
@@ -438,6 +443,8 @@ function App() {
           currentView={currentView}
           onNavigate={setCurrentView}
           onOpenSettings={() => setSettingsOpen(true)}
+          onOpenWhatsapp={() => setWhatsappModalOpen(true)}
+          onOpenSms={() => setSmsModalOpen(true)}
           currentUser={currentUser}
           onLogout={handleLogout}
           darkMode={darkMode}
@@ -445,7 +452,12 @@ function App() {
         />
       </div>
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-16 print:pt-4 print:px-0 space-y-5">
+      <main 
+        className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-16 print:pt-4 print:px-0 space-y-5 transition-opacity duration-200 ${
+          isAnyModalOpen ? 'opacity-0 pointer-events-none select-none' : 'opacity-100'
+        }`}
+        aria-hidden={isAnyModalOpen}
+      >
         
         <FieldProfileSelector 
           activeProfile={fieldProfile}
@@ -514,7 +526,7 @@ function App() {
         </div>
       </main>
 
-      <div className="relative z-10">
+      <div className={`relative z-10 transition-opacity duration-200 ${isAnyModalOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
         <Footer />
       </div>
 
@@ -525,6 +537,19 @@ function App() {
         onToggleDarkMode={handleToggleDarkMode}
         onClearHistory={handleClearHistory}
         historyCount={history.length}
+      />
+
+      <WhatsAppBotModal
+        isOpen={whatsappModalOpen}
+        onClose={() => setWhatsappModalOpen(false)}
+        defaultCrop={fieldProfile?.cropType || 'Wheat'}
+      />
+
+      <SmsAlertModal
+        isOpen={smsModalOpen}
+        onClose={() => setSmsModalOpen(false)}
+        defaultDistrict={fieldProfile?.district || 'Faisalabad'}
+        defaultCrop={fieldProfile?.cropType || 'Wheat'}
       />
 
       {/* Live website context aggregation for AI Farm Advisor Chatbot */}
@@ -558,11 +583,13 @@ function App() {
         };
 
         return (
-          <Chatbot 
-            fieldProfile={fieldProfile} 
-            weatherData={weatherData} 
-            liveContext={liveContext} 
-          />
+          <div className={isAnyModalOpen ? 'hidden' : ''}>
+            <Chatbot 
+              fieldProfile={fieldProfile} 
+              weatherData={weatherData} 
+              liveContext={liveContext} 
+            />
+          </div>
         );
       })()}
     </div>
