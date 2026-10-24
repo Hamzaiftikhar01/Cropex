@@ -347,12 +347,114 @@ export function isConversationalGreeting(text) {
 /**
  * Sends conversation history to the secure chat proxy with RAG knowledge grounding.
  *
+/**
+ * Formats live website telemetry, on-screen leaf diagnosis, active farm profile,
+ * and current weather conditions into a structured context block for the LLM.
+ *
+ * @param {object} liveContext
+ * @param {object} fieldProfile
+ * @param {object} weatherData
+ * @returns {string} Structured live context string
+ */
+export function formatLiveWebsiteContext(liveContext, fieldProfile, weatherData) {
+  const profile = liveContext?.fieldProfile || fieldProfile;
+  const weather = liveContext?.weatherData || weatherData;
+  const activeDiag = liveContext?.analysisResult?.diagnosis || liveContext?.analysisResult;
+  const advice = liveContext?.advice || liveContext?.advisorAdvice;
+  const diseaseRisk = liveContext?.diseaseRisk;
+  const history = liveContext?.history || [];
+  const currentView = liveContext?.currentView || 'dashboard';
+
+  const lines = [];
+
+  // Active Screen & Field Profile
+  lines.push(`- Current Screen: ${currentView.toUpperCase()}`);
+  lines.push(`- Active Field: ${profile?.name || 'My Farm Field'} (${profile?.district || 'Faisalabad'}, Pakistan)`);
+  lines.push(`- Crop: ${profile?.cropType || 'Wheat'} | Soil: ${profile?.soilType || 'Loamy'} | Last Irrigated: ${profile?.lastIrrigatedDaysAgo ?? 3} days ago`);
+  if (profile?.sowingDate) {
+    lines.push(`- Sowing Date: ${profile.sowingDate}`);
+  }
+
+  // Live Weather & Spray Conditions
+  if (weather?.current) {
+    const temp = Math.round(weather.current.temperature_2m ?? 25);
+    const humidity = Math.round(weather.current.relative_humidity_2m ?? 60);
+    const wind = Math.round(weather.current.wind_speed_10m ?? 8);
+    const rainProb = weather.daily?.precipitation_probability_max?.[0] ?? 0;
+    const spraySafe = wind <= 15 && rainProb < 30;
+
+    lines.push(`- Live Weather: ${temp}°C, Humidity: ${humidity}%, Wind: ${wind} km/h, Rain Chance: ${rainProb}%`);
+    lines.push(`- Spray Window Suitability: ${spraySafe ? 'FAVORABLE / SAFE (Calm wind < 15 km/h, no imminent rain)' : 'UNFAVORABLE (High winds or rain probability)'}`);
+  }
+
+  // Active Proactive Epidemiological Risk
+  if (diseaseRisk) {
+    lines.push(`- Proactive Disease Risk Model: ${diseaseRisk.diseaseName || 'Crop Pathogen Risk'} (Risk Level: ${diseaseRisk.riskLevel || 'Medium'}, ${diseaseRisk.percentage || 25}%)`);
+    if (diseaseRisk.guidance) {
+      lines.push(`- Epidemiological Alert: ${diseaseRisk.guidance}`);
+    }
+  }
+
+  // Active Farm Advisor Recommendation On Screen
+  if (advice) {
+    if (advice.verdict) lines.push(`- On-Screen Farm Advisor Verdict: "${advice.verdict}"`);
+    if (advice.verdictUr) lines.push(`- On-Screen Verdict (Urdu): "${advice.verdictUr}"`);
+    if (advice.explanation) lines.push(`- Advisor Reason: "${advice.explanation}"`);
+  }
+
+  // Active Leaf Scan Diagnosis (CRITICAL)
+  if (activeDiag && (activeDiag.disease || activeDiag.disease_name)) {
+    const dName = activeDiag.disease_name || activeDiag.disease;
+    const conf = activeDiag.confidence ? (activeDiag.confidence > 1 ? activeDiag.confidence : Math.round(activeDiag.confidence * 100)) : 90;
+    const sev = activeDiag.severity || 'Moderate';
+    const crp = activeDiag.cropName || activeDiag.crop || profile?.cropType;
+
+    lines.push(`\n[ACTIVE LEAF DIAGNOSTIC SCAN (SCANNED BY USER ON WEBSITE)]`);
+    lines.push(`- Diagnosed Disease: ${dName}`);
+    lines.push(`- Host Crop: ${crp} | Severity: ${sev} | Confidence: ${conf}%`);
+    if (activeDiag.scientific_name) lines.push(`- Pathogen: ${activeDiag.scientific_name}`);
+    if (activeDiag.symptoms) lines.push(`- Symptoms: ${activeDiag.symptoms}`);
+
+    const treatments = activeDiag.recommendedProducts || activeDiag.recommended_treatments || activeDiag.dppRegisteredProducts || activeDiag.dpp_registered_products || [];
+    if (Array.isArray(treatments) && treatments.length > 0) {
+      lines.push(`- Verified DPP Treatments & Label Dosages:`);
+      treatments.forEach((t) => {
+        const pName = t.productName || t.product || t.name;
+        const pDose = t.dose || t.dosage || t.perAcreDose || 'See product label';
+        const pPhi = t.phiDays ? `${t.phiDays} days PHI` : '';
+        const pClass = t.class || t.whoClass ? `WHO ${t.class || t.whoClass}` : '';
+        lines.push(`  * ${pName}: ${pDose} ${[pPhi, pClass].filter(Boolean).length > 0 ? `(${[pPhi, pClass].filter(Boolean).join(', ')})` : ''}`);
+      });
+    }
+
+    const preventions = activeDiag.bestPractices || activeDiag.culturalPreventions || activeDiag.cultural_preventions || [];
+    if (Array.isArray(preventions) && preventions.length > 0) {
+      lines.push(`- Cultural Prevention Practices: ${preventions.slice(0, 3).join('; ')}`);
+    }
+  }
+
+  // Recent Scans
+  if (Array.isArray(history) && history.length > 0) {
+    lines.push(`\n[RECENT SCANS HISTORY IN SESSION]`);
+    history.slice(0, 3).forEach((h, i) => {
+      const hName = h.disease || h.disease_name || 'Scan';
+      const hCrop = h.crop || h.cropName || '';
+      lines.push(`- Recent #${i + 1}: ${hName}${hCrop ? ` (${hCrop})` : ''}`);
+    });
+  }
+
+  return lines.join('\n');
+}
+
+/**
+ * Sends a conversation history to the chatbot API proxy with local context grounding.
+ *
  * @param {Array<{role: string, content: string}>} messageHistory
- * @param {{ fieldProfile?: object, weatherData?: object }} contextData
+ * @param {{ fieldProfile?: object, weatherData?: object, liveContext?: object }} contextData
  * @returns {Promise<{ reply: string, sources: Array<object> }>} Assistant reply and cited sources
  */
 export async function generateChatResponse(messageHistory, contextData) {
-  const { fieldProfile, weatherData } = contextData || {};
+  const { fieldProfile, weatherData, liveContext } = contextData || {};
 
   // Extract latest user inquiry for RAG retrieval
   const lastUserMsg = [...messageHistory].reverse().find((m) => m.role === 'user')?.content || '';
@@ -390,12 +492,17 @@ export async function generateChatResponse(messageHistory, contextData) {
     }
   }
 
-  const systemContent = `You are a highly intelligent, empathetic agricultural expert assistant for Cropex — an AI farming platform for Pakistan.
-Prioritize local context: District: ${fieldProfile?.district || 'Unknown'}, Crop: ${fieldProfile?.cropType || 'Unknown'}.
-Weather: ${weatherData ? `Temp ${weatherData.current?.temperature_2m ?? '?'}°C, Humidity ${weatherData.current?.relative_humidity_2m ?? '?'}%` : 'unavailable'}.
+  const liveContextPrompt = formatLiveWebsiteContext(liveContext, fieldProfile, weatherData);
+  const activeDiag = liveContext?.analysisResult?.diagnosis || liveContext?.analysisResult;
+  const activeDiseaseStr = activeDiag?.disease ? `Active Diagnosed Issue on Website: ${activeDiag.disease} (${activeDiag.severity || 'Moderate'} severity). ` : '';
+
+  const systemContent = `You are a highly intelligent, empathetic agricultural expert assistant for Cropex — an AI precision farming platform for Pakistan.
+You have direct, real-time access to the user's active session and live farm data on the website.
+${activeDiseaseStr}Active Field: ${fieldProfile?.name || 'Field 1'}, District: ${fieldProfile?.district || 'Unknown'}, Crop: ${fieldProfile?.cropType || 'Unknown'}.
+Weather: ${weatherData?.current ? `Temp ${Math.round(weatherData.current.temperature_2m)}°C, Humidity ${Math.round(weatherData.current.relative_humidity_2m)}%, Wind ${Math.round(weatherData.current.wind_speed_10m)} km/h` : 'unavailable'}.
 ${isGreeting 
   ? 'The user has sent a greeting or pleasantry. Respond warmly, politely, and concisely in Urdu or English, welcome them to Cropex, and offer to help with their crops, diseases, or weather. DO NOT invent citations or cite academic sources for greetings.' 
-  : 'Only recommend treatments registered with the Pakistan Department of Plant Protection (DPP). Never invent chemical dosages — always state official label dosages or direct farmers to consult local extension officers.'}
+  : 'When the farmer asks about their farm, recent scans, detected diseases, weather, spray timing, or what issues were found on their field, READ AND CITE the active live website context directly. Only recommend treatments registered with the Pakistan Department of Plant Protection (DPP). Never invent chemical dosages — always state official label dosages or direct farmers to consult local extension officers.'}
 BANNED SUBSTANCES: NEVER recommend banned or cancelled chemicals in Pakistan (Endosulfan, Monocrotophos, DDT, Dieldrin, Aldrin, Heptachlor, Methyl Parathion, Methamidophos, Phosphamidon, Chlordane).
 Always advise respecting Pre-Harvest Intervals (PHI) for crop safety.
 DISCLAIMER: Advice is AI-generated. Always verify with a certified agronomist.`;
@@ -407,13 +514,22 @@ DISCLAIMER: Advice is AI-generated. Always verify with a certified agronomist.`;
 
   let data;
   try {
-    data = await callApi('/api/chat', { messages, ragContext, sources, isGreeting }, 35_000);
+    data = await callApi('/api/chat', { messages, ragContext, sources, liveContextPrompt, isGreeting }, 35_000);
   } catch (apiErr) {
     console.warn('[aiService] Chat API error, using grounded knowledge base response:', apiErr);
     if (isGreeting) {
       return {
         reply: "Assalam-o-Alaikum! Hello! I am your Cropex AI Farm Advisor. How can I assist you with your crops, weather, or pest management today?\n\n(السلام علیکم! میں آپ کا کراپیکس فارم مشیر ہوں۔ میں آج آپ کی فصل، موسم یا کیڑوں کے تدارک کے بارے میں کیا مدد کر سکتا ہوں؟)",
         sources: [],
+      };
+    }
+    if (activeDiag && (activeDiag.disease || activeDiag.disease_name)) {
+      const dName = activeDiag.disease_name || activeDiag.disease;
+      const treatments = activeDiag.recommendedProducts || activeDiag.recommended_treatments || [];
+      const treatmentLine = treatments.length > 0 ? `\n\n🌾 **تجویز کردہ دوا (DPP):** ${treatments[0].productName || treatments[0].product || treatments[0].name} (${treatments[0].dose || 'لیبل کے مطابق'})` : '';
+      return {
+        reply: `**حالیہ اسکین کی تشخیص: ${dName}**\n\nآپ کی فصل (${activeDiag.cropName || activeDiag.crop || fieldProfile?.cropType}) میں ${dName} تشخیص ہوئی ہے۔${treatmentLine}\n\nمزید تفصیلات یا اسپرے کے صحیح وقت کے لیے فارم ایڈوائزر الرٹ دیکھیں۔`,
+        sources: sources || [],
       };
     }
     if (sources && sources.length > 0) {

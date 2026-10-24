@@ -17,6 +17,7 @@ import CropGuideView from './pages/CropGuideView';
 import { useWeatherData } from './hooks/useWeatherData';
 import { useLanguage } from './context/LanguageContext';
 import { getDeterministicAdvice, getRephrasedAdvice } from './services/farmAdvisor';
+import { calculateDiseaseRisk, calculateIrrigation, calculateYieldForecast } from './utils/agriRules';
 import { supabase } from './lib/supabase';
 import { loadReferenceData } from './lib/referenceData';
 import { Sprout } from 'lucide-react';
@@ -526,8 +527,44 @@ function App() {
         historyCount={history.length}
       />
 
-      {/* Floating Chatbot */}
-      <Chatbot fieldProfile={fieldProfile} weatherData={weatherData} />
+      {/* Live website context aggregation for AI Farm Advisor Chatbot */}
+      {(() => {
+        const diseaseRisk = weatherData ? calculateDiseaseRisk(fieldProfile.cropType, weatherData, language) : null;
+        const irrigationAdvice = weatherData ? calculateIrrigation(
+          fieldProfile.cropType,
+          fieldProfile.soilType,
+          fieldProfile.sowingDate,
+          fieldProfile.lastIrrigatedDaysAgo ?? 3,
+          weatherData,
+          language
+        ) : null;
+        const yieldForecast = weatherData ? calculateYieldForecast(
+          fieldProfile,
+          weatherData,
+          diseaseRisk?.percentage ?? 15,
+          language
+        ) : null;
+
+        const liveContext = {
+          currentView,
+          fieldProfile,
+          weatherData,
+          advice,
+          analysisResult,
+          history,
+          diseaseRisk,
+          irrigationAdvice,
+          yieldForecast,
+        };
+
+        return (
+          <Chatbot 
+            fieldProfile={fieldProfile} 
+            weatherData={weatherData} 
+            liveContext={liveContext} 
+          />
+        );
+      })()}
     </div>
   );
 }

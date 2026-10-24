@@ -90,7 +90,7 @@ export default async function handler(req, res) {
   }
 
   // ── Input validation ─────────────────────────────────────────────────────────
-  const { messages, ragContext, sources, isGreeting: isGreetingFlag } = req.body || {};
+  const { messages, ragContext, sources, liveContextPrompt, isGreeting: isGreetingFlag } = req.body || {};
 
   if (!Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'Missing messages array.' });
@@ -118,6 +118,21 @@ export default async function handler(req, res) {
   // Detect if the latest inquiry is a greeting/casual pleasantry
   const lastUserMsg = [...sanitizedMessages].reverse().find((m) => m.role === 'user')?.content || '';
   const isGreeting = Boolean(isGreetingFlag) || isConversationalGreeting(lastUserMsg);
+
+  // Inject live website context & telemetry into system prompt so AI can directly answer questions about current farm & scans
+  if (liveContextPrompt && typeof liveContextPrompt === 'string') {
+    const liveSystemPrompt = `\n\n=== LIVE FARM TELEMETRY & WEBSITE STATE (CURRENT USER SESSION) ===\n${liveContextPrompt}\n===================================================================\n\nREAL-TIME WEBSITE CONTEXT GROUNDING DIRECTIVES:\n1. The data above is live telemetry from the user's active session on the Cropex website right now.\n2. When the user asks about their farm, their field, their crops, recent scans, detected diseases, symptoms, weather, spraying, or what is happening on their field:\n   - Directly read, summarize, and explain the live data from above (e.g., specific disease diagnosed, active DPP product names with exact label doses, weather conditions, spray window safety, and irrigation status).\n   - Example in Urdu: "آپ کے حالیہ اسکین کے مطابق آپ کی فصل میں [Disease] تشخیص ہوئی ہے جس کا علاج [Product] ہے..."\n   - Example in English: "According to your live scan on Cropex, your [Crop] has been diagnosed with [Disease]..."\n3. Always adhere to official DPP-registered remedies and label dosages.\n4. Respond in natural, fluent Urdu (or Punjabi) or English matching the user's language.`;
+
+    const systemIdx = sanitizedMessages.findIndex((m) => m.role === 'system');
+    if (systemIdx >= 0) {
+      sanitizedMessages[systemIdx].content += liveSystemPrompt;
+    } else {
+      sanitizedMessages.unshift({
+        role: 'system',
+        content: `You are Cropex AI, an expert precision farming advisor for Pakistan.${liveSystemPrompt}`,
+      });
+    }
+  }
 
   // Inject RAG grounding instructions and sources into system prompt ONLY for substantive queries
   if (!isGreeting && ragContext && typeof ragContext === 'string' && Array.isArray(sources) && sources.length > 0) {

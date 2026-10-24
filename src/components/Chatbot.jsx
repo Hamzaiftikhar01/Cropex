@@ -51,7 +51,7 @@ function SourcesAccordion({ sources }) {
   );
 }
 
-export default function Chatbot({ fieldProfile, weatherData }) {
+export default function Chatbot({ fieldProfile, weatherData, liveContext }) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Hello! I am your AI Farm Advisor. Ask me anything about your crops, weather, or farming practices.' }
@@ -134,7 +134,7 @@ export default function Chatbot({ fieldProfile, weatherData }) {
     setIsTyping(true);
 
     try {
-      const response = await generateChatResponse(newMessages, { fieldProfile, weatherData });
+      const response = await generateChatResponse(newMessages, { fieldProfile, weatherData, liveContext });
       const content = typeof response === 'string' ? response : response.reply;
       const sources = response?.sources || [];
       setMessages([...newMessages, { role: 'assistant', content, sources }]);
@@ -145,27 +145,63 @@ export default function Chatbot({ fieldProfile, weatherData }) {
     }
   };
 
+  const activeDiagnosis = liveContext?.analysisResult?.diagnosis || liveContext?.analysisResult;
+
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
       {/* Chat Window */}
       {isOpen && (
-        <div className="bg-neutral-surface border border-neutral-border rounded-2xl shadow-hard w-[90vw] sm:w-[350px] h-[500px] max-h-[80vh] flex flex-col mb-4 overflow-hidden transition-all duration-300">
-          {/* Header */}
-          <div className="bg-brand-primary text-neutral-surface p-4 flex justify-between items-center shadow-xs">
-            <div className="flex items-center gap-2">
-              <Bot size={24} className="text-white" aria-hidden="true" />
-              <h3 className="font-bold text-sm tracking-wide">AI Farm Advisor (اردو / English)</h3>
+        <div className="bg-neutral-surface border border-neutral-border rounded-2xl shadow-hard w-[90vw] sm:w-[360px] h-[520px] max-h-[82vh] flex flex-col mb-4 overflow-hidden transition-all duration-300">
+          {/* Header with Live Sync Status */}
+          <div className="bg-[#1B4332] text-white p-3.5 flex justify-between items-center shadow-xs">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600/40 text-white shrink-0">
+                <Bot size={20} className="text-white" aria-hidden="true" />
+              </span>
+              <div className="min-w-0">
+                <h3 className="font-bold text-xs sm:text-sm tracking-wide text-white truncate">AI Farm Advisor (اردو / English)</h3>
+                <div className="flex items-center gap-1.5 text-[10px] text-emerald-200 mt-0.5 truncate">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+                  <span className="truncate">
+                    Live Synced: {liveContext?.fieldProfile?.district || fieldProfile?.district || 'Farm'} · {liveContext?.fieldProfile?.cropType || fieldProfile?.cropType || 'Crop'}
+                    {activeDiagnosis?.disease && (
+                      <span className="text-amber-300 font-bold ml-1">
+                        · {activeDiagnosis.disease}
+                      </span>
+                    )}
+                  </span>
+                </div>
+              </div>
             </div>
             <button 
               onClick={() => {
                 stopSpeaking();
                 setIsOpen(false);
               }}
-              className="text-brand-surface hover:text-white transition-colors cursor-pointer"
+              className="text-white/80 hover:text-white transition-colors cursor-pointer p-1 shrink-0"
+              title="Close chat"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
           </div>
+
+          {/* Active Leaf Diagnosis Context Banner */}
+          {activeDiagnosis?.disease && (
+            <div className="bg-[#142918] border-b border-[#213b27] px-3.5 py-1.5 flex items-center justify-between text-[11px] text-emerald-300">
+              <span className="flex items-center gap-1.5 truncate">
+                <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+                <span className="font-semibold truncate">Active Leaf Scan: {activeDiagnosis.disease}</span>
+                {activeDiagnosis.confidence && (
+                  <span className="text-emerald-400 text-[10px]">
+                    ({Math.round(activeDiagnosis.confidence > 1 ? activeDiagnosis.confidence : activeDiagnosis.confidence * 100)}%)
+                  </span>
+                )}
+              </span>
+              <span className="text-[9px] uppercase tracking-wider font-bold text-emerald-400 bg-emerald-950/60 px-1.5 py-0.5 rounded shrink-0">
+                Live Synced
+              </span>
+            </div>
+          )}
 
           {/* Messages Area */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-neutral-fill/30">
