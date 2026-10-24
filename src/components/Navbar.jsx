@@ -62,32 +62,32 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
 
   return (
     <header className="sticky top-0 z-40 border-b border-[#213024] bg-[#131D16] text-white transition-colors duration-200">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+      <nav className="mx-auto flex max-w-[1440px] items-center justify-between px-3 sm:px-6 lg:px-8 h-16 w-full gap-2 lg:gap-4">
         
         {/* Logo */}
         <a
           href="#dashboard"
           onClick={(e) => handleLinkClick(e, 'dashboard')}
-          className="flex items-center gap-2.5 focus:outline-none focus:ring-1 focus:ring-emerald-500 rounded-xl p-1"
+          className="flex items-center gap-2.5 focus:outline-none focus:ring-1 focus:ring-emerald-500 rounded-xl p-1 shrink-0"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-xs">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-xs shrink-0">
             <Sprout size={18} aria-hidden="true" />
           </span>
-          <span className="text-lg font-bold tracking-tight text-white font-sans">
+          <span className="text-lg font-bold tracking-tight text-white font-sans whitespace-nowrap shrink-0">
             Cropex
           </span>
         </a>
 
         {/* Desktop Links */}
-        <ul className="hidden md:flex items-center gap-1 lg:gap-1.5">
+        <ul className="hidden md:flex items-center gap-1 lg:gap-1.5 shrink-0">
           {navLinks.map((link) => {
             const isActive = currentView === link.view;
             return (
-              <li key={link.view}>
+              <li key={link.view} className="shrink-0">
                 <a
                   href={`#${link.view}`}
                   onClick={(e) => handleLinkClick(e, link.view)}
-                  className={`text-xs lg:text-sm font-medium transition-all py-1.5 px-3 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 ${
+                  className={`inline-flex items-center justify-center whitespace-nowrap shrink-0 h-8 lg:h-9 text-xs lg:text-sm font-medium transition-all px-3 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 ${
                     isActive
                       ? 'text-white bg-white/15 font-semibold'
                       : 'text-stone-300 hover:text-white hover:bg-white/10'
@@ -101,27 +101,27 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
         </ul>
 
         {/* Right Action Controls */}
-        <div className="hidden md:flex items-center gap-2 lg:gap-2.5">
+        <div className="hidden md:flex items-center gap-1.5 lg:gap-2.5 shrink-0">
           {/* WhatsApp Bot Simulation Launcher */}
           <button
             type="button"
             onClick={() => setWhatsappModalOpen(true)}
-            className="h-8 inline-flex items-center gap-1.5 rounded-full bg-[#1b281f] hover:bg-[#25372b] text-stone-200 border border-[#2d3e31] px-3.5 text-xs font-medium transition shadow-xs cursor-pointer"
+            className="h-8 lg:h-9 inline-flex items-center justify-center gap-1.5 rounded-full bg-[#1b281f] hover:bg-[#25372b] text-stone-200 border border-[#2d3e31] px-3 lg:px-3.5 text-xs font-medium transition shadow-xs cursor-pointer whitespace-nowrap shrink-0"
             title="Open WhatsApp Farm Assistant (واٹس ایپ بوٹ)"
           >
-            <MessageSquare size={13} className="text-emerald-400" />
-            <span>WhatsApp Bot</span>
+            <MessageSquare size={13} className="text-emerald-400 shrink-0" />
+            <span className="whitespace-nowrap">WhatsApp Bot</span>
           </button>
 
           {/* District SMS Outbreak Alerts */}
           <button
             type="button"
             onClick={() => setSmsModalOpen(true)}
-            className="h-8 inline-flex items-center gap-1.5 rounded-full bg-[#1b281f] hover:bg-[#25372b] text-stone-200 border border-[#2d3e31] px-3 text-xs font-medium transition shadow-xs cursor-pointer"
+            className="h-8 lg:h-9 inline-flex items-center justify-center gap-1.5 rounded-full bg-[#1b281f] hover:bg-[#25372b] text-stone-200 border border-[#2d3e31] px-2.5 lg:px-3 text-xs font-medium transition shadow-xs cursor-pointer whitespace-nowrap shrink-0"
             title="District Outbreak Emergency SMS Alerts"
           >
-            <Bell size={13} className="text-amber-400" />
-            <span>SMS Alerts</span>
+            <Bell size={13} className="text-amber-400 shrink-0" />
+            <span className="whitespace-nowrap">SMS Alerts</span>
           </button>
 
           {/* Low-Bandwidth 2G Mode Toggle */}
@@ -132,17 +132,17 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
               setLowBandwidthMode(next);
               setLowBandwidth(next);
             }}
-            className={`h-8 inline-flex items-center gap-1.5 rounded-full px-3 text-xs font-bold transition shadow-xs cursor-pointer ${
+            className={`h-8 lg:h-9 inline-flex items-center justify-center gap-1.5 rounded-full px-2.5 lg:px-3 text-xs font-bold transition shadow-xs cursor-pointer whitespace-nowrap shrink-0 ${
               lowBandwidth
                 ? 'bg-[#a3e635] text-[#142900] hover:bg-[#bef264]'
                 : 'bg-[#a3e635] text-[#142900] hover:bg-[#bef264]'
             }`}
             title="Toggle Rural 2G / Low-Bandwidth Mode"
           >
-            {lowBandwidth ? <WifiOff size={13} /> : <Wifi size={13} />}
-            <span>2G mode</span>
+            {lowBandwidth ? <WifiOff size={13} className="shrink-0" /> : <Wifi size={13} className="shrink-0" />}
+            <span className="whitespace-nowrap">2G mode</span>
             {offlineCount > 0 && (
-              <span className="px-1.5 py-0.2 rounded-full bg-emerald-900 text-white text-[9px] font-bold">
+              <span className="px-1.5 py-0.2 rounded-full bg-emerald-900 text-white text-[9px] font-bold shrink-0">
                 {offlineCount}
               </span>
             )}
@@ -151,26 +151,26 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
           {/* Language Toggle Button */}
           <button
             onClick={() => toggleLanguage()}
-            className="h-8 inline-flex items-center justify-center rounded-full bg-[#1b281f] border border-[#2d3e31] px-3 text-xs font-medium text-stone-200 hover:text-white hover:bg-[#25372b] transition-colors cursor-pointer"
+            className="h-8 lg:h-9 inline-flex items-center justify-center rounded-full bg-[#1b281f] border border-[#2d3e31] px-2.5 lg:px-3 text-xs font-medium text-stone-200 hover:text-white hover:bg-[#25372b] transition-colors cursor-pointer whitespace-nowrap shrink-0"
             title="Toggle Language (English / Urdu / Punjabi)"
           >
-            <span>{language === 'en' ? 'EN | اردو' : getLanguageLabel()}</span>
+            <span className="whitespace-nowrap">{language === 'en' ? 'EN | اردو' : getLanguageLabel()}</span>
           </button>
 
           {/* Dark Mode Toggle Button */}
           <button
             onClick={onToggleDarkMode}
-            className="h-8 w-8 inline-flex items-center justify-center rounded-full text-stone-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            className="h-8 w-8 lg:h-9 lg:w-9 inline-flex items-center justify-center rounded-full text-stone-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0"
             title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
             {darkMode ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
           </button>
 
           {/* Profile Menu Dropdown */}
-          <div className="relative" ref={dropdownRef}>
+          <div className="relative shrink-0" ref={dropdownRef}>
             <button
               onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-              className="h-8 w-8 inline-flex items-center justify-center rounded-full text-stone-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+              className="h-8 w-8 lg:h-9 lg:w-9 inline-flex items-center justify-center rounded-full text-stone-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0"
             >
               <User size={16} aria-hidden="true" />
             </button>
@@ -212,24 +212,24 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
         </div>
 
         {/* Mobile Controls */}
-        <div className="flex items-center gap-1.5 md:hidden">
+        <div className="flex items-center gap-1.5 md:hidden shrink-0">
           <button
             onClick={onToggleDarkMode}
-            className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-stone-300 hover:text-white transition-colors cursor-pointer"
+            className="h-8 w-8 inline-flex items-center justify-center rounded-lg text-stone-300 hover:text-white transition-colors cursor-pointer shrink-0"
             title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
             {darkMode ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
           </button>
           <button
             onClick={() => toggleLanguage()}
-            className="h-8 px-2.5 inline-flex items-center justify-center rounded-full bg-[#1b281f] border border-[#2d3e31] text-xs font-medium text-stone-200"
+            className="h-8 px-2.5 inline-flex items-center justify-center rounded-full bg-[#1b281f] border border-[#2d3e31] text-xs font-medium text-stone-200 whitespace-nowrap shrink-0"
           >
-            <span>EN | اردو</span>
+            <span className="whitespace-nowrap">EN | اردو</span>
           </button>
           
           <button
             type="button"
-            className="h-8 w-8 inline-flex items-center justify-center rounded-lg p-1 text-stone-300 hover:text-white transition-colors"
+            className="h-8 w-8 inline-flex items-center justify-center rounded-lg p-1 text-stone-300 hover:text-white transition-colors shrink-0"
             aria-label="Toggle menu"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((prev) => !prev)}
@@ -247,7 +247,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
 
       {/* Mobile Drawer */}
       {menuOpen && (
-        <div className="border-t border-neutral-border bg-neutral-surface px-4 py-4 md:hidden text-left space-y-3">
+        <div className="border-t border-[#213024] bg-[#131D16] px-4 py-4 md:hidden text-left space-y-3">
           <ul className="flex flex-col gap-1">
             {navLinks.map((link) => {
               const isActive = currentView === link.view;
@@ -258,8 +258,8 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
                     onClick={(e) => handleLinkClick(e, link.view)}
                     className={`block rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold transition-colors ${
                       isActive
-                        ? 'text-brand-primary bg-brand-surface'
-                        : 'text-neutral-medium hover:bg-neutral-fill hover:text-neutral-high'
+                        ? 'text-white bg-white/15 font-semibold'
+                        : 'text-stone-300 hover:bg-white/10 hover:text-white'
                     }`}
                   >
                     {link.label}
@@ -269,33 +269,33 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
             })}
           </ul>
 
-          <div className="pt-3 border-t border-neutral-border flex flex-col gap-2">
+          <div className="pt-3 border-t border-[#213024] flex flex-col gap-2">
             {currentUser && (
               <div className="px-3.5 py-1">
-                <p className="text-xs font-bold text-neutral-high truncate">{currentUser.fullName}</p>
+                <p className="text-xs font-bold text-white truncate">{currentUser.fullName}</p>
               </div>
             )}
             <button
               onClick={() => { setWhatsappModalOpen(true); setMenuOpen(false); }}
-              className="text-left rounded-xl px-3.5 py-2.5 text-xs font-bold text-emerald-700 dark:text-emerald-300 hover:bg-neutral-fill"
+              className="text-left rounded-xl px-3.5 py-2.5 text-xs font-bold text-emerald-400 hover:bg-white/10 w-full"
             >
-              <MessageSquare size={14} className="inline mr-2 text-emerald-600" aria-hidden="true" /> WhatsApp Farm Bot (واٹس ایپ)
+              <MessageSquare size={14} className="inline mr-2 text-emerald-400" aria-hidden="true" /> WhatsApp Farm Bot (واٹس ایپ)
             </button>
             <button
               onClick={() => { setSmsModalOpen(true); setMenuOpen(false); }}
-              className="text-left rounded-xl px-3.5 py-2.5 text-xs font-bold text-amber-700 dark:text-amber-300 hover:bg-neutral-fill"
+              className="text-left rounded-xl px-3.5 py-2.5 text-xs font-bold text-amber-400 hover:bg-white/10 w-full"
             >
-              <Bell size={14} className="inline mr-2 text-amber-600" aria-hidden="true" /> District Outbreak Alerts (ایمرجنسی الرٹ)
+              <Bell size={14} className="inline mr-2 text-amber-400" aria-hidden="true" /> District Outbreak Alerts (ایمرجنسی الرٹ)
             </button>
             <button
               onClick={() => { toggleLanguage(); setMenuOpen(false); }}
-              className="text-left rounded-xl px-3.5 py-2.5 text-xs font-semibold text-neutral-medium hover:bg-neutral-fill"
+              className="text-left rounded-xl px-3.5 py-2.5 text-xs font-semibold text-stone-300 hover:bg-white/10 w-full"
             >
               <Languages size={14} className="inline mr-2" aria-hidden="true" /> {getLanguageLabel()}
             </button>
             <button
               onClick={() => { onOpenSettings(); setMenuOpen(false); }}
-              className="text-left rounded-xl px-3.5 py-2.5 text-xs font-semibold text-neutral-medium hover:bg-neutral-fill"
+              className="text-left rounded-xl px-3.5 py-2.5 text-xs font-semibold text-stone-300 hover:bg-white/10 w-full"
             >
               <Settings size={14} className="inline mr-2" aria-hidden="true" /> {t('settings')}
             </button>
@@ -305,7 +305,7 @@ function Navbar({ currentView, onNavigate, onOpenSettings, currentUser, onLogout
                   onLogout();
                   setMenuOpen(false);
                 }}
-                className="text-left rounded-xl px-3.5 py-2.5 text-xs font-bold text-semantic-high hover:bg-neutral-fill"
+                className="text-left rounded-xl px-3.5 py-2.5 text-xs font-bold text-rose-400 hover:bg-white/10 w-full"
               >
                 <LogOut size={14} className="inline mr-2" aria-hidden="true" /> {currentUser.isGuest ? 'Exit Guest Mode' : t('signOut')}
               </button>

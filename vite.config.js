@@ -27,9 +27,15 @@ function localApiDevPlugin() {
             handler = (await import('./api/rag.js')).default;
           } else if (apiName === 'rephrase') {
             handler = (await import('./api/rephrase.js')).default;
+          } else if (apiName === 'tts') {
+            handler = (await import('./api/tts.js')).default;
           }
 
           if (!handler) return next();
+
+          // Parse query string for GET requests
+          const parsedUrl = new URL(req.url, 'http://localhost');
+          req.query = Object.fromEntries(parsedUrl.searchParams);
 
           // Collect body for POST/PUT requests
           let body = {};
@@ -49,7 +55,7 @@ function localApiDevPlugin() {
           }
           req.body = body;
 
-          // Polyfill res.status and res.json for Vercel Serverless Function compatibility
+          // Polyfill res.status, res.json, and res.send for Vercel Serverless Function compatibility
           res.status = function (statusCode) {
             res.statusCode = statusCode;
             return res;
@@ -59,6 +65,22 @@ function localApiDevPlugin() {
               res.setHeader('Content-Type', 'application/json');
             }
             res.end(JSON.stringify(data));
+            return res;
+          };
+          res.send = function (data) {
+            if (Buffer.isBuffer(data)) {
+              if (!res.headersSent && !res.getHeader('Content-Type')) {
+                res.setHeader('Content-Type', 'audio/mpeg');
+              }
+              res.end(data);
+            } else if (typeof data === 'object') {
+              if (!res.headersSent) {
+                res.setHeader('Content-Type', 'application/json');
+              }
+              res.end(JSON.stringify(data));
+            } else {
+              res.end(String(data));
+            }
             return res;
           };
 

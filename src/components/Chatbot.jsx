@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Bot, Sprout, BookOpen, ChevronDown, ChevronUp, ShieldCheck, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import { Bot, Sprout, BookOpen, ChevronDown, ChevronUp, ShieldCheck, Mic, MicOff, Volume2, VolumeX, Send } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { generateChatResponse } from '../services/aiService';
@@ -253,9 +253,11 @@ export default function Chatbot({ fieldProfile, weatherData }) {
             <button
               type="submit"
               disabled={!input.trim() || isTyping}
-              className="bg-brand-primary hover:bg-brand-secondary text-white rounded-xl px-4 py-2 flex items-center justify-center transition-colors disabled:opacity-50 cursor-pointer"
+              className="bg-[#1B4332] hover:bg-[#143527] text-white rounded-xl px-3.5 py-2.5 flex items-center justify-center transition-colors disabled:opacity-50 cursor-pointer shadow-sm shrink-0"
+              title="Send message"
+              aria-label="Send message"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+              <Send size={16} className="text-white" aria-hidden="true" />
             </button>
           </form>
         </div>
@@ -273,10 +275,10 @@ export default function Chatbot({ fieldProfile, weatherData }) {
           <button
             onClick={() => setIsOpen(true)}
             aria-label="Open AI Farm Advisor chat"
-            className="bg-brand-primary hover:bg-brand-secondary text-white w-14 h-14 rounded-full shadow-hard flex items-center justify-center transition-transform hover:scale-105 cursor-pointer relative shrink-0"
+            className="bg-[#1B4332] hover:bg-[#143527] text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-105 cursor-pointer relative shrink-0"
           >
-            <Bot size={32} className="text-crop-600 dark:text-crop-400" aria-hidden="true" />
-            <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-semantic-high border-2 border-white rounded-full"></span>
+            <Bot size={28} className="text-white" aria-hidden="true" />
+            <span className="absolute top-0.5 right-0.5 w-3.5 h-3.5 bg-rose-600 border-2 border-white rounded-full"></span>
           </button>
         </div>
       )}

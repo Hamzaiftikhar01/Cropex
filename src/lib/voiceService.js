@@ -105,12 +105,17 @@ export function cleanTextForSpeech(text) {
   return text
     .replace(/```[\s\S]*?```/g, '') // remove code blocks
     .replace(/`([^`]+)`/g, '$1') // inline code
+    .replace(/https?:\/\/\S+/g, '') // remove URLs
+    .replace(/\[[^\]]*\]\([^)]*\)/g, '') // remove markdown links
+    .replace(/\[[^\]]*\]/g, '') // remove bracket citations [1], [DPP]
     .replace(/\*\*([^*]+)\*\*/g, '$1') // bold
     .replace(/\*([^*]+)\*/g, '$1') // italic
     .replace(/#+\s+/g, '') // headers
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // links
-    .replace(/[•\-*]\s+/g, '') // bullet points
+    .replace(/^\s*[-•*]\s+/gm, '') // bullet points
+    .replace(/^\s*\d+\.\s+/gm, '') // numbered lists
     .replace(/[_~>]/g, '') // quotes, strikethrough
+    .replace(/&nbsp;/g, ' ')
+    .replace(/[|\\/]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -118,7 +123,14 @@ export function cleanTextForSpeech(text) {
 /**
  * Stops any actively playing audio or SpeechSynthesis voice.
  */
+let synthInterval = null;
+
 export function stopSpeaking() {
+  if (synthInterval) {
+    clearInterval(synthInterval);
+    synthInterval = null;
+  }
+
   if (currentAudio) {
     try {
       currentAudio.pause();
@@ -164,7 +176,9 @@ export function speakText(rawText, options = {}) {
   let isCancelled = false;
 
   // Primary Engine: High-fidelity Serverless TTS endpoint (/api/tts)
-  const encodedText = encodeURIComponent(text.slice(0, 300));
+  // Sends up to 1000 characters of sanitized, fluent text
+  const speechText = text.slice(0, 1000);
+  const encodedText = encodeURIComponent(speechText);
   const ttsUrl = `/api/tts?lang=${lang}&text=${encodedText}`;
 
   const audio = new Audio(ttsUrl);
@@ -181,37 +195,88 @@ export function speakText(rawText, options = {}) {
   };
 
   audio.onerror = () => {
-    // Upstream or network failed -> Fallback to browser SpeechSynthesis
+    // Upstream or network failed -> Fallback to browser SpeechSynthesis with stall protection
     currentAudio = null;
     if (isCancelled) return;
 
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       try {
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = lang === 'en' ? 'en-US' : 'ur-PK';
-        utterance.rate = rate * 0.95;
+        window.speechSynthesis.cancel();
 
-        // Try to locate native Urdu / Hindi / Indian voice if available
+        // Split long text into short sentences to avoid Chromium 15-second speech freeze bug
+        const sentences = speechText.match(/[^۔!؟\n.?]+[۔!؟\n.?]*/g) || [speechText];
         const voices = window.speechSynthesis.getVoices() || [];
+
+        // Locate best native Urdu or compatible South Asian voice
         const preferredVoice = voices.find(
-          (v) => v.lang.startsWith(lang) || v.lang.includes('ur') || v.lang.includes('hi')
+          (v) =>
+            v.lang === 'ur-PK' ||
+            v.lang === 'ur' ||
+            v.lang.toLowerCase().includes('urdu') ||
+            (lang === 'ur' && (v.lang === 'hi-IN' || v.lang.startsWith('hi'))) ||
+            (lang === 'en' && (v.lang === 'en-US' || v.lang === 'en-GB'))
         );
-        if (preferredVoice) {
-          utterance.voice = preferredVoice;
-        }
 
-        utterance.onstart = () => {
-          if (!isCancelled && onStart) onStart();
-        };
-        utterance.onend = () => {
-          if (!isCancelled && onEnd) onEnd();
-        };
-        utterance.onerror = (e) => {
-          if (!isCancelled && onError) onError(e);
+        let currentIdx = 0;
+        let started = false;
+
+        // Keepalive timer prevents Chrome from freezing/stalling speech synthesis
+        synthInterval = setInterval(() => {
+          if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.pause();
+            window.speechSynthesis.resume();
+          } else {
+            clearInterval(synthInterval);
+            synthInterval = null;
+          }
+        }, 8000);
+
+        const speakNext = () => {
+          if (isCancelled || currentIdx >= sentences.length) {
+            if (synthInterval) {
+              clearInterval(synthInterval);
+              synthInterval = null;
+            }
+            if (!isCancelled && onEnd) onEnd();
+            return;
+          }
+
+          const sText = sentences[currentIdx].trim();
+          if (!sText) {
+            currentIdx++;
+            speakNext();
+            return;
+          }
+
+          const utterance = new SpeechSynthesisUtterance(sText);
+          utterance.lang = lang === 'en' ? 'en-US' : 'ur-PK';
+          utterance.rate = rate * 0.95;
+          if (preferredVoice) utterance.voice = preferredVoice;
+
+          utterance.onstart = () => {
+            if (!started && !isCancelled && onStart) {
+              started = true;
+              onStart();
+            }
+          };
+
+          utterance.onend = () => {
+            currentIdx++;
+            speakNext();
+          };
+
+          utterance.onerror = (e) => {
+            console.warn('[voiceService] Synthesis utterance error:', e);
+            currentIdx++;
+            speakNext();
+          };
+
+          window.speechSynthesis.speak(utterance);
         };
 
-        window.speechSynthesis.speak(utterance);
+        speakNext();
       } catch (synthErr) {
+        if (synthInterval) clearInterval(synthInterval);
         if (onError) onError(synthErr);
       }
     } else if (onError) {
