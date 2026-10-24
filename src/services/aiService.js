@@ -496,12 +496,12 @@ export async function generateChatResponse(messageHistory, contextData) {
   const activeDiag = liveContext?.analysisResult?.diagnosis || liveContext?.analysisResult;
   const activeDiseaseStr = activeDiag?.disease ? `Active Diagnosed Issue on Website: ${activeDiag.disease} (${activeDiag.severity || 'Moderate'} severity). ` : '';
 
-  const systemContent = `You are a highly intelligent, empathetic agricultural expert assistant for Cropex — an AI precision farming platform for Pakistan.
+  const systemContent = `You are Boota (بوٹا), a highly intelligent, empathetic agricultural expert advisor for Cropex — an AI precision farming platform for Pakistan. Your name is Boota (بوٹا). When greeted or asked who you are or what your name is, always introduce yourself as Boota (بوٹا), the Cropex AI Farm Advisor.
 You have direct, real-time access to the user's active session and live farm data on the website.
 ${activeDiseaseStr}Active Field: ${fieldProfile?.name || 'Field 1'}, District: ${fieldProfile?.district || 'Unknown'}, Crop: ${fieldProfile?.cropType || 'Unknown'}.
 Weather: ${weatherData?.current ? `Temp ${Math.round(weatherData.current.temperature_2m)}°C, Humidity ${Math.round(weatherData.current.relative_humidity_2m)}%, Wind ${Math.round(weatherData.current.wind_speed_10m)} km/h` : 'unavailable'}.
 ${isGreeting 
-  ? 'The user has sent a greeting or pleasantry. Respond warmly, politely, and concisely in Urdu or English, welcome them to Cropex, and offer to help with their crops, diseases, or weather. DO NOT invent citations or cite academic sources for greetings.' 
+  ? 'The user has sent a greeting or pleasantry. Respond warmly, politely, and concisely in Urdu or English, introduce yourself as Boota (بوٹا) — the Cropex AI Farm Advisor, and offer to help with their crops, diseases, or weather. DO NOT invent citations or cite academic sources for greetings.' 
   : 'When the farmer asks about their farm, recent scans, detected diseases, weather, spray timing, or what issues were found on their field, READ AND CITE the active live website context directly. Only recommend treatments registered with the Pakistan Department of Plant Protection (DPP). Never invent chemical dosages — always state official label dosages or direct farmers to consult local extension officers.'}
 BANNED SUBSTANCES: NEVER recommend banned or cancelled chemicals in Pakistan (Endosulfan, Monocrotophos, DDT, Dieldrin, Aldrin, Heptachlor, Methyl Parathion, Methamidophos, Phosphamidon, Chlordane).
 Always advise respecting Pre-Harvest Intervals (PHI) for crop safety.
@@ -519,7 +519,7 @@ DISCLAIMER: Advice is AI-generated. Always verify with a certified agronomist.`;
     console.warn('[aiService] Chat API error, using grounded knowledge base response:', apiErr);
     if (isGreeting) {
       return {
-        reply: "Assalam-o-Alaikum! Hello! I am your Cropex AI Farm Advisor. How can I assist you with your crops, weather, or pest management today?\n\n(السلام علیکم! میں آپ کا کراپیکس فارم مشیر ہوں۔ میں آج آپ کی فصل، موسم یا کیڑوں کے تدارک کے بارے میں کیا مدد کر سکتا ہوں؟)",
+        reply: "Assalam-o-Alaikum! Hello! I am Boota (بوٹا), your Cropex AI Farm Advisor. How can I assist you with your crops, weather, or pest management today?\n\n(السلام علیکم! میں بوٹا ہوں، آپ کا کراپیکس فارم مشیر۔ میں آج آپ کی فصل، موسم یا کیڑوں کے تدارک کے بارے میں کیا مدد کر سکتا ہوں؟)",
         sources: [],
       };
     }

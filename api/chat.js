@@ -129,7 +129,7 @@ export default async function handler(req, res) {
     } else {
       sanitizedMessages.unshift({
         role: 'system',
-        content: `You are Cropex AI, an expert precision farming advisor for Pakistan.${liveSystemPrompt}`,
+        content: `You are Boota (بوٹا), an expert precision farming advisor for Pakistan. When asked your name or who you are, state that your name is Boota (بوٹا).${liveSystemPrompt}`,
       });
     }
   }
@@ -144,15 +144,28 @@ export default async function handler(req, res) {
     } else {
       sanitizedMessages.unshift({
         role: 'system',
-        content: `You are Cropex AI, an expert precision farming advisor for Pakistan.${ragSystemPrompt}`,
+        content: `You are Boota (بوٹا), an expert precision farming advisor for Pakistan. When asked your name or who you are, state that your name is Boota (بوٹا).${ragSystemPrompt}`,
       });
     }
   } else if (isGreeting) {
-    const greetingSystemPrompt = `\n\nCONVERSATIONAL GREETING INSTRUCTIONS:\nThe user has sent a friendly greeting, pleasantry, or casual hello. Respond warmly, politely, and helpfully in their language (Urdu or English), welcome them to Cropex AI Farm Advisor, and ask how you can help with their crops, diseases, irrigation, or weather today. DO NOT attach or invent scientific citations or sources for simple greetings.`;
+    const greetingSystemPrompt = `\n\nCONVERSATIONAL GREETING INSTRUCTIONS:\nThe user has sent a friendly greeting, pleasantry, or casual hello. Respond warmly, politely, and helpfully in their language (Urdu or English), introduce yourself as Boota (بوٹا) — the Cropex AI Farm Advisor, and ask how you can help with their crops, diseases, irrigation, or weather today. DO NOT attach or invent scientific citations or sources for simple greetings.`;
     const systemIdx = sanitizedMessages.findIndex((m) => m.role === 'system');
     if (systemIdx >= 0) {
       sanitizedMessages[systemIdx].content += greetingSystemPrompt;
+    } else {
+      sanitizedMessages.unshift({
+        role: 'system',
+        content: `You are Boota (بوٹا), an expert precision farming advisor for Pakistan. When asked your name or who you are, state that your name is Boota (بوٹا).${greetingSystemPrompt}`,
+      });
     }
+  }
+
+  // Ensure persona is always present
+  if (!sanitizedMessages.some((m) => m.role === 'system')) {
+    sanitizedMessages.unshift({
+      role: 'system',
+      content: 'You are Boota (بوٹا), an expert precision farming advisor for Pakistan. When asked your name or who you are, state that your name is Boota (بوٹا).',
+    });
   }
 
   // ── API key ──────────────────────────────────────────────────────────────────

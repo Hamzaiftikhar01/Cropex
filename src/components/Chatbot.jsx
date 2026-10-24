@@ -54,7 +54,7 @@ function SourcesAccordion({ sources }) {
 export default function Chatbot({ fieldProfile, weatherData, liveContext }) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: 'Hello! I am your AI Farm Advisor. Ask me anything about your crops, weather, or farming practices.' }
+    { role: 'assistant', content: 'Hello! I am Boota (بوٹا), your AI Farm Advisor. Ask me anything about your crops, weather, or farming practices.' }
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -159,7 +159,7 @@ export default function Chatbot({ fieldProfile, weatherData, liveContext }) {
                 <Bot size={20} className="text-white" aria-hidden="true" />
               </span>
               <div className="min-w-0">
-                <h3 className="font-bold text-xs sm:text-sm tracking-wide text-white truncate">AI Farm Advisor (اردو / English)</h3>
+                <h3 className="font-bold text-xs sm:text-sm tracking-wide text-white truncate">Boota — AI Farm Advisor (بوٹا)</h3>
                 <div className="flex items-center gap-1.5 text-[10px] text-emerald-200 mt-0.5 truncate">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
                   <span className="truncate">
@@ -306,11 +306,11 @@ export default function Chatbot({ fieldProfile, weatherData, liveContext }) {
             onClick={() => setIsOpen(true)}
             className="animate-fade-in bg-neutral-surface border border-neutral-border text-neutral-high text-[13px] font-semibold rounded-full shadow-soft px-3.5 py-2 cursor-pointer hover:bg-neutral-fill transition-colors whitespace-nowrap"
           >
-            Ask me anything <Sprout size={16} className="inline ml-1" aria-hidden="true" />
+            Ask Boota <Sprout size={16} className="inline ml-1" aria-hidden="true" />
           </button>
           <button
             onClick={() => setIsOpen(true)}
-            aria-label="Open AI Farm Advisor chat"
+            aria-label="Open Boota chat"
             className="bg-[#1B4332] hover:bg-[#143527] text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-105 cursor-pointer relative shrink-0"
           >
             <Bot size={28} className="text-white" aria-hidden="true" />
