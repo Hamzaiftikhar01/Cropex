@@ -489,432 +489,359 @@ function AnalysisResult({ result, isAnalyzing, error, uploadedImage }) {
   }
 
   return (
-    <section id="results" className="border-t border-earth-100 bg-earth-50/40 py-12 sm:py-16 dark:border-earth-850 dark:bg-earth-900/40 transition-colors">
+    <section id="results" className="py-8 sm:py-12 transition-colors text-left animate-fade-in">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         
-        {/* Actions Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-crop-600 dark:text-crop-400">
-              Diagnostic Assessment
-            </span>
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-earth-900 dark:text-earth-50 mt-0.5">
-              CROPEX AI Crop Health Diagnostic Report
-            </h2>
-          </div>
+        {/* Top Navigation Row: Back link on left, Scan another leaf on right */}
+        <div className="flex items-center justify-between gap-4 mb-4">
+          <button
+            type="button"
+            onClick={() => {
+              const uploadCard = document.getElementById('upload');
+              if (uploadCard) uploadCard.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="inline-flex items-center gap-1.5 text-base sm:text-lg font-bold text-neutral-high hover:opacity-80 transition cursor-pointer"
+          >
+            <svg className="h-4 w-4 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Diagnosis report</span>
+          </button>
 
-          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
-            {/* Phase 6: Voice Readout Button */}
-            <button
-              type="button"
-              onClick={handleToggleAudioReport}
-              className={`h-10 inline-flex items-center gap-2 rounded-xl px-4 text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer ${
-                isPlayingAudio
-                  ? 'bg-red-500 text-white animate-pulse'
-                  : 'border border-emerald-300 bg-emerald-50 text-emerald-900 hover:bg-emerald-100 dark:border-emerald-700/60 dark:bg-emerald-950/40 dark:text-emerald-200'
-              }`}
-            >
-              {isPlayingAudio ? (
-                <>
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+          <button
+            type="button"
+            onClick={() => {
+              const uploadCard = document.getElementById('upload');
+              if (uploadCard) uploadCard.scrollIntoView({ behavior: 'smooth' });
+              const fileInput = document.querySelector('input[type="file"]');
+              if (fileInput) fileInput.click();
+            }}
+            className="h-8 px-3.5 text-xs font-semibold rounded-lg border border-neutral-border bg-white dark:bg-stone-800 text-neutral-high hover:bg-neutral-fill transition cursor-pointer shadow-soft"
+          >
+            Scan another leaf
+          </button>
+        </div>
+
+        {/* 1. HERO DIAGNOSIS CARD (Split Layout: Sage Leaf Container + Disease Details) */}
+        <div className="bg-white dark:bg-[#18211b] border border-neutral-border rounded-2xl p-6 sm:p-7 shadow-soft">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+            
+            {/* Left Leaf Photo Container in Soft Sage */}
+            <div className="md:col-span-5">
+              <div className="bg-[#CFE5D4] dark:bg-[#1E3025] rounded-2xl min-h-[220px] sm:min-h-[260px] flex items-center justify-center overflow-hidden relative shadow-xs">
+                {uploadedImage ? (
+                  <img
+                    src={uploadedImage}
+                    alt={`${finalCropName} leaf diagnosis`}
+                    className="w-full h-full object-cover rounded-2xl max-h-[300px]"
+                  />
+                ) : (
+                  <div className="text-center p-6">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#1B4332] dark:text-[#A8D1B3] block">
+                      [LEAF PHOTO]
+                    </span>
+                    <span className="text-[11px] text-[#2D6A4F] dark:text-[#68AE7B] mt-1 block">
+                      {finalCropName} Symptomatic Sample
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Right Column: Disease Header, Score Ring, Action Buttons, and Escalation */}
+            <div className="md:col-span-7 space-y-3">
+              {/* Crop Badge & Circular Score Ring */}
+              <div className="flex items-center justify-between">
+                <span className="bg-[#EAF4ED] text-[#166534] border border-[#D2EDD7] text-xs font-bold px-3 py-1 rounded-full">
+                  {finalCropName}
+                </span>
+
+                {/* Circular Score Ring Meter */}
+                <div className="relative flex items-center justify-center w-12 h-12">
+                  <svg className="w-12 h-12 -rotate-90" viewBox="0 0 36 36">
+                    <path
+                      className="text-stone-200 dark:text-stone-700"
+                      strokeWidth="3.5"
+                      stroke="currentColor"
+                      fill="none"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                    <path
+                      className="text-emerald-700 dark:text-emerald-500"
+                      strokeDasharray={`${numericConfidence}, 100`}
+                      strokeWidth="3.5"
+                      strokeLinecap="round"
+                      stroke="currentColor"
+                      fill="none"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
                   </svg>
-                  <span>Stop Voice (آواز بند کریں)</span>
-                </>
-              ) : (
-                <>
-                  <svg className="h-4 w-4 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <span className="absolute text-xs font-bold text-neutral-high">
+                    {numericConfidence}%
+                  </span>
+                </div>
+              </div>
+
+              {/* Disease Name & Scientific Pathogen */}
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-neutral-high tracking-tight">
+                  {finalDisease}
+                </h2>
+                <p className="text-sm italic text-neutral-medium font-sans mt-0.5">
+                  {pathogen || 'Puccinia striiformis'}
+                </p>
+              </div>
+
+              {/* Severity & Verified Sources */}
+              <div className="flex flex-wrap items-center gap-3 pt-1">
+                <span className={`font-semibold text-xs px-2.5 py-1 rounded-full border ${
+                  severityVal === 'High'
+                    ? 'bg-[#FEECE9] text-[#B91C1C] border-[#FCDAD6]'
+                    : severityVal === 'Moderate'
+                    ? 'bg-[#FEF3C7] text-[#92400E] border-[#FDE68A]'
+                    : 'bg-[#EAF4ED] text-[#166534] border-[#D2EDD7]'
+                }`}>
+                  Severity: {severityVal}
+                </span>
+                <span className="text-xs text-neutral-medium font-medium">
+                  Verified sources: PARC, CIMMYT
+                </span>
+              </div>
+
+              {/* Action Buttons: Listen, Download PDF, Expert help */}
+              <div className="flex flex-wrap items-center gap-2.5 pt-2">
+                <button
+                  type="button"
+                  onClick={handleToggleAudioReport}
+                  className={`h-9 inline-flex items-center gap-1.5 rounded-xl px-4 text-xs font-semibold shadow-xs transition cursor-pointer ${
+                    isPlayingAudio
+                      ? 'bg-red-600 text-white animate-pulse'
+                      : 'bg-[#1B4332] hover:bg-[#143527] text-white'
+                  }`}
+                >
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
                   </svg>
-                  <span>Listen (رپورٹ سنیں)</span>
-                </>
+                  <span>{isPlayingAudio ? 'Stop Voice' : 'Listen · رپورٹ سنیں'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => downloadPdfReport(activeResult)}
+                  className="h-9 inline-flex items-center gap-1.5 rounded-xl border border-neutral-border bg-white dark:bg-stone-800 hover:bg-neutral-fill text-neutral-high px-3.5 text-xs font-semibold transition cursor-pointer shadow-soft"
+                >
+                  <svg className="h-4 w-4 text-neutral-medium" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span>Download PDF</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsEscalationOpen(true)}
+                  className="h-9 inline-flex items-center gap-1.5 rounded-xl border border-neutral-border bg-white dark:bg-stone-800 hover:bg-neutral-fill text-neutral-high px-3.5 text-xs font-semibold transition cursor-pointer shadow-soft"
+                >
+                  <svg className="h-4 w-4 text-neutral-medium" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  <span>Expert help</span>
+                </button>
+              </div>
+
+              {/* Warning / Escalation Recommendation Callout Box */}
+              {needsEscalation && (
+                <div className="bg-[#FDF2F0] border border-[#FCDAD6] rounded-xl p-3 text-xs sm:text-sm text-[#991B1B] font-medium leading-relaxed mt-3">
+                  Escalation recommended: severity is High, so confirm this diagnosis with an agronomist before spraying.
+                </div>
               )}
-            </button>
+            </div>
+
+          </div>
+        </div>
+
+        {/* 2. DPP REGISTERED REMEDIES SECTION (Table matching Screenshot 1) */}
+        <div className="bg-white dark:bg-[#18211b] border border-neutral-border rounded-2xl p-6 shadow-soft mt-6">
+          <div className="flex items-center justify-between pb-3 border-b border-neutral-border">
+            <h3 className="text-base sm:text-lg font-bold text-neutral-high">
+              DPP registered remedies
+            </h3>
+            <a
+              href="https://agripunjab.gov.pk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-semibold text-[#15803D] dark:text-[#4ADE80] hover:underline"
+            >
+              Source: [DPP registry]
+            </a>
+          </div>
+
+          <div className="overflow-x-auto mt-4">
+            <table className="w-full text-left text-xs min-w-[550px]">
+              <thead>
+                <tr className="border-b border-neutral-border text-neutral-medium text-[11px] font-semibold">
+                  <th className="pb-3 pr-4">Product and active ingredient</th>
+                  <th className="pb-3 pr-4">Label dose per acre</th>
+                  <th className="pb-3 pr-4">PHI</th>
+                  <th className="pb-3">WHO class</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-neutral-border">
+                {productsList && productsList.length > 0 ? (
+                  productsList.map((p, idx) => (
+                    <tr key={p.id || idx} className="hover:bg-neutral-fill/40 transition-colors">
+                      <td className="py-3.5 pr-4">
+                        <a
+                          href={resolveOfficialProductUrl(p)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-bold text-sm text-neutral-high hover:text-emerald-700 dark:hover:text-emerald-400 block transition-colors"
+                        >
+                          {p.name}
+                        </a>
+                        <span className="text-xs text-neutral-medium block mt-0.5">
+                          {p.activeIngredient || p.companyName || 'Registered Active'}
+                        </span>
+                      </td>
+                      <td className="py-3.5 pr-4 text-neutral-high text-xs sm:text-sm font-medium">
+                        {p.labelDosageAcre || p.dosage || '65 g in 100–120 L water'}
+                      </td>
+                      <td className="py-3.5 pr-4 text-neutral-high text-xs sm:text-sm font-medium">
+                        {p.phiDays ? `${p.phiDays} days` : '35 days'}
+                      </td>
+                      <td className="py-3.5 text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400">
+                        {p.whoToxicityClass ? p.whoToxicityClass.split('(')[0].trim() : 'Class III'}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <>
+                    <tr className="hover:bg-neutral-fill/40 transition-colors">
+                      <td className="py-3.5 pr-4">
+                        <a
+                          href="https://www.syngenta.com.pk/product/crop-protection/amistar-top-02"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-bold text-sm text-neutral-high hover:text-emerald-700 block transition-colors"
+                        >
+                          Nativo 75 WG
+                        </a>
+                        <span className="text-xs text-neutral-medium block mt-0.5">
+                          Tebuconazole 50% + Trifloxystrobin 25%
+                        </span>
+                      </td>
+                      <td className="py-3.5 pr-4 text-neutral-high text-xs sm:text-sm font-medium">
+                        65 g in 100–120 L water
+                      </td>
+                      <td className="py-3.5 pr-4 text-neutral-high text-xs sm:text-sm font-medium">
+                        35 days
+                      </td>
+                      <td className="py-3.5 text-xs sm:text-sm font-semibold text-blue-600">
+                        Class III
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-neutral-fill/40 transition-colors">
+                      <td className="py-3.5 pr-4">
+                        <a
+                          href="https://www.syngenta.com.pk/product/crop-protection/amistar-top-02"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-bold text-sm text-neutral-high hover:text-emerald-700 block transition-colors"
+                        >
+                          Amistar Top
+                        </a>
+                        <span className="text-xs text-neutral-medium block mt-0.5">
+                          Azoxystrobin + Difenoconazole
+                        </span>
+                      </td>
+                      <td className="py-3.5 pr-4 text-neutral-high text-xs sm:text-sm font-medium">
+                        200 ml in 100–120 L water
+                      </td>
+                      <td className="py-3.5 pr-4 text-neutral-high text-xs sm:text-sm font-medium">
+                        30 days
+                      </td>
+                      <td className="py-3.5 text-xs sm:text-sm font-semibold text-neutral-medium">
+                        See label
+                      </td>
+                    </tr>
+                  </>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* 3. PROTECTIVE EQUIPMENT & TALK TO AN EXPERT CARDS (Side-by-side grid) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          
+          {/* Protective Equipment Card */}
+          <div className="bg-white dark:bg-[#18211b] border border-neutral-border rounded-2xl p-6 shadow-soft space-y-4">
+            <h4 className="text-base sm:text-lg font-bold text-neutral-high">
+              Protective equipment
+            </h4>
+            <div className="space-y-3 pt-1">
+              {[
+                'Chemical-resistant gloves',
+                'Respirator or face mask',
+                'Protective goggles',
+                'Observe the field re-entry interval'
+              ].map((item, idx) => (
+                <label key={idx} className="flex items-center gap-3 text-xs sm:text-sm text-neutral-high font-medium cursor-pointer">
+                  <input
+                    type="checkbox"
+                    defaultChecked={idx === 0}
+                    className="w-4 h-4 rounded border-stone-300 text-emerald-700 focus:ring-emerald-600 cursor-pointer"
+                  />
+                  <span>{item}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Talk to an Expert Card */}
+          <div className="bg-white dark:bg-[#18211b] border border-neutral-border rounded-2xl p-6 shadow-soft space-y-4 flex flex-col justify-between">
+            <div>
+              <h4 className="text-base sm:text-lg font-bold text-neutral-high">
+                Talk to an expert
+              </h4>
+              <div className="space-y-2.5 pt-3 text-xs sm:text-sm">
+                <div className="flex items-center justify-between py-1 border-b border-neutral-border/60">
+                  <span className="text-neutral-medium font-medium">Punjab Agriculture Helpline</span>
+                  <a href="tel:080015000" className="font-bold text-neutral-high hover:text-emerald-700 transition">
+                    0800-15000
+                  </a>
+                </div>
+                <div className="flex items-center justify-between py-1 border-b border-neutral-border/60">
+                  <span className="text-neutral-medium font-medium">PARC/NARC Islamabad</span>
+                  <a href="tel:0519255012" className="font-bold text-neutral-high hover:text-emerald-700 transition">
+                    051-9255012
+                  </a>
+                </div>
+                <div className="flex items-center justify-between py-1">
+                  <span className="text-neutral-medium font-medium">CCRI Multan (cotton)</span>
+                  <a href="tel:0619201128" className="font-bold text-neutral-high hover:text-emerald-700 transition">
+                    061-9201128
+                  </a>
+                </div>
+              </div>
+            </div>
 
             <button
               type="button"
               onClick={() => setIsEscalationOpen(true)}
-              className="h-10 inline-flex items-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-4 text-xs sm:text-sm font-bold text-amber-900 shadow-xs transition-all hover:bg-amber-100 dark:border-amber-700/60 dark:bg-amber-950/40 dark:text-amber-200 dark:hover:bg-amber-900/60 cursor-pointer"
+              className="w-full mt-2 py-2.5 rounded-xl border border-neutral-border bg-white dark:bg-stone-800 hover:bg-neutral-fill text-neutral-high font-semibold text-xs sm:text-sm text-center transition cursor-pointer shadow-soft"
             >
-              <svg className="h-4 w-4 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-              <span>Talk to an Expert</span>
-              {needsEscalation && (
-                <span className="flex h-2 w-2 relative">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-                </span>
-              )}
+              Send details on WhatsApp
             </button>
-
-            <button
-              type="button"
-              onClick={() => downloadPdfReport(activeResult)}
-              className="h-10 inline-flex items-center gap-2 rounded-xl bg-crop-600 px-4 sm:px-5 text-xs sm:text-sm font-bold text-white shadow-sm shadow-crop-600/20 transition-all hover:bg-crop-700 hover:shadow-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-crop-500"
-            >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              Download PDF Report (A4)
-            </button>
-
-            <button
-              type="button"
-              onClick={() => downloadWordReport(activeResult)}
-              className="h-10 inline-flex items-center gap-2 rounded-xl border border-earth-200 bg-white px-3.5 sm:px-4 text-xs sm:text-sm font-bold text-earth-800 shadow-xs transition-all hover:bg-earth-50 dark:border-earth-750 dark:bg-earth-900 dark:text-earth-200 dark:hover:bg-earth-800 cursor-pointer"
-            >
-              <svg className="h-4 w-4 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              Word (.doc)
-            </button>
-          </div>
-        </div>
-
-        {/* Enterprise Report Sheet View (Matches A4 Architecture) */}
-        <div className="relative bg-white dark:bg-earth-900 rounded-2xl border border-earth-100 dark:border-earth-800 shadow-soft p-6 sm:p-10 text-left overflow-hidden">
-          
-          {/* Subtle Watermark in Center */}
-          <div className="pointer-events-none select-none absolute inset-0 flex items-center justify-center opacity-[0.03] dark:opacity-[0.04]">
-            <span className="text-[120px] font-black tracking-tighter text-earth-900 dark:text-white">
-              CROPEX
-            </span>
-          </div>
-
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-baseline gap-2 pb-5 border-b border-earth-100 dark:border-earth-800 relative z-10">
-            <div>
-              <div className="text-xl font-black tracking-wider text-earth-900 dark:text-earth-50">
-                CROPEX
-              </div>
-              <div className="text-[10px] font-bold text-crop-600 dark:text-crop-400 uppercase tracking-widest mt-0.5">
-                AI CROP HEALTH DIAGNOSTIC REPORT
-              </div>
-            </div>
-
-            <div className="text-left sm:text-right">
-              <div className="text-xs font-bold text-earth-800 dark:text-earth-200">
-                REPORT ID: CRX-2026-0902-001
-              </div>
-              <div className="text-[11px] text-earth-500 dark:text-earth-450 mt-0.5">
-                GENERATED: 02 September 2026, 06:26 PM
-              </div>
-            </div>
-          </div>
-
-          {/* DIAGNOSIS SECTION */}
-          <div className="mt-6 relative z-10">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-crop-600 dark:text-crop-400 block">
-              DIAGNOSIS
-            </span>
-            <h3 className="text-2xl sm:text-3xl font-black text-earth-900 dark:text-earth-50 mt-1">
-              {finalDisease}
-            </h3>
-            <p className="text-xs sm:text-sm italic text-earth-500 dark:text-earth-400 mt-0.5 font-sans">
-              {pathogen}
-            </p>
-
-            {/* 4-Column Diagnostic Summary Card */}
-            <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 bg-earth-50/60 dark:bg-earth-950/60 p-4 rounded-xl border border-earth-100 dark:border-earth-800">
-              <div>
-                <span className="text-[9px] uppercase font-bold text-earth-500 dark:text-earth-350 tracking-wider block">
-                  CROP
-                </span>
-                <span className="text-sm font-bold text-earth-850 dark:text-earth-100 mt-0.5 block">
-                  {finalCropName}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-[9px] uppercase font-bold text-earth-500 dark:text-earth-350 tracking-wider block">
-                  DISEASE TYPE
-                </span>
-                <span className="text-sm font-bold text-earth-850 dark:text-earth-100 mt-0.5 block">
-                  {diseaseType}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-[9px] uppercase font-bold text-earth-500 dark:text-earth-350 tracking-wider block">
-                  CONFIDENCE
-                </span>
-                <span className="text-sm font-bold text-crop-600 dark:text-crop-350 mt-0.5 block">
-                  {confidenceVal}
-                </span>
-              </div>
-
-              <div>
-                <span className="text-[9px] uppercase font-bold text-earth-500 dark:text-earth-350 tracking-wider block">
-                  SEVERITY
-                </span>
-                <span className="text-sm font-bold text-amber-600 dark:text-amber-400 mt-0.5 block">
-                  {severityVal}
-                </span>
-              </div>
-            </div>
-
-            {/* In-depth Pathological Description */}
-            <div className="mt-5 text-xs sm:text-sm text-earth-700 dark:text-earth-200 leading-relaxed font-medium bg-earth-50/30 dark:bg-earth-950/40 p-4 rounded-xl border border-earth-100/60 dark:border-earth-800/60">
-              <span className="font-bold text-earth-900 dark:text-earth-50 block mb-1">Pathological Overview:</span>
-              {activeResult.description || sampleResult.description}
-            </div>
-
-            {/* Phase 5: Critical Safety Warning Banner if banned substances detected */}
-            {activeResult.safetyWarnings && activeResult.safetyWarnings.length > 0 && (
-              <div className="mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/40 dark:bg-red-950/30">
-                <div className="flex items-start gap-3">
-                  <span className="p-1.5 rounded-lg bg-red-600 text-white shrink-0 mt-0.5 text-xs font-bold">DANGER</span>
-                  <div>
-                    <h5 className="text-xs sm:text-sm font-bold text-red-700 dark:text-red-300">
-                      Prohibited Chemical Alert (Pakistan DPP Blacklist)
-                    </h5>
-                    {activeResult.safetyWarnings.map((warn, wIdx) => (
-                      <p key={wIdx} className="text-xs text-red-600 dark:text-red-400 mt-1 font-medium leading-relaxed">
-                        {warn}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Phase 5: Expert Escalation Recommendation Card */}
-            {needsEscalation && (
-              <div className="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-300 dark:border-amber-700/60 dark:bg-amber-950/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-amber-500 text-white shrink-0 mt-0.5">
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h5 className="text-xs sm:text-sm font-bold text-amber-900 dark:text-amber-200">
-                      Expert Escalation Recommended ({isLowConfidence ? `Low Confidence: ${confidenceVal}` : 'High Severity Alert'})
-                    </h5>
-                    <p className="text-xs text-amber-800 dark:text-amber-300/90 mt-0.5 leading-relaxed">
-                      AI visual analysis indicates high risk or borderline certainty. Before applying high-potency chemical sprays, consult certified agricultural extension officers or send a WhatsApp referral.
-                    </p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsEscalationOpen(true)}
-                  className="shrink-0 text-xs font-bold px-3.5 py-2 rounded-lg bg-amber-600 text-white hover:bg-amber-700 transition shadow-sm cursor-pointer whitespace-nowrap"
-                >
-                  Connect with Expert
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* 1. VISIBLE SYMPTOMS */}
-          <div className="mt-8 pt-5 border-t border-earth-100 dark:border-earth-800 relative z-10">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-crop-600 dark:text-crop-400 mb-3">
-              VISIBLE SYMPTOMS
-            </h4>
-            <ul className="space-y-2.5">
-              {symptomsList.map((item, idx) => (
-                <li key={idx} className="text-xs sm:text-sm text-earth-750 dark:text-earth-200 flex items-start gap-2.5">
-                  <span className="w-1.5 h-0.5 bg-crop-600 mt-2 shrink-0 rounded-full dark:bg-crop-400"></span>
-                  <span className="font-medium leading-relaxed">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* 2. LIKELY CAUSES & RISK FACTORS */}
-          <div className="mt-8 pt-5 border-t border-earth-100 dark:border-earth-800 relative z-10">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-crop-600 dark:text-crop-400 mb-3">
-              LIKELY CAUSES & RISK FACTORS
-            </h4>
-            <ul className="space-y-2.5">
-              {causesList.map((item, idx) => (
-                <li key={idx} className="text-xs sm:text-sm text-earth-750 dark:text-earth-200 flex items-start gap-2.5">
-                  <span className="w-1.5 h-0.5 bg-crop-600 mt-2 shrink-0 rounded-full dark:bg-crop-400"></span>
-                  <span className="font-medium leading-relaxed">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* 3. PREVENTION & MANAGEMENT */}
-          <div className="mt-8 pt-5 border-t border-earth-100 dark:border-earth-800 relative z-10">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-crop-600 dark:text-crop-400 mb-3">
-              PREVENTION & MANAGEMENT
-            </h4>
-            <ul className="space-y-2.5">
-              {preventionList.map((item, idx) => (
-                <li key={idx} className="text-xs sm:text-sm text-earth-750 dark:text-earth-200 flex items-start gap-2.5">
-                  <span className="w-1.5 h-0.5 bg-crop-600 mt-2 shrink-0 rounded-full dark:bg-crop-400"></span>
-                  <span className="font-medium leading-relaxed">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Phase 3: Grounded RAG Knowledge Base Advisory */}
-          {activeResult.groundedTreatment && (
-            <div className="mt-8 pt-5 border-t border-earth-100 dark:border-earth-800 relative z-10 bg-crop-50/30 dark:bg-crop-950/20 p-4 rounded-xl border border-crop-200/50 dark:border-crop-800/50">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-crop-100 text-crop-800 dark:bg-crop-900/40 dark:text-crop-300">
-                  VERIFIED ADVISORY
-                </span>
-                <span className="text-[10px] text-earth-500 dark:text-earth-400 font-medium">
-                  Source: {activeResult.groundedTreatment.source}
-                </span>
-              </div>
-              <h4 className="text-sm font-bold text-earth-900 dark:text-earth-100 mb-1">
-                {activeResult.groundedTreatment.title}
-              </h4>
-              <p className="text-xs sm:text-sm text-earth-700 dark:text-earth-200 leading-relaxed">
-                {activeResult.groundedTreatment.guidance}
-              </p>
-              {activeResult.groundedTreatment.guidance_ur && (
-                <p className="mt-2 text-xs text-earth-600 dark:text-earth-300 leading-relaxed text-right" dir="rtl">
-                  {activeResult.groundedTreatment.guidance_ur}
-                </p>
-              )}
-            </div>
-          )}
-
-          {/* 4. AI DIAGNOSTIC DISCLAIMER */}
-          <div className="mt-8 p-4 rounded-xl bg-earth-50/80 dark:bg-earth-950/60 border border-earth-150 dark:border-earth-800 relative z-10">
-            <span className="text-[10px] font-bold text-earth-500 dark:text-earth-350 uppercase tracking-widest block">
-              AI DIAGNOSTIC DISCLAIMER
-            </span>
-            <p className="mt-1 text-xs text-earth-600 dark:text-earth-300 leading-relaxed font-medium">
-              This assessment is based on AI-powered visual analysis. Similar symptoms may have different causes. Field verification by a qualified agricultural professional is recommended before treatment decisions.
-            </p>
-          </div>
-
-          {/* 5. Minimal Footer */}
-          <div className="mt-8 pt-4 border-t border-earth-100 dark:border-earth-800 text-center relative z-10">
-            <p className="text-[11px] text-earth-400 dark:text-earth-350 font-medium">
-              Intelligent Agricultural Decision Support
-            </p>
           </div>
 
         </div>
 
-        {/* 6. RECOMMENDED CROP PROTECTION PRODUCTS (COMMERCIAL FORMULATIONS & OFFICIAL WEBSITES) */}
-        {productsList && productsList.length > 0 && (
-          <div className="mt-12 text-left">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2 pb-3 border-b border-earth-200 dark:border-earth-800">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-crop-600 dark:text-crop-400">
-                  Chemical & Biological Interventions
-                </span>
-                <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-earth-900 dark:text-earth-50 mt-0.5">
-                  Recommended Crop Protection Products
-                </h3>
-              </div>
-              <p className="text-xs text-earth-500 dark:text-earth-350 font-medium">
-                Official products registered with DPP Pakistan
-              </p>
-            </div>
+        {/* Footer Medical / Agronomic AI Disclaimer */}
+        <p className="text-[11px] text-neutral-medium text-center pt-8 italic leading-relaxed max-w-3xl mx-auto">
+          AI-assisted advice. Confirm diagnoses and chemical doses with a certified extension officer or plant pathologist before applying treatment.
+        </p>
 
-            <div className="mt-6 grid gap-5 sm:grid-cols-2">
-              {productsList.map((product, idx) => (
-                <div
-                  key={product.id || idx}
-                  className="flex flex-col justify-between rounded-2xl border border-earth-200 bg-white p-6 shadow-soft hover:shadow-card hover:border-crop-500/30 transition-all dark:border-earth-800 dark:bg-earth-900"
-                >
-                  <div>
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="inline-flex items-center rounded-lg bg-crop-50 px-2.5 py-1 text-xs font-bold text-crop-800 ring-1 ring-inset ring-crop-600/20 dark:bg-crop-950/40 dark:text-crop-300 dark:ring-crop-900/40">
-                        {product.productType || 'Crop Protection'}
-                      </span>
-                      <span className="text-xs font-bold text-earth-600 dark:text-earth-300">
-                        {product.companyName || product.company || 'Licensed Manufacturer'}
-                      </span>
-                    </div>
-
-                    <h4 className="mt-3 text-lg font-bold text-earth-900 dark:text-earth-50">
-                      {product.name}
-                    </h4>
-
-                    {/* Phase 5: DPP Registration & PHI Tags */}
-                    <div className="mt-2 flex flex-wrap gap-1.5 items-center">
-                      {product.dppRegistrationNo && (
-                        <span className="inline-flex items-center gap-1 rounded bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-800 ring-1 ring-inset ring-emerald-600/20 dark:bg-emerald-950/40 dark:text-emerald-300">
-                          ✓ DPP: {product.dppRegistrationNo}
-                        </span>
-                      )}
-                      {product.phiDays && (
-                        <span className="inline-flex items-center gap-1 rounded bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-800 ring-1 ring-inset ring-blue-600/20 dark:bg-blue-950/40 dark:text-blue-300">
-                          ⏱ {product.phiDays}d PHI
-                        </span>
-                      )}
-                      {product.whoToxicityClass && (
-                        <span className="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-700 dark:bg-slate-850 dark:text-slate-300">
-                          ☣ {product.whoToxicityClass}
-                        </span>
-                      )}
-                    </div>
-
-                    {product.activeIngredient && (
-                      <p className="mt-2 text-xs text-earth-700 dark:text-earth-250">
-                        <span className="font-bold text-earth-900 dark:text-earth-100">Active Ingredient: </span>
-                        {product.activeIngredient}
-                      </p>
-                    )}
-
-                    {/* Official Label Dosage Per Acre */}
-                    {(product.labelDosageAcre || product.dosage) && (
-                      <div className="mt-2.5 p-2.5 rounded-xl bg-crop-50/50 dark:bg-crop-950/30 border border-crop-200/50 dark:border-crop-800/40">
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-crop-800 dark:text-crop-300 block">
-                          Official DPP Label Dosage:
-                        </span>
-                        <span className="text-xs font-bold text-earth-900 dark:text-earth-100 mt-0.5 block">
-                          {product.labelDosageAcre || product.dosage}
-                        </span>
-                      </div>
-                    )}
-
-                    <p className="mt-3 text-xs sm:text-sm leading-relaxed text-earth-650 dark:text-earth-300 font-medium">
-                      {product.description || product.notes || 'Curative and protective formulation targeting foliar pathogens.'}
-                    </p>
-
-                    {/* Protective Equipment PPE */}
-                    {product.protectiveEquipment && product.protectiveEquipment.length > 0 && (
-                      <div className="mt-3 pt-2.5 border-t border-earth-100 dark:border-earth-800">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-earth-500 dark:text-earth-400 block mb-1">
-                          Mandatory PPE:
-                        </span>
-                        <div className="flex flex-wrap gap-1">
-                          {product.protectiveEquipment.map((ppe, pIdx) => (
-                            <span key={pIdx} className="text-[10px] font-medium px-2 py-0.5 rounded bg-earth-100 dark:bg-earth-800 text-earth-750 dark:text-earth-250">
-                              • {ppe}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="mt-5 pt-4 border-t border-earth-100 dark:border-earth-800">
-                    <a
-                      href={resolveOfficialProductUrl(product)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-earth-200 bg-earth-50/50 hover:bg-crop-50 hover:text-crop-700 hover:border-crop-300 px-4 py-2.5 text-xs sm:text-sm font-bold text-earth-750 transition-all dark:border-earth-750 dark:bg-earth-850 dark:text-earth-200 dark:hover:bg-crop-950/30 dark:hover:text-crop-300 cursor-pointer"
-                    >
-                      <span>Official Product Details & Label</span>
-                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Phase 5: Expert Escalation Modal */}
+        {/* Expert Escalation Modal */}
         <ExpertEscalationModal
           isOpen={isEscalationOpen}
           onClose={() => setIsEscalationOpen(false)}

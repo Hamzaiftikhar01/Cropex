@@ -35,8 +35,25 @@ const FALLBACK_PROFILE = {
 
 function App() {
   const { language } = useLanguage();
-  const [currentView, setCurrentView] = useState('dashboard');
+  const [currentView, setCurrentView] = useState(() => {
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const h = window.location.hash.replace('#', '').trim();
+      if (['dashboard', 'weather', 'disease', 'guides', 'yield'].includes(h)) return h;
+    }
+    return 'dashboard';
+  });
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash.replace('#', '').trim();
+      if (['dashboard', 'weather', 'disease', 'guides', 'yield'].includes(hash)) {
+        setCurrentView(hash);
+      }
+    };
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
   
   // Auth Session State
   const [currentUser, setCurrentUser] = useState(null);
@@ -427,7 +444,7 @@ function App() {
         />
       </div>
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-16 print:mt-0 print:pt-4 print:px-0 space-y-6">
+      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-16 print:pt-4 print:px-0 space-y-5">
         
         <FieldProfileSelector 
           activeProfile={fieldProfile}

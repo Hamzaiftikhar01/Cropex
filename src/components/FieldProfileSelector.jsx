@@ -46,13 +46,14 @@ export default function FieldProfileSelector({ activeProfile, onProfileChange, r
   return (
     <div className="bg-transparent mb-4 transition-all text-left">
       {/* Top Strip */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-1">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-neutral-high truncate">
-            {profileName}
+          <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block shrink-0 shadow-xs"></span>
+          <span className="text-sm font-semibold text-neutral-high">
+            {profileName.includes('Field') ? profileName : `${activeProfile.district} ${activeProfile.cropType} Field 1`}
           </span>
           <span className="text-neutral-low hidden md:inline">•</span>
-          <span className="text-[13px] text-neutral-high hidden md:inline truncate">
+          <span className="text-xs text-neutral-medium hidden md:inline truncate">
             {t('crop_' + activeProfile.cropType.toLowerCase())} · {t('dist_' + activeProfile.district.toLowerCase())} · {t('soil_' + activeProfile.soilType.toLowerCase())} · {activeProfile.lastIrrigatedDaysAgo ?? 3} {t('daysAgo')}
           </span>
         </div>
@@ -62,9 +63,9 @@ export default function FieldProfileSelector({ activeProfile, onProfileChange, r
           <select 
             value={activeProfile.id === 'custom' ? '' : activeProfile.id}
             onChange={handleSelectDemo}
-            className="h-8 px-2 text-xs font-semibold bg-neutral-fill border border-neutral-border text-neutral-high rounded-md focus:outline-none focus:ring-1 focus:ring-brand-primary"
+            className="h-8 px-2.5 text-xs font-medium bg-neutral-surface border border-neutral-border text-neutral-medium hover:text-neutral-high rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-primary cursor-pointer transition-colors shadow-soft"
           >
-            <option value="" disabled>{t('farmProfile')} ▾</option>
+            <option value="" disabled>Field profile ▾</option>
             {DEMO_PROFILES.map(p => (
               <option key={p.id} value={p.id}>
                 {language === 'ur' ? p.nameUr : language === 'pa' ? p.namePa : p.name}
@@ -77,10 +78,10 @@ export default function FieldProfileSelector({ activeProfile, onProfileChange, r
               setEditForm(activeProfile);
               setIsEditing(!isEditing);
             }}
-            className={`h-8 px-3 rounded-md text-xs font-semibold border transition-colors shrink-0 cursor-pointer ${
+            className={`h-8 px-3 rounded-lg text-xs font-medium border transition-colors shrink-0 cursor-pointer shadow-soft ${
               isEditing
-                ? 'bg-semantic-high/10 text-semantic-high border-semantic-high'
-                : 'border-neutral-border text-neutral-high hover:bg-neutral-fill'
+                ? 'bg-rose-50 text-rose-700 border-rose-300 dark:bg-rose-950/30 dark:border-rose-800'
+                : 'border-neutral-border text-neutral-medium hover:text-neutral-high bg-neutral-surface hover:bg-neutral-fill'
             }`}
           >
             {isEditing ? t('cancel') : <><Edit2 size={12} className="inline mr-1" aria-hidden="true" /> {t('modifyProfile')}</>}
