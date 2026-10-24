@@ -9,7 +9,7 @@ import {
   requestPushNotificationPermission,
   sendBrowserPushNotification,
 } from '../lib/smsAlertService';
-import { SUPPORTED_DISTRICTS } from '../lib/districtData';
+import { SUPPORTED_DISTRICTS, DISTRICT_STATISTICS } from '../lib/districtData';
 
 export default function SmsAlertModal({ isOpen, onClose, defaultDistrict = 'Faisalabad', defaultCrop = 'Wheat' }) {
   const [phone, setPhone] = useState('');
@@ -188,11 +188,14 @@ export default function SmsAlertModal({ isOpen, onClose, defaultDistrict = 'Fais
                     onChange={(e) => setDistrict(e.target.value)}
                     className="w-full px-3 py-2 rounded-xl border border-earth-300 dark:border-earth-700 bg-white dark:bg-earth-800 text-xs sm:text-sm"
                   >
-                    {SUPPORTED_DISTRICTS.map((d) => (
-                      <option key={d.name} value={d.name}>
-                        {d.name} ({d.nameUr})
-                      </option>
-                    ))}
+                    {SUPPORTED_DISTRICTS.map((key) => {
+                      const d = DISTRICT_STATISTICS[key] || { name: key, name_ur: key };
+                      return (
+                        <option key={key} value={d.name}>
+                          {d.name} ({d.name_ur})
+                        </option>
+                      );
+                    })}
                   </select>
                 </div>
 
